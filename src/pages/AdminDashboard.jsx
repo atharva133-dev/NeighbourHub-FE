@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+﻿import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { Activity, AlertTriangle, FileText, Flag, Users } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -94,18 +94,20 @@ export default function AdminDashboard() {
             </div>
             <div className="glass-card p-5 transition duration-300 hover:-translate-y-1 hover:bg-white/15">
               <Users className="mb-4 h-5 w-5 text-violet-300" />
-              <p className="text-sm text-slate-400">Known users</p>
-              <p className="mt-2 text-3xl font-bold text-white">1+</p>
+              <p className="text-sm text-slate-400">Engagement</p>
+              <p className="mt-2 text-3xl font-bold text-white">{totalLikes}</p>
+              <p className="text-xs text-slate-500">total likes</p>
             </div>
             <div className="glass-card p-5 transition duration-300 hover:-translate-y-1 hover:bg-white/15">
-              <Flag className="mb-4 h-5 w-5 text-orange-300" />
-              <p className="text-sm text-slate-400">Total reports</p>
-              <p className="mt-2 text-3xl font-bold text-white">0</p>
+              <Flag className="mb-4 h-5 w-5 text-emerald-300" />
+              <p className="text-sm text-slate-400">Categories</p>
+              <p className="mt-2 text-3xl font-bold text-white">{categoryData.length}</p>
             </div>
             <div className="glass-card p-5 transition duration-300 hover:-translate-y-1 hover:bg-white/15">
               <AlertTriangle className="mb-4 h-5 w-5 text-red-300" />
-              <p className="text-sm text-slate-400">Emergency notices</p>
+              <p className="text-sm text-slate-400">Emergency</p>
               <p className="mt-2 text-3xl font-bold text-white">{emergencyCount}</p>
+              <p className="text-xs text-slate-500">active alerts</p>
             </div>
           </div>
 

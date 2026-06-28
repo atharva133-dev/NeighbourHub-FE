@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Heart, MessageCircle, Pin, Trash2, Clock } from 'lucide-react';
+import { Heart, MessageCircle, Pin, Trash2, Clock, ExternalLink } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
 import CommentSection from './CommentSection';
@@ -41,6 +42,7 @@ function timeAgo(date) {
 
 export default function NoticeCard({ notice, onUpdate, onDelete }) {
   const { user, isAdmin } = useAuth();
+  const navigate = useNavigate();
   const [expanded, setExpanded] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
   const [likeLoading, setLikeLoading] = useState(false);
@@ -154,9 +156,17 @@ export default function NoticeCard({ notice, onUpdate, onDelete }) {
         )}
       </div>
 
-      <h3 className="text-lg font-semibold text-white">{notice.title}</h3>
+      <h3 className="text-lg font-semibold text-white">
+        <button
+          type="button"
+          onClick={() => navigate(`/notice/${notice._id}`)}
+          className="text-left hover:text-blue-300 transition-colors duration-200"
+        >
+          {notice.title}
+        </button>
+      </h3>
       <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-slate-300">
-        {notice.description || notice.content}
+        {notice.content}
       </p>
 
       <div className="mt-4 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-400">

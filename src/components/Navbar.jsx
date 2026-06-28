@@ -11,7 +11,8 @@ import {
   Search as SearchIcon,
   AlertTriangle,
   Home,
-  Users
+  Users,
+  Shield
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useSocket } from '../context/SocketContext';
@@ -160,6 +161,26 @@ export default function Navbar({ onSearchChange }) {
                       <Settings className="h-4 w-4" />
                       Settings
                     </Link>
+                    {user?.role === 'admin' && (
+                      <>
+                        <Link
+                          to="/admin"
+                          onClick={() => setUserDropdownOpen(false)}
+                          className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-300 transition-colors hover:bg-white/10 hover:text-white"
+                        >
+                          <Shield className="h-4 w-4" />
+                          Dashboard
+                        </Link>
+                        <Link
+                          to="/admin/users"
+                          onClick={() => setUserDropdownOpen(false)}
+                          className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-300 transition-colors hover:bg-white/10 hover:text-white"
+                        >
+                          <Users className="h-4 w-4" />
+                          Users
+                        </Link>
+                      </>
+                    )}
                     <button
                       type="button"
                       onClick={handleLogout}
@@ -241,14 +262,26 @@ export default function Navbar({ onSearchChange }) {
                 <User className="h-5 w-5" />
                 Profile
               </Link>
-              <Link
-                to="/settings"
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-300 transition-colors hover:bg-white/10 hover:text-white"
-              >
-                <Settings className="h-5 w-5" />
-                Settings
-              </Link>
+              {user?.role === 'admin' && (
+                <>
+                  <Link
+                    to="/admin"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-300 transition-colors hover:bg-white/10 hover:text-white"
+                  >
+                    <Shield className="h-5 w-5" />
+                    Dashboard
+                  </Link>
+                  <Link
+                    to="/admin/users"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-300 transition-colors hover:bg-white/10 hover:text-white"
+                  >
+                    <Users className="h-5 w-5" />
+                    Users
+                  </Link>
+                </>
+              )}
               <button
                 type="button"
                 onClick={handleLogout}

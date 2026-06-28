@@ -4,12 +4,15 @@ import { AuthProvider } from './context/AuthContext';
 import { SocketProvider } from './context/SocketContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminDashboard from './pages/AdminDashboard';
+import AdminUsers from './pages/AdminUsers';
 import Home from './pages/Home';
 import Events from './pages/Events';
 import LostFound from './pages/LostFound';
 import Emergency from './pages/Emergency';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Profile from './pages/Profile';
+import NoticeDetail from './pages/NoticeDetail';
 
 export default function App() {
   return (
@@ -59,6 +62,9 @@ export default function App() {
                 </ProtectedRoute>
               }
             />
+            <Route path="/notice/:id" element={<ProtectedRoute><NoticeDetail /></ProtectedRoute>} />
+            <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+            <Route path="/admin/users" element={<ProtectedRoute><AdminUsers /></ProtectedRoute>} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
           <Toaster

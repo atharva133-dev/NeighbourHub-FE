@@ -71,14 +71,13 @@ export default function Events() {
   const filtered = notices.filter((notice) => {
     const matchesSearch = searchQuery === '' || 
       notice.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      notice.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       notice.content?.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesSearch;
   });
 
   return (
     <Layout onSearchChange={setSearchQuery}>
-     
+      
 
       <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
         <div>

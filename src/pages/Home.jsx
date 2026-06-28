@@ -83,7 +83,6 @@ export default function Home() {
   const filtered = notices.filter((notice) => {
     const matchesSearch = searchQuery === '' || 
       notice.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      notice.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       notice.content?.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesSearch;
   });
