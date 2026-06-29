@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
-import { AlertTriangle, Pin, ArrowUp } from 'lucide-react';
+import { AlertTriangle, Pin, ArrowUp, Users } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import api from '../api/axios';
+import { useAuth } from '../context/AuthContext';
 import { useSocket } from '../context/SocketContext';
 import Layout from '../components/Layout';
 import NoticeCard from '../components/NoticeCard';
@@ -16,23 +18,36 @@ function sortNotices(list) {
 }
 
 export default function Home() {
-  const { socket } = useSocket();
+  const { activeCommunityId } = useAuth();
+  const { socket, joinCommunity, leaveCommunity, getOnlineCount } = useSocket();
+  const navigate = useNavigate();
   const [notices, setNotices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [showBackToTop, setShowBackToTop] = useState(false);
 
+  // Join / leave the community socket room
+  useEffect(() => {
+    if (!socket || !activeCommunityId) return;
+    joinCommunity(activeCommunityId);
+    return () => leaveCommunity(activeCommunityId);
+  }, [socket, activeCommunityId, joinCommunity, leaveCommunity]);
+
   const fetchNotices = useCallback(async () => {
+    if (!activeCommunityId) {
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     try {
-      const { data } = await api.get('/notices');
+      const { data } = await api.get(`/notices?communityId=${activeCommunityId}`);
       setNotices(sortNotices(data));
     } catch (err) {
       toast.error(err.response?.data?.message || 'Failed to load notices');
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [activeCommunityId]);
 
   useEffect(() => {
     fetchNotices();
@@ -80,16 +95,40 @@ export default function Home() {
     };
   }, [socket]);
 
+  // No community selected – prompt
+  if (!activeCommunityId) {
+    return (
+      <Layout onSearchChange={setSearchQuery}>
+        <div className="glass-card flex flex-col items-center justify-center rounded-2xl px-6 py-20 text-center">
+          <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-purple-500/20">
+            <Users className="h-8 w-8 text-purple-400" />
+          </div>
+          <h2 className="text-xl font-semibold text-white">No community selected</h2>
+          <p className="mt-2 max-w-sm text-sm text-slate-400">
+            Join or create a community to see and post notices.
+          </p>
+          <button
+            type="button"
+            onClick={() => navigate('/community')}
+            className="mt-6 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-purple-500/20 transition hover:-translate-y-0.5"
+          >
+            Go to Communities
+          </button>
+        </div>
+      </Layout>
+    );
+  }
+
   const filtered = notices.filter((notice) => {
-    const matchesSearch = searchQuery === '' || 
+    const matchesSearch =
+      searchQuery === '' ||
       notice.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       notice.content?.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesSearch;
   });
 
-  const hasEmergencyNotices = notices.some(n => n.category === 'Emergency');
-  const pinnedNotices = notices.filter(n => n.pinned);
-  const regularNotices = notices.filter(n => !n.pinned);
+  const hasEmergencyNotices = notices.some((n) => n.category === 'Emergency');
+  const pinnedNotices = notices.filter((n) => n.pinned);
 
   return (
     <Layout onSearchChange={setSearchQuery}>

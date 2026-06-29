@@ -12,20 +12,29 @@ import {
   AlertTriangle,
   Home,
   Users,
-  Shield
+  Shield,
+  ArrowLeftRight
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useSocket } from '../context/SocketContext';
 import NotificationBell from './NotificationBell';
 
 export default function Navbar({ onSearchChange }) {
-  const { user, logout } = useAuth();
-  const { onlineUsers } = useSocket();
+  const { user, logout, activeCommunityId } = useAuth();
+  const { getOnlineCount } = useSocket();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const userDropdownRef = useRef(null);
+
+  const onlineUsers = getOnlineCount(activeCommunityId);
+
+  // Derive community name from user object
+  const communityName =
+    typeof user?.communityId === 'object'
+      ? user?.communityId?.name
+      : null;
 
   const handleLogout = () => {
     logout();
@@ -64,14 +73,18 @@ export default function Navbar({ onSearchChange }) {
     <nav className="sticky top-0 z-50 border-b border-white/10 bg-[#0f0f1a]/80 backdrop-blur-xl">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between gap-4">
-          {/* Logo */}
+          {/* Logo + Community Name */}
           <Link to="/" className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-purple-600 to-blue-600 text-sm font-extrabold text-white shadow-lg shadow-purple-500/20">
-              NH
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-purple-600 to-blue-600 shadow-lg shadow-purple-500/20 overflow-hidden">
+              <img src="/logo.png" alt="NH Logo" className="h-full w-full object-cover" />
             </div>
             <div className="hidden sm:block">
               <p className="text-base font-bold text-white">NeighbourHub</p>
-              <p className="text-xs text-slate-400">Community board</p>
+              {communityName ? (
+                <p className="text-xs text-purple-300 font-medium">{communityName}</p>
+              ) : (
+                <p className="text-xs text-slate-400">Community board</p>
+              )}
             </div>
           </Link>
 
@@ -111,7 +124,7 @@ export default function Navbar({ onSearchChange }) {
 
           {/* Right Section */}
           <div className="flex items-center gap-2">
-            {/* Online Users */}
+            {/* Online Users (community-scoped) */}
             <div className="hidden sm:flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2">
               <span className="relative flex h-2 w-2">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />
@@ -119,6 +132,19 @@ export default function Navbar({ onSearchChange }) {
               </span>
               <span className="text-sm font-medium text-slate-300">{onlineUsers} online</span>
             </div>
+
+            {/* Switch Community */}
+            {activeCommunityId && (
+              <button
+                type="button"
+                onClick={() => navigate('/community')}
+                title="Switch Community"
+                className="hidden sm:flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm font-medium text-slate-300 transition-all duration-200 hover:bg-white/10 hover:text-white"
+              >
+                <ArrowLeftRight className="h-4 w-4" />
+                <span className="hidden lg:inline">Switch</span>
+              </button>
+            )}
 
             {/* Notification Bell */}
             <NotificationBell />
@@ -130,8 +156,12 @@ export default function Navbar({ onSearchChange }) {
                 onClick={() => setUserDropdownOpen(!userDropdownOpen)}
                 className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2 transition-all duration-200 hover:bg-white/10"
               >
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-purple-600 to-blue-600 text-sm font-bold text-white">
-                  {user?.name?.charAt(0).toUpperCase() || 'U'}
+                <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-lg bg-gradient-to-br from-purple-600 to-blue-600 text-sm font-bold text-white">
+                  {user?.avatarUrl ? (
+                    <img src={user.avatarUrl} alt="" className="h-full w-full object-cover" />
+                  ) : (
+                    user?.name?.charAt(0).toUpperCase() || 'U'
+                  )}
                 </div>
                 <span className="hidden sm:block text-sm font-medium text-slate-300">
                   {user?.name?.split(' ')[0] || 'User'}
@@ -143,6 +173,9 @@ export default function Navbar({ onSearchChange }) {
                   <div className="border-b border-white/10 px-4 py-3">
                     <p className="text-sm font-semibold text-white">{user?.name}</p>
                     <p className="text-xs text-slate-400">{user?.email}</p>
+                    {communityName && (
+                      <p className="mt-1 text-xs font-medium text-purple-300">{communityName}</p>
+                    )}
                   </div>
                   <div className="py-2">
                     <Link
@@ -160,6 +193,14 @@ export default function Navbar({ onSearchChange }) {
                     >
                       <Settings className="h-4 w-4" />
                       Settings
+                    </Link>
+                    <Link
+                      to="/community"
+                      onClick={() => setUserDropdownOpen(false)}
+                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-300 transition-colors hover:bg-white/10 hover:text-white"
+                    >
+                      <ArrowLeftRight className="h-4 w-4" />
+                      Switch Community
                     </Link>
                     {user?.role === 'admin' && (
                       <>
@@ -261,6 +302,22 @@ export default function Navbar({ onSearchChange }) {
               >
                 <User className="h-5 w-5" />
                 Profile
+              </Link>
+              <Link
+                to="/settings"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-300 transition-colors hover:bg-white/10 hover:text-white"
+              >
+                <Settings className="h-5 w-5" />
+                Settings
+              </Link>
+              <Link
+                to="/community"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-300 transition-colors hover:bg-white/10 hover:text-white"
+              >
+                <ArrowLeftRight className="h-5 w-5" />
+                Switch Community
               </Link>
               {user?.role === 'admin' && (
                 <>

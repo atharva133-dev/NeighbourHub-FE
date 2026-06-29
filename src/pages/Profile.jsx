@@ -75,7 +75,7 @@ export default function Profile() {
       </div>
 
       {/* Profile Card */}
-      <div className="glass-card mb-6 overflow-hidden">
+      <div>
         <div className="bg-gradient-to-r from-purple-600/20 to-blue-600/20 px-6 py-8 sm:px-8">
           <div className="flex flex-col items-center gap-4 sm:flex-row">
             <div className="flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-blue-500 text-2xl font-bold text-white shadow-lg shadow-purple-500/30">

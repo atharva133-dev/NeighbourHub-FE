@@ -1,0 +1,192 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { KeyRound, Trash2 } from 'lucide-react';
+import toast from 'react-hot-toast';
+import api from '../../api/axios';
+import { useAuth } from '../../context/AuthContext';
+
+export default function AccountSection() {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [changingPassword, setChangingPassword] = useState(false);
+  const [deletePassword, setDeletePassword] = useState('');
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+
+  const handleChangePassword = async () => {
+    if (!currentPassword || !newPassword) {
+      toast.error('Please fill in all password fields');
+      return;
+    }
+    if (newPassword.length < 6) {
+      toast.error('New password must be at least 6 characters');
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      toast.error('New passwords do not match');
+      return;
+    }
+
+    setChangingPassword(true);
+    try {
+      await api.patch('/users/password', { currentPassword, newPassword });
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+      toast.success('Password updated successfully');
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to change password');
+    } finally {
+      setChangingPassword(false);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    if (!deletePassword) {
+      toast.error('Enter your password to confirm deletion');
+      return;
+    }
+
+    setDeleting(true);
+    try {
+      await api.delete('/users/account', { data: { password: deletePassword } });
+      logout();
+      toast.success('Account deleted');
+      navigate('/register');
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to delete account');
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="glass-card rounded-2xl p-6">
+        <h2 className="mb-2 text-xl font-semibold text-white">Account</h2>
+        <p className="mb-6 text-sm text-slate-400">Manage your login credentials</p>
+
+        <div className="mb-6">
+          <label className="mb-1 block text-sm font-medium text-slate-200">Email</label>
+          <input
+            type="email"
+            value={user?.email || ''}
+            disabled
+            className="glass-input w-full cursor-not-allowed opacity-60"
+          />
+          <p className="mt-1 text-xs text-slate-500">Email cannot be changed</p>
+        </div>
+
+        <div className="border-t border-white/10 pt-6">
+          <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold text-white">
+            <KeyRound className="h-4 w-4 text-purple-400" />
+            Change Password
+          </h3>
+          <div className="space-y-4">
+            <div>
+              <label htmlFor="currentPassword" className="mb-1 block text-sm font-medium text-slate-200">
+                Current Password
+              </label>
+              <input
+                id="currentPassword"
+                type="password"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                className="glass-input w-full"
+                autoComplete="current-password"
+              />
+            </div>
+            <div>
+              <label htmlFor="newPassword" className="mb-1 block text-sm font-medium text-slate-200">
+                New Password
+              </label>
+              <input
+                id="newPassword"
+                type="password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                className="glass-input w-full"
+                autoComplete="new-password"
+              />
+            </div>
+            <div>
+              <label htmlFor="confirmPassword" className="mb-1 block text-sm font-medium text-slate-200">
+                Confirm New Password
+              </label>
+              <input
+                id="confirmPassword"
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="glass-input w-full"
+                autoComplete="new-password"
+              />
+            </div>
+            <button
+              type="button"
+              onClick={handleChangePassword}
+              disabled={changingPassword}
+              className="rounded-lg bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-2.5 text-sm font-semibold text-white transition hover:-translate-y-0.5 disabled:opacity-60"
+            >
+              {changingPassword ? 'Updating...' : 'Update Password'}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div className="glass-card rounded-2xl border-red-500/20 p-6">
+        <h3 className="mb-2 flex items-center gap-2 text-lg font-semibold text-red-400">
+          <Trash2 className="h-5 w-5" />
+          Delete Account
+        </h3>
+        <p className="mb-4 text-sm text-slate-400">
+          Permanently delete your account and all associated data. This action cannot be undone.
+        </p>
+
+        {!showDeleteConfirm ? (
+          <button
+            type="button"
+            onClick={() => setShowDeleteConfirm(true)}
+            className="rounded-lg border border-red-500/40 px-4 py-2 text-sm font-medium text-red-400 transition hover:bg-red-500/10"
+          >
+            Delete my account
+          </button>
+        ) : (
+          <div className="space-y-3">
+            <input
+              type="password"
+              value={deletePassword}
+              onChange={(e) => setDeletePassword(e.target.value)}
+              placeholder="Enter password to confirm"
+              className="glass-input w-full max-w-sm"
+              autoComplete="current-password"
+            />
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={handleDeleteAccount}
+                disabled={deleting}
+                className="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-500 disabled:opacity-60"
+              >
+                {deleting ? 'Deleting...' : 'Confirm Delete'}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowDeleteConfirm(false);
+                  setDeletePassword('');
+                }}
+                className="rounded-lg px-4 py-2 text-sm text-slate-400 transition hover:text-white"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

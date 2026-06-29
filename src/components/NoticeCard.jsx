@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Heart, MessageCircle, Pin, Trash2, Clock, ExternalLink } from 'lucide-react';
+import { Heart, MessageCircle, Pin, Trash2, Clock, ExternalLink, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/axios';
@@ -47,6 +47,7 @@ export default function NoticeCard({ notice, onUpdate, onDelete }) {
   const [actionLoading, setActionLoading] = useState(false);
   const [likeLoading, setLikeLoading] = useState(false);
   const [timeDisplay, setTimeDisplay] = useState(timeAgo(notice.createdAt));
+  const [lightboxOpen, setLightboxOpen] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -63,6 +64,10 @@ export default function NoticeCard({ notice, onUpdate, onDelete }) {
     : false;
 
   const isNew = (new Date() - new Date(notice.createdAt)) < 300000; // 5 minutes
+  const userId = user?._id || user?.id;
+  const authorId = typeof notice.author === 'object' ? notice.author._id : notice.author;
+  const isAuthor = userId && authorId && String(userId) === String(authorId);
+  const canDelete = isAdmin || isAuthor;
 
   const handlePin = async () => {
     setActionLoading(true);
@@ -92,14 +97,18 @@ export default function NoticeCard({ notice, onUpdate, onDelete }) {
   };
 
   const handleDelete = async () => {
-    if (!window.confirm('Delete this notice permanently?')) return;
     setActionLoading(true);
     try {
       await api.delete(`/notices/${notice._id}`);
       onDelete?.(notice._id);
-      toast.success('Notice deleted');
+      toast.success('Notice deleted successfully');
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Failed to delete notice');
+      const errorMessage = err.response?.data?.message || 'Failed to delete notice';
+      if (err.response?.status === 403) {
+        toast.error('You can only delete your own notices');
+      } else {
+        toast.error(errorMessage);
+      }
     } finally {
       setActionLoading(false);
     }
@@ -132,17 +141,19 @@ export default function NoticeCard({ notice, onUpdate, onDelete }) {
             {priority}
           </span>
         </div>
-        {isAdmin && (
+        {canDelete && (
           <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={handlePin}
-              disabled={actionLoading}
-              className="inline-flex items-center gap-1 rounded-lg border border-white/10 px-2.5 py-1 text-xs font-medium text-slate-200 transition duration-200 hover:bg-white/10 disabled:opacity-50"
-            >
-              <Pin className="h-3 w-3" />
-              {notice.pinned ? 'Unpin' : 'Pin'}
-            </button>
+            {isAdmin && (
+              <button
+                type="button"
+                onClick={handlePin}
+                disabled={actionLoading}
+                className="inline-flex items-center gap-1 rounded-lg border border-white/10 px-2.5 py-1 text-xs font-medium text-slate-200 transition duration-200 hover:bg-white/10 disabled:opacity-50"
+              >
+                <Pin className="h-3 w-3" />
+                {notice.pinned ? 'Unpin' : 'Pin'}
+              </button>
+            )}
             <button
               type="button"
               onClick={handleDelete}
@@ -168,6 +179,18 @@ export default function NoticeCard({ notice, onUpdate, onDelete }) {
       <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-slate-300">
         {notice.content}
       </p>
+
+      {notice.imageUrl && (
+        <div className="mt-4 relative overflow-hidden rounded-xl bg-[#1a1a2e]">
+          <img
+            src={notice.imageUrl}
+            alt="Notice image"
+            className="w-full max-h-[500px] cursor-pointer object-contain transition-transform hover:scale-[1.02]"
+            onClick={() => setLightboxOpen(true)}
+          />
+          <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/50 to-transparent pointer-events-none" />
+        </div>
+      )}
 
       <div className="mt-4 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-400">
         <span>
@@ -199,11 +222,35 @@ export default function NoticeCard({ notice, onUpdate, onDelete }) {
           className="inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-medium text-violet-200 transition duration-200 hover:bg-white/10 hover:text-white"
         >
           <MessageCircle className="h-4 w-4" />
-          {expanded ? 'Hide comments' : 'View comments'}
+          {expanded ? 'Hide' : (notice.commentCount > 0 ? notice.commentCount : 'Comment')}
         </button>
       </div>
 
       {expanded && <CommentSection noticeId={notice._id} />}
+
+      {lightboxOpen && notice.imageUrl && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4"
+          onClick={() => setLightboxOpen(false)}
+        >
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setLightboxOpen(false);
+            }}
+            className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
+          >
+            <X className="h-6 w-6" />
+          </button>
+          <img
+            src={notice.imageUrl}
+            alt="Full size notice image"
+            className="max-h-[90vh] max-w-[90vw] rounded-lg object-contain"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
     </article>
   );
 }
