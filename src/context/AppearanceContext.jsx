@@ -20,6 +20,14 @@ const AppearanceContext = createContext(null);
 
 function applyAppearance(settings) {
   const root = document.documentElement;
+
+  // Apply Theme
+  if (settings.theme === 'dark') {
+    root.classList.add('dark');
+  } else {
+    root.classList.remove('dark');
+  }
+
   const accent = ACCENT_COLORS[settings.accentColor] || ACCENT_COLORS.purple;
 
   root.dataset.theme = settings.theme;

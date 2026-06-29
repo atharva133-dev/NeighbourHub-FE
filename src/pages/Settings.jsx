@@ -33,11 +33,11 @@ export default function Settings() {
   return (
     <Layout>
       <div className="mx-auto max-w-5xl">
-        <h1 className="mb-6 text-3xl font-bold text-white">Settings</h1>
+        <h1 className="mb-6 text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Settings</h1>
 
-        <div className="grid gap-6 lg:grid-cols-[240px_1fr]">
+        <div className="grid gap-8 lg:grid-cols-[240px_1fr]">
           <aside className="lg:sticky lg:top-24 lg:self-start">
-            <nav className="glass-card overflow-hidden rounded-2xl p-2">
+            <nav className="glass-card overflow-hidden rounded-2xl p-3 shadow-sm border border-slate-200 bg-white/60 dark:border-white/10 dark:bg-[#13131f]/60">
               <div className="flex gap-2 overflow-x-auto pb-1 lg:flex-col lg:overflow-visible lg:pb-0 scrollbar-hide">
                 {TABS.map((tab) => {
                   const Icon = tab.icon;
@@ -47,13 +47,13 @@ export default function Settings() {
                       key={tab.id}
                       type="button"
                       onClick={() => setActiveTab(tab.id)}
-                      className={`flex shrink-0 items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-colors lg:w-full ${
+                      className={`flex shrink-0 items-center gap-3 rounded-xl px-4 py-3 text-sm font-bold transition-all duration-300 lg:w-full ${
                         isActive
-                          ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg shadow-purple-500/20'
-                          : 'text-slate-300 hover:bg-white/5'
+                          ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg shadow-purple-500/25 scale-[1.02]'
+                          : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-white/5 dark:hover:text-white'
                       }`}
                     >
-                      <Icon className="h-4 w-4" />
+                      <Icon className={`h-4 w-4 ${isActive ? 'text-white' : 'text-slate-400 dark:text-slate-500'}`} />
                       {tab.label}
                     </button>
                   );
@@ -62,7 +62,7 @@ export default function Settings() {
             </nav>
           </aside>
 
-          <main>
+          <main className="animate-fade-in">
             <ActiveSection />
           </main>
         </div>

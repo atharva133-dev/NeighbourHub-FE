@@ -88,25 +88,31 @@ export default function LostFound() {
 
   return (
     <Layout onSearchChange={setSearchQuery}>
-      <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
+      <div className="grid gap-8 lg:grid-cols-[1fr_380px]">
         <div>
           {loading ? (
             <NoticeListSkeleton />
           ) : filtered.length === 0 ? (
-            <div className="glass-card border-dashed py-16 text-center">
-              <p className="text-slate-300">No lost &amp; found items yet. Be the first to post!</p>
+            <div className="glass-card border-dashed border-2 border-slate-200 bg-slate-50 py-20 text-center dark:border-white/10 dark:bg-white/5">
+              <p className="text-slate-500 dark:text-slate-400 font-medium text-lg">No lost & found items yet.</p>
+              <p className="text-slate-400 dark:text-slate-500 mt-1">Hope everyone finds what they are looking for!</p>
             </div>
           ) : (
-            <div className="space-y-4">
-              {filtered.map((notice) => (
-                <NoticeCard
+            <div className="space-y-6">
+              {filtered.map((notice, index) => (
+                <div
                   key={notice._id}
-                  notice={notice}
-                  onUpdate={(updated) =>
-                    setNotices((prev) => sortNotices(prev.map((n) => (n._id === updated._id ? updated : n))))
-                  }
-                  onDelete={(id) => setNotices((prev) => prev.filter((n) => n._id !== id))}
-                />
+                  className="animate-fade-in"
+                  style={{ animationDelay: `${index * 50}ms` }}
+                >
+                  <NoticeCard
+                    notice={notice}
+                    onUpdate={(updated) =>
+                      setNotices((prev) => sortNotices(prev.map((n) => (n._id === updated._id ? updated : n))))
+                    }
+                    onDelete={(id) => setNotices((prev) => prev.filter((n) => n._id !== id))}
+                  />
+                </div>
               ))}
             </div>
           )}

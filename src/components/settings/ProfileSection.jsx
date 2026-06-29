@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { User, Camera, Save } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../../api/axios';
@@ -6,6 +7,7 @@ import { useAuth } from '../../context/AuthContext';
 
 export default function ProfileSection() {
   const { user, setUser } = useAuth();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');
   const [bio, setBio] = useState('');
@@ -80,23 +82,23 @@ export default function ProfileSection() {
 
   return (
     <div className="glass-card rounded-2xl p-6">
-      <h2 className="mb-6 text-xl font-semibold text-white">Profile</h2>
+      <h2 className="mb-6 text-xl font-bold text-slate-900 dark:text-white">Profile</h2>
 
       <div className="mb-6">
-        <label className="mb-3 block text-sm font-medium text-slate-200">Avatar</label>
+        <label className="mb-3 block text-sm font-semibold text-slate-700 dark:text-slate-200">Avatar</label>
         <div className="flex items-start gap-6">
           <div className="relative">
-            <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-[var(--accent-primary)] to-[var(--accent-secondary)] text-white">
+            <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-purple-500 to-blue-500 text-white shadow-inner">
               {avatarPreview ? (
                 <img src={avatarPreview} alt="Avatar" className="h-full w-full object-cover" />
               ) : (
-                <User className="h-12 w-12" />
+                <User className="h-10 w-10 opacity-90" />
               )}
             </div>
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="absolute bottom-0 right-0 flex h-8 w-8 items-center justify-center rounded-full bg-purple-600 text-white shadow-lg transition hover:bg-purple-500"
+              className="absolute bottom-0 right-0 flex h-8 w-8 items-center justify-center rounded-full bg-white text-slate-700 shadow-md ring-1 ring-slate-200 transition hover:bg-slate-50 dark:bg-slate-800 dark:text-slate-200 dark:ring-white/10 dark:hover:bg-slate-700"
             >
               <Camera className="h-4 w-4" />
             </button>
@@ -108,13 +110,13 @@ export default function ProfileSection() {
               className="hidden"
             />
           </div>
-          <div className="flex-1">
-            <p className="mb-2 text-sm text-slate-300">Upload a profile picture. Max size: 2MB.</p>
+          <div className="flex-1 pt-2">
+            <p className="mb-2 text-sm text-slate-500 dark:text-slate-400">Upload a profile picture. Max size: 2MB.</p>
             {(avatarPreview || user?.avatarUrl) && (
               <button
                 type="button"
                 onClick={removeAvatar}
-                className="text-sm text-red-400 transition hover:text-red-300"
+                className="text-sm font-medium text-red-500 transition hover:text-red-600 dark:text-red-400 dark:hover:text-red-300"
               >
                 Remove avatar
               </button>
@@ -123,8 +125,8 @@ export default function ProfileSection() {
         </div>
       </div>
 
-      <div className="mb-4">
-        <label htmlFor="name" className="mb-1 block text-sm font-medium text-slate-200">
+      <div className="mb-5">
+        <label htmlFor="name" className="mb-1.5 block text-sm font-semibold text-slate-700 dark:text-slate-200">
           Name
         </label>
         <input
@@ -138,7 +140,7 @@ export default function ProfileSection() {
       </div>
 
       <div className="mb-6">
-        <label htmlFor="bio" className="mb-1 block text-sm font-medium text-slate-200">
+        <label htmlFor="bio" className="mb-1.5 block text-sm font-semibold text-slate-700 dark:text-slate-200">
           Bio
         </label>
         <textarea
@@ -150,44 +152,65 @@ export default function ProfileSection() {
           className="glass-input w-full resize-none"
           placeholder="Tell us about yourself..."
         />
-        <p className="mt-1 text-right text-xs text-slate-500">{bio.length}/300</p>
+        <p className="mt-1 text-right text-xs font-medium text-slate-400 dark:text-slate-500">{bio.length}/300</p>
       </div>
 
       <button
         type="button"
         onClick={handleSave}
         disabled={loading}
-        className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-purple-500/20 transition duration-200 hover:-translate-y-0.5 hover:shadow-purple-500/30 disabled:opacity-60"
+        className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-purple-500/25 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-purple-500/40 disabled:opacity-60 disabled:hover:translate-y-0"
       >
         <Save className="h-4 w-4" />
         {loading ? 'Saving...' : 'Save Changes'}
       </button>
 
       {user?.communityId?.code && (
-        <div className="mt-8 rounded-xl border border-white/10 bg-white/5 p-4">
-          <div className="mb-2 flex items-center justify-between">
-            <h3 className="text-sm font-medium text-slate-200">Active Community</h3>
-            <button
-              type="button"
-              onClick={async () => {
-                if (!window.confirm('Are you sure you want to leave this community?')) return;
-                try {
-                  const { data } = await api.post(`/community/${user.communityId.id || user.communityId._id}/leave`);
-                  toast.success(data.message);
-                  setUser(data.user);
-                } catch (err) {
-                  toast.error(err.response?.data?.message || 'Failed to leave community');
-                }
-              }}
-              className="rounded-lg bg-red-500/10 px-3 py-1.5 text-xs font-semibold text-red-400 transition hover:bg-red-500/20 hover:text-red-300"
-            >
-              Leave Community
-            </button>
+        <div className="mt-8 rounded-xl border border-slate-200 bg-slate-50 p-5 dark:border-white/10 dark:bg-white/5">
+          <div className="mb-3 flex flex-wrap items-center justify-between gap-4">
+            <h3 className="text-sm font-bold text-slate-900 dark:text-white">Active Community</h3>
+            {user.communityId.admin && user.communityId.admin.toString() === user.id ? (
+              <button
+                type="button"
+                onClick={async () => {
+                  if (!window.confirm('Deleting this community will remove all notices and members. This cannot be undone. Are you sure?')) return;
+                  try {
+                    const { data } = await api.delete(`/community/${user.communityId.id || user.communityId._id}`);
+                    toast.success(data.message);
+                    setUser({ ...user, communityId: null });
+                    navigate('/community');
+                  } catch (err) {
+                    toast.error(err.response?.data?.message || 'Failed to delete community');
+                  }
+                }}
+                className="rounded-lg bg-red-100 px-3 py-1.5 text-xs font-bold text-red-700 transition hover:bg-red-200 dark:bg-red-500/10 dark:text-red-400 dark:hover:bg-red-500/20 dark:hover:text-red-300"
+              >
+                Delete Community
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={async () => {
+                  if (!window.confirm('Are you sure you want to leave this community?')) return;
+                  try {
+                    const { data } = await api.post(`/community/${user.communityId.id || user.communityId._id}/leave`);
+                    toast.success(data.message);
+                    setUser(data.user);
+                    navigate('/community');
+                  } catch (err) {
+                    toast.error(err.response?.data?.message || 'Failed to leave community');
+                  }
+                }}
+                className="rounded-lg bg-red-100 px-3 py-1.5 text-xs font-bold text-red-700 transition hover:bg-red-200 dark:bg-red-500/10 dark:text-red-400 dark:hover:bg-red-500/20 dark:hover:text-red-300"
+              >
+                Leave Community
+              </button>
+            )}
           </div>
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-base font-semibold text-white">{user.communityId.name}</p>
-              <p className="text-sm text-slate-400">Code: <span className="font-mono text-purple-300">{user.communityId.code}</span></p>
+              <p className="text-base font-bold text-slate-900 dark:text-white">{user.communityId.name}</p>
+              <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mt-0.5">Code: <span className="font-mono text-purple-600 dark:text-purple-400">{user.communityId.code}</span></p>
             </div>
           </div>
         </div>

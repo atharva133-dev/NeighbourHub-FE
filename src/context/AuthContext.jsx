@@ -25,6 +25,9 @@ export function AuthProvider({ children }) {
       } else {
         localStorage.removeItem('communityId');
       }
+    } else if (userData) {
+      setActiveCommunityId(null);
+      localStorage.removeItem('communityId');
     }
   };
 

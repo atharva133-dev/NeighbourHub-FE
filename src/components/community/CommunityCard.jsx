@@ -23,7 +23,7 @@ export default function CommunityCard({ community, onEnter }) {
 
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
-            <h3 className="truncate text-lg font-bold text-white">{community.name}</h3>
+            <p className="font-bold text-gray-900 dark:text-white truncate" title={community.name}>{community.name || "Unnamed Community"}</p>
             {community.isAdmin && (
               <span className="inline-flex items-center gap-1 rounded-full bg-purple-500/20 px-2 py-0.5 text-xs font-medium text-purple-300">
                 <Shield className="h-3 w-3" />

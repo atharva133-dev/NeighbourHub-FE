@@ -113,7 +113,7 @@ export default function NotificationBell() {
         type="button"
         onClick={handleToggle}
         aria-label="Notifications"
-        className="relative rounded-lg border border-white/10 bg-white/5 p-2 text-slate-100 transition duration-200 hover:-translate-y-0.5 hover:bg-white/10"
+        className="relative rounded-lg border border-slate-200 bg-white p-2 text-slate-600 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-slate-50 hover:text-slate-900 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:shadow-none dark:hover:bg-white/10"
       >
         <Bell className="h-5 w-5" />
         {unreadCount > 0 && (
@@ -124,14 +124,14 @@ export default function NotificationBell() {
       </button>
 
       {open && (
-        <div className="absolute right-0 mt-3 w-80 max-w-[calc(100vw-2rem)] overflow-hidden rounded-lg border border-white/10 bg-slate-950/95 shadow-2xl shadow-black/40 backdrop-blur-xl">
-          <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
-            <h3 className="text-sm font-semibold text-white">Notifications</h3>
+        <div className="absolute right-0 mt-3 w-80 max-w-[calc(100vw-2rem)] overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/95 dark:shadow-2xl dark:shadow-black/40">
+          <div className="flex items-center justify-between border-b border-slate-100 px-4 py-3 dark:border-white/10">
+            <h3 className="text-sm font-semibold text-slate-900 dark:text-white">Notifications</h3>
             {unreadCount > 0 && (
               <button
                 type="button"
                 onClick={handleMarkAllRead}
-                className="text-xs font-medium text-blue-300 transition hover:text-blue-200"
+                className="text-xs font-medium text-blue-600 transition hover:text-blue-500 dark:text-blue-300 dark:hover:text-blue-200"
               >
                 Mark all read
               </button>

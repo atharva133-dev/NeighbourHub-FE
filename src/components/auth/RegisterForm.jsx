@@ -87,20 +87,20 @@ export default function RegisterForm({ onSwitchToLogin }) {
 
   return (
     <>
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold text-white">Join NeighbourHub</h2>
-        <p className="mt-1 text-sm text-slate-400">Connect with your local community</p>
+      <div className="mb-8">
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Join NeighbourHub</h2>
+        <p className="mt-1.5 text-sm font-medium text-slate-600 dark:text-slate-400">Connect with your local community</p>
       </div>
 
       {error && (
-        <div className="mb-4 rounded-lg border border-red-400/20 bg-red-500/10 px-4 py-2 text-sm text-red-200">
+        <div className="mb-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-600 dark:border-red-400/20 dark:bg-red-500/10 dark:text-red-200">
           {error}
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-5">
         <div>
-          <label htmlFor="name" className="mb-1 block text-sm font-medium text-slate-200">
+          <label htmlFor="name" className="mb-1.5 block text-sm font-bold text-slate-700 dark:text-slate-200">
             Full name
           </label>
           <input
@@ -114,12 +114,12 @@ export default function RegisterForm({ onSwitchToLogin }) {
             placeholder="Jane Doe"
           />
           {fieldErrors.name && (
-            <p className="mt-1 text-xs text-red-400">{fieldErrors.name}</p>
+            <p className="mt-1.5 text-xs font-semibold text-red-500 dark:text-red-400">{fieldErrors.name}</p>
           )}
         </div>
 
         <div>
-          <label htmlFor="email" className="mb-1 block text-sm font-medium text-slate-200">
+          <label htmlFor="email" className="mb-1.5 block text-sm font-bold text-slate-700 dark:text-slate-200">
             Email
           </label>
           <input
@@ -133,12 +133,12 @@ export default function RegisterForm({ onSwitchToLogin }) {
             placeholder="you@example.com"
           />
           {fieldErrors.email && (
-            <p className="mt-1 text-xs text-red-400">{fieldErrors.email}</p>
+            <p className="mt-1.5 text-xs font-semibold text-red-500 dark:text-red-400">{fieldErrors.email}</p>
           )}
         </div>
 
         <div>
-          <label htmlFor="password" className="mb-1 block text-sm font-medium text-slate-200">
+          <label htmlFor="password" className="mb-1.5 block text-sm font-bold text-slate-700 dark:text-slate-200">
             Password
           </label>
           <div className="relative">
@@ -156,15 +156,15 @@ export default function RegisterForm({ onSwitchToLogin }) {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-white"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-slate-600 dark:hover:text-white"
               aria-label={showPassword ? 'Hide password' : 'Show password'}
             >
               {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
             </button>
           </div>
           {password && (
-            <div className="mt-2">
-              <div className="flex h-1.5 overflow-hidden rounded-full bg-white/10">
+            <div className="mt-2.5">
+              <div className="flex h-1.5 overflow-hidden rounded-full bg-slate-200 dark:bg-white/10">
                 <div
                   className={`h-full transition-all duration-300 ${strength.color}`}
                   style={{ width: `${(strength.score / 3) * 100}%` }}
@@ -172,12 +172,12 @@ export default function RegisterForm({ onSwitchToLogin }) {
               </div>
               {strength.label && (
                 <p
-                  className={`mt-1 text-xs font-medium ${
+                  className={`mt-1.5 text-xs font-bold ${
                     strength.label === 'Weak'
-                      ? 'text-red-400'
+                      ? 'text-red-500 dark:text-red-400'
                       : strength.label === 'Fair'
-                        ? 'text-yellow-400'
-                        : 'text-green-400'
+                        ? 'text-yellow-500 dark:text-yellow-400'
+                        : 'text-green-500 dark:text-green-400'
                   }`}
                 >
                   {strength.label}
@@ -186,12 +186,12 @@ export default function RegisterForm({ onSwitchToLogin }) {
             </div>
           )}
           {fieldErrors.password && (
-            <p className="mt-1 text-xs text-red-400">{fieldErrors.password}</p>
+            <p className="mt-1.5 text-xs font-semibold text-red-500 dark:text-red-400">{fieldErrors.password}</p>
           )}
         </div>
 
         <div>
-          <label htmlFor="confirmPassword" className="mb-1 block text-sm font-medium text-slate-200">
+          <label htmlFor="confirmPassword" className="mb-1.5 block text-sm font-bold text-slate-700 dark:text-slate-200">
             Confirm Password
           </label>
           <div className="relative">
@@ -208,27 +208,27 @@ export default function RegisterForm({ onSwitchToLogin }) {
             <button
               type="button"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-white"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-slate-600 dark:hover:text-white"
               aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
             >
               {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
             </button>
           </div>
           {fieldErrors.confirmPassword && (
-            <p className="mt-1 text-xs text-red-400">{fieldErrors.confirmPassword}</p>
+            <p className="mt-1.5 text-xs font-semibold text-red-500 dark:text-red-400">{fieldErrors.confirmPassword}</p>
           )}
         </div>
 
-        <label className="flex cursor-pointer items-start gap-2 text-sm text-slate-300">
+        <label className="flex cursor-pointer items-start gap-2.5 text-sm font-medium text-slate-600 dark:text-slate-300">
           <input
             type="checkbox"
             checked={acceptedTerms}
             onChange={(e) => setAcceptedTerms(e.target.checked)}
-            className="mt-0.5 h-4 w-4 rounded border-white/20 bg-slate-900/50 text-purple-600 focus:ring-purple-500/40"
+            className="mt-0.5 h-4 w-4 rounded border-slate-300 bg-white text-purple-600 focus:ring-purple-500/40 dark:border-white/20 dark:bg-slate-900/50"
           />
           <span>
             I agree to the{' '}
-            <button type="button" className="font-medium text-purple-400 hover:text-purple-300">
+            <button type="button" className="font-bold text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300 transition-colors">
               Terms and Conditions
             </button>
           </span>
@@ -237,7 +237,7 @@ export default function RegisterForm({ onSwitchToLogin }) {
         <button
           type="submit"
           disabled={loading}
-          className="flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-purple-600 to-violet-600 py-2.5 text-sm font-semibold text-white shadow-lg shadow-purple-500/25 transition duration-200 hover:-translate-y-0.5 hover:shadow-purple-500/40 disabled:opacity-60"
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 py-3 text-sm font-bold text-white shadow-lg shadow-purple-500/25 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-purple-500/40 disabled:opacity-60 disabled:hover:translate-y-0"
         >
           {loading ? (
             <>
@@ -250,12 +250,12 @@ export default function RegisterForm({ onSwitchToLogin }) {
         </button>
       </form>
 
-      <p className="mt-6 text-center text-sm text-slate-400">
+      <p className="mt-8 text-center text-sm font-medium text-slate-600 dark:text-slate-400">
         Already have an account?{' '}
         <button
           type="button"
           onClick={onSwitchToLogin}
-          className="font-medium text-purple-400 transition hover:text-purple-300"
+          className="font-bold text-purple-600 transition hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300"
         >
           Sign in
         </button>

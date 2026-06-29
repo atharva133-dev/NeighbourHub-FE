@@ -51,18 +51,18 @@ export default function NotificationsSection() {
 
   return (
     <div className="glass-card rounded-2xl p-6">
-      <h2 className="mb-2 text-xl font-semibold text-white">Notifications</h2>
-      <p className="mb-6 text-sm text-slate-400">Choose what you want to be notified about</p>
+      <h2 className="mb-2 text-xl font-bold text-slate-900 dark:text-white">Notifications</h2>
+      <p className="mb-6 text-sm text-slate-600 dark:text-slate-400">Choose what you want to be notified about</p>
 
-      <div className="space-y-3">
+      <div className="space-y-4">
         {NOTIFICATION_OPTIONS.map(({ key, label, description }) => (
           <div
             key={key}
-            className="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 px-4 py-3"
+            className="flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50 px-5 py-4 dark:border-white/10 dark:bg-white/5"
           >
             <div>
-              <p className="text-sm font-medium text-white">{label}</p>
-              <p className="text-xs text-slate-400">{description}</p>
+              <p className="text-sm font-bold text-slate-900 dark:text-white">{label}</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{description}</p>
             </div>
             <ToggleSwitch checked={prefs[key]} onChange={() => handleToggle(key)} />
           </div>
@@ -73,7 +73,7 @@ export default function NotificationsSection() {
         type="button"
         onClick={handleSave}
         disabled={loading}
-        className="mt-6 flex items-center gap-2 rounded-lg bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-purple-500/20 transition hover:-translate-y-0.5 disabled:opacity-60"
+        className="mt-8 flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-purple-500/25 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-purple-500/40 disabled:opacity-60 disabled:hover:translate-y-0"
       >
         <Save className="h-4 w-4" />
         {loading ? 'Saving...' : 'Save Preferences'}

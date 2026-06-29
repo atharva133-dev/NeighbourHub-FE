@@ -88,33 +88,39 @@ export default function Emergency() {
 
   return (
     <Layout onSearchChange={setSearchQuery}>
-      <div className="mb-6 glass-card border-red-500/30 p-5 animate-pulse relative z-0">
-        <p className="text-xs font-semibold uppercase text-red-300">Emergency Alerts</p>
-        <h2 className="mt-2 text-2xl font-bold text-white sm:text-3xl">Emergency Notices</h2>
-        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate-300">
-          Critical alerts and emergency information for your neighbourhood. Stay informed during urgent situations.
+      <div className="mb-8 rounded-2xl border-2 border-red-300 bg-red-50 p-6 shadow-sm dark:border-red-500/50 dark:bg-red-500/10">
+        <h1 className="mb-2 text-2xl font-bold text-red-800 dark:text-red-200">Emergency Center</h1>
+        <p className="text-sm text-red-600 dark:text-red-300">
+          Use this section ONLY for urgent community matters (security alerts, severe weather, urgent hazards).
+          In case of a life-threatening emergency, always call local authorities (911) immediately.
         </p>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
+      <div className="grid gap-8 lg:grid-cols-[1fr_380px]">
         <div>
           {loading ? (
             <NoticeListSkeleton />
           ) : filtered.length === 0 ? (
-            <div className="glass-card border-dashed py-16 text-center">
-              <p className="text-slate-300">No emergency alerts at this time.</p>
+            <div className="glass-card border-dashed border-2 border-slate-200 bg-slate-50 py-20 text-center dark:border-white/10 dark:bg-white/5">
+              <p className="text-slate-500 dark:text-slate-400 font-medium text-lg">No active emergencies.</p>
+              <p className="text-slate-400 dark:text-slate-500 mt-1">Stay safe and report any issues promptly.</p>
             </div>
           ) : (
-            <div className="space-y-4">
-              {filtered.map((notice) => (
-                <NoticeCard
+            <div className="space-y-6">
+              {filtered.map((notice, index) => (
+                <div
                   key={notice._id}
-                  notice={notice}
-                  onUpdate={(updated) =>
-                    setNotices((prev) => sortNotices(prev.map((n) => (n._id === updated._id ? updated : n))))
-                  }
-                  onDelete={(id) => setNotices((prev) => prev.filter((n) => n._id !== id))}
-                />
+                  className="animate-fade-in"
+                  style={{ animationDelay: `${index * 50}ms` }}
+                >
+                  <NoticeCard
+                    notice={notice}
+                    onUpdate={(updated) =>
+                      setNotices((prev) => sortNotices(prev.map((n) => (n._id === updated._id ? updated : n))))
+                    }
+                    onDelete={(id) => setNotices((prev) => prev.filter((n) => n._id !== id))}
+                  />
+                </div>
               ))}
             </div>
           )}

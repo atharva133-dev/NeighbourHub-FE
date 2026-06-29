@@ -91,12 +91,21 @@ export default function CommentSection({ noticeId }) {
           <p className="text-sm text-slate-400">No comments yet. Start the conversation!</p>
         ) : (
           comments.map((comment) => (
-            <div key={comment._id} className="rounded-lg border border-white/10 bg-white/5 px-3 py-2">
-              <div className="flex items-center justify-between gap-2">
-                <span className="text-sm font-medium text-slate-100">{comment.author?.name}</span>
-                <span className="text-xs text-slate-400">{formatDate(comment.createdAt)}</span>
+            <div key={comment._id} className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 dark:border-white/10 dark:bg-white/5">
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2.5">
+                  <div className="flex h-6 w-6 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-purple-500 to-blue-500 text-[10px] font-bold text-white shadow-sm">
+                    {comment.author?.avatarUrl ? (
+                      <img src={comment.author.avatarUrl} alt="" className="h-full w-full object-cover" />
+                    ) : (
+                      comment.author?.name?.charAt(0).toUpperCase() || 'A'
+                    )}
+                  </div>
+                  <span className="text-sm font-bold text-slate-900 dark:text-slate-100">{comment.author?.name}</span>
+                </div>
+                <span className="text-xs font-medium text-slate-500 dark:text-slate-400">{formatDate(comment.createdAt)}</span>
               </div>
-              <p className="mt-1 text-sm text-slate-300">{comment.content}</p>
+              <p className="mt-2 text-sm text-slate-700 dark:text-slate-300 ml-8">{comment.content}</p>
             </div>
           ))
         )}
