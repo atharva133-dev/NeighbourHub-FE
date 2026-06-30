@@ -52,11 +52,22 @@ export function AuthProvider({ children }) {
     return data.user;
   };
 
+  // Returns { email } — no JWT yet; caller must show OTP screen next
   const register = async (name, email, password) => {
     const { data } = await api.post('/auth/register', { name, email, password });
+    return { email: data.email };
+  };
+
+  // Called after user submits OTP — issues JWT and logs in
+  const verifyOtp = async (email, otp) => {
+    const { data } = await api.post('/auth/verify-otp', { email, otp });
     localStorage.setItem('token', data.token);
     setUser(data.user);
     return data.user;
+  };
+
+  const resendOtp = async (email) => {
+    await api.post('/auth/resend-otp', { email });
   };
 
   const logout = () => {
@@ -85,6 +96,8 @@ export function AuthProvider({ children }) {
         loading,
         login,
         register,
+        verifyOtp,
+        resendOtp,
         logout,
         isAdmin: user?.role === 'admin',
         activeCommunityId,

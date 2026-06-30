@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, LogIn, Users } from 'lucide-react';
+import { Plus, LogIn, Users, LogOut } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
@@ -10,7 +10,7 @@ import JoinCommunityModal from '../components/community/JoinCommunityModal';
 import { PageLoader } from '../components/Skeletons';
 
 export default function Community() {
-  const { user, setUser, enterCommunity: setActiveCommunity } = useAuth();
+  const { user, setUser, enterCommunity: setActiveCommunity, logout } = useAuth();
   const navigate = useNavigate();
   const [communities, setCommunities] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -69,6 +69,14 @@ export default function Community() {
             </p>
           </div>
           <div className="flex gap-3">
+            <button
+              type="button"
+              onClick={() => { logout(); navigate('/login'); }}
+              className="flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-5 py-2.5 text-sm font-bold text-slate-700 shadow-sm transition-all hover:bg-red-50 hover:border-red-300 hover:text-red-600 dark:border-white/10 dark:bg-white/5 dark:text-white dark:hover:bg-red-500/10 dark:hover:border-red-400/30 dark:hover:text-red-400"
+            >
+              <LogOut className="h-4 w-4" />
+              Logout
+            </button>
             <button
               type="button"
               onClick={() => setShowJoin(true)}

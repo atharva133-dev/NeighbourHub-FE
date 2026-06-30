@@ -1,5 +1,4 @@
 import { useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useAuth } from '../../context/AuthContext';
@@ -22,9 +21,8 @@ function validateEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-export default function RegisterForm({ onSwitchToLogin }) {
+export default function RegisterForm({ onSwitchToLogin, onRegistered }) {
   const { register } = useAuth();
-  const navigate = useNavigate();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -73,9 +71,9 @@ export default function RegisterForm({ onSwitchToLogin }) {
     setError('');
     setLoading(true);
     try {
-      await register(name, email, password);
-      toast.success('Account created');
-      navigate('/community');
+      const { email: registeredEmail } = await register(name, email, password);
+      toast.success('Account created — check your email for the OTP.');
+      if (onRegistered) onRegistered(registeredEmail);
     } catch (err) {
       const message = err.response?.data?.message || 'Registration failed';
       setError(message);

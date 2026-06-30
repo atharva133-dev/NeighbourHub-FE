@@ -1,10 +1,19 @@
 import { useState, useEffect } from 'react';
-import { Heart, MessageCircle, Pin, Trash2, Clock, ExternalLink, X } from 'lucide-react';
+import { Heart, MessageCircle, Pin, Trash2, Clock, ExternalLink, X, Languages, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
 import CommentSection from './CommentSection';
+
+const LANGUAGES = [
+  { code: 'en', label: 'English' },
+  { code: 'hi', label: 'Hindi' },
+  { code: 'mr', label: 'Marathi' },
+  { code: 'gu', label: 'Gujarati' },
+  { code: 'ta', label: 'Tamil' },
+  { code: 'te', label: 'Telugu' },
+];
 
 const CATEGORY_STYLES = {
   General: 'bg-blue-100 text-blue-700 ring-blue-200 dark:bg-blue-500/15 dark:text-blue-200 dark:ring-blue-400/20',
@@ -49,6 +58,14 @@ export default function NoticeCard({ notice, onUpdate, onDelete }) {
   const [timeDisplay, setTimeDisplay] = useState(timeAgo(notice.createdAt));
   const [lightboxOpen, setLightboxOpen] = useState(false);
 
+  // Translation state
+  const [showLangMenu, setShowLangMenu] = useState(false);
+  const [translateLoading, setTranslateLoading] = useState(false);
+  const [translatedContent, setTranslatedContent] = useState(null); // { lang, text }
+  const [showOriginal, setShowOriginal] = useState(false);
+  // Cache: { [langCode]: translatedText }
+  const [translationCache, setTranslationCache] = useState({});
+
   useEffect(() => {
     const interval = setInterval(() => {
       setTimeDisplay(timeAgo(notice.createdAt));
@@ -56,6 +73,16 @@ export default function NoticeCard({ notice, onUpdate, onDelete }) {
 
     return () => clearInterval(interval);
   }, [notice.createdAt]);
+
+  // Close language dropdown on outside click
+  useEffect(() => {
+    if (!showLangMenu) return;
+    const handler = (e) => {
+      if (!e.target.closest('[data-translate-menu]')) setShowLangMenu(false);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [showLangMenu]);
 
   const likes = notice.likes || [];
   const priority = notice.priority || (notice.category === 'Emergency' ? 'Urgent' : 'Medium');
@@ -111,6 +138,39 @@ export default function NoticeCard({ notice, onUpdate, onDelete }) {
       }
     } finally {
       setActionLoading(false);
+    }
+  };
+
+  const handleTranslate = async (langCode) => {
+    setShowLangMenu(false);
+
+    // English = restore original
+    if (langCode === 'en') {
+      setTranslatedContent(null);
+      setShowOriginal(false);
+      return;
+    }
+
+    // If same lang already translated, just show it
+    if (translationCache[langCode]) {
+      setTranslatedContent({ lang: langCode, text: translationCache[langCode] });
+      setShowOriginal(false);
+      return;
+    }
+
+    setTranslateLoading(true);
+    try {
+      const { data } = await api.post('/translate', {
+        text: notice.content,
+        targetLang: langCode,
+      });
+      setTranslationCache((prev) => ({ ...prev, [langCode]: data.translatedText }));
+      setTranslatedContent({ lang: langCode, text: data.translatedText });
+      setShowOriginal(false);
+    } catch {
+      toast.error('Translation failed');
+    } finally {
+      setTranslateLoading(false);
     }
   };
 
@@ -176,9 +236,20 @@ export default function NoticeCard({ notice, onUpdate, onDelete }) {
           {notice.title}
         </button>
       </h3>
+
+      {/* Content — shows translated text or original */}
       <p className="mt-3 whitespace-pre-wrap text-[15px] leading-relaxed text-slate-600 dark:text-slate-300">
-        {notice.content}
+        {translatedContent && !showOriginal ? translatedContent.text : notice.content}
       </p>
+      {translatedContent && (
+        <button
+          type="button"
+          onClick={() => setShowOriginal((v) => !v)}
+          className="mt-1.5 text-xs font-semibold text-purple-500 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300 transition-colors"
+        >
+          {showOriginal ? 'Show Translation' : 'Show Original'}
+        </button>
+      )}
 
       {notice.imageUrl && (
         <div className="mt-5 relative overflow-hidden rounded-xl bg-slate-100 dark:bg-[#13131f] border border-slate-200 dark:border-white/5">
@@ -234,6 +305,45 @@ export default function NoticeCard({ notice, onUpdate, onDelete }) {
           <MessageCircle className="h-4 w-4" />
           {expanded ? 'Hide Comments' : (notice.commentCount > 0 ? `${notice.commentCount} Comments` : 'Comment')}
         </button>
+
+        {/* Translate button + dropdown */}
+        <div className="relative ml-auto" data-translate-menu>
+          <button
+            type="button"
+            onClick={() => setShowLangMenu((v) => !v)}
+            disabled={translateLoading}
+            className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-600 shadow-sm transition-all duration-300 hover:bg-slate-50 hover:text-slate-900 disabled:opacity-60 dark:border-white/10 dark:bg-transparent dark:text-slate-300 dark:hover:bg-white/10 dark:hover:text-white dark:shadow-none"
+          >
+            {translateLoading
+              ? <Loader2 className="h-4 w-4 animate-spin" />
+              : <Languages className="h-4 w-4" />
+            }
+            Translate
+          </button>
+
+          {showLangMenu && (
+            <div className="absolute right-0 bottom-full mb-2 z-20 w-40 rounded-xl border border-slate-200 bg-white py-1.5 shadow-xl dark:border-white/10 dark:bg-[#1a1a2e]">
+              {LANGUAGES.map((lang) => (
+                <button
+                  key={lang.code}
+                  type="button"
+                  onClick={() => handleTranslate(lang.code)}
+                  className={`flex w-full items-center justify-between px-4 py-2 text-sm font-medium transition-colors hover:bg-slate-50 dark:hover:bg-white/5 ${
+                    (lang.code === 'en' && !translatedContent)
+                      || (translatedContent?.lang === lang.code && !showOriginal)
+                      ? 'text-purple-600 dark:text-purple-400 font-bold'
+                      : 'text-slate-700 dark:text-slate-200'
+                  }`}
+                >
+                  {lang.label}
+                  {translationCache[lang.code] && (
+                    <span className="h-1.5 w-1.5 rounded-full bg-purple-500" />
+                  )}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
       {expanded && (
