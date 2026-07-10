@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { User, KeyRound, Palette, Bell, Shield, Info } from 'lucide-react';
+import { User, KeyRound, Palette, Bell, Shield, Info, ShieldCheck, Briefcase } from 'lucide-react';
 import Layout from '../components/Layout';
 import ProfileSection from '../components/settings/ProfileSection';
 import AccountSection from '../components/settings/AccountSection';
@@ -7,28 +7,40 @@ import AppearanceSection from '../components/settings/AppearanceSection';
 import NotificationsSection from '../components/settings/NotificationsSection';
 import PrivacySection from '../components/settings/PrivacySection';
 import AboutSection from '../components/settings/AboutSection';
+import ModerationSection from '../components/settings/ModerationSection';
+import HelpersSection from '../components/helpers/HelpersSection';
+import { useAuth } from '../context/AuthContext';
 
-const TABS = [
-  { id: 'profile', label: 'Profile', icon: User },
-  { id: 'account', label: 'Account', icon: KeyRound },
-  { id: 'appearance', label: 'Appearance', icon: Palette },
-  { id: 'notifications', label: 'Notifications', icon: Bell },
-  { id: 'privacy', label: 'Privacy', icon: Shield },
-  { id: 'about', label: 'About', icon: Info },
+const BASE_TABS = [
+  { id: 'profile',       label: 'Profile',       icon: User },
+  { id: 'account',       label: 'Account',        icon: KeyRound },
+  { id: 'appearance',    label: 'Appearance',     icon: Palette },
+  { id: 'notifications', label: 'Notifications',  icon: Bell },
+  { id: 'privacy',       label: 'Privacy',        icon: Shield },
+  { id: 'helpers',       label: 'Helpers',       icon: Briefcase },
+  { id: 'about',         label: 'About',          icon: Info },
+];
+
+const ADMIN_TABS = [
+  { id: 'moderation', label: 'Moderation', icon: ShieldCheck },
 ];
 
 const SECTIONS = {
-  profile: ProfileSection,
-  account: AccountSection,
-  appearance: AppearanceSection,
+  profile:       ProfileSection,
+  account:       AccountSection,
+  appearance:    AppearanceSection,
   notifications: NotificationsSection,
-  privacy: PrivacySection,
-  about: AboutSection,
+  privacy:       PrivacySection,
+  helpers:       HelpersSection,
+  about:         AboutSection,
+  moderation:    ModerationSection,
 };
 
 export default function Settings() {
   const [activeTab, setActiveTab] = useState('profile');
-  const ActiveSection = SECTIONS[activeTab];
+
+  const tabs = [...BASE_TABS, ...ADMIN_TABS];
+  const ActiveSection = SECTIONS[activeTab] || ProfileSection;
 
   return (
     <Layout>
@@ -39,7 +51,7 @@ export default function Settings() {
           <aside className="lg:sticky lg:top-24 lg:self-start">
             <nav className="glass-card overflow-hidden rounded-2xl p-3 shadow-sm border border-slate-200 bg-white/60 dark:border-white/10 dark:bg-[#13131f]/60">
               <div className="flex gap-2 overflow-x-auto pb-1 lg:flex-col lg:overflow-visible lg:pb-0 scrollbar-hide">
-                {TABS.map((tab) => {
+                {tabs.map((tab) => {
                   const Icon = tab.icon;
                   const isActive = activeTab === tab.id;
                   return (

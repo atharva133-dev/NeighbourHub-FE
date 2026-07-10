@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Loader2, CheckCircle2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useAuth } from '../../context/AuthContext';
+import { getApiErrorMessage } from '../../utils/apiError';
 
 export default function LoginForm({ onSwitchToRegister }) {
   const { login } = useAuth();
@@ -26,7 +27,7 @@ export default function LoginForm({ onSwitchToRegister }) {
       toast.success('Welcome back');
       setTimeout(() => navigate('/community'), 900);
     } catch (err) {
-      const message = err.response?.data?.message || 'Login failed';
+      const message = getApiErrorMessage(err, 'Login failed');
       setError(message);
       toast.error(message);
       setShake(true);

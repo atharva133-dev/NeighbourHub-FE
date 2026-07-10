@@ -16,6 +16,8 @@ import Profile from './pages/Profile';
 import NoticeDetail from './pages/NoticeDetail';
 import Settings from './pages/Settings';
 import Community from './pages/Community';
+import Amenities from './pages/Amenities';
+import MyBookings from './pages/MyBookings';
 
 export default function App() {
   return (
@@ -78,6 +80,14 @@ export default function App() {
               <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
               <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
               <Route path="/admin/users" element={<ProtectedRoute><AdminUsers /></ProtectedRoute>} />
+              <Route
+                path="/amenities"
+                element={<ProtectedRoute><Amenities /></ProtectedRoute>}
+              />
+              <Route
+                path="/my-bookings"
+                element={<ProtectedRoute><MyBookings /></ProtectedRoute>}
+              />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
             <Toaster

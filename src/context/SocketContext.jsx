@@ -1,30 +1,41 @@
 import { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { io } from 'socket.io-client';
+import { useAuth } from './AuthContext';
 
 const SocketContext = createContext(null);
 
 const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000';
 
 export function SocketProvider({ children }) {
+  const { user } = useAuth();
   const [socket, setSocket] = useState(null);
   // Map of communityId -> online count
   const [onlineMap, setOnlineMap] = useState({});
 
+  // Only connect after login — avoids WebSocket retry spam on auth pages when backend is down
   useEffect(() => {
-    const instance = io(SOCKET_URL, { transports: ['websocket', 'polling'] });
+    if (!user) {
+      setSocket(null);
+      setOnlineMap({});
+      return undefined;
+    }
+
+    const instance = io(SOCKET_URL, {
+      transports: ['websocket', 'polling'],
+      reconnectionAttempts: 8,
+    });
     setSocket(instance);
 
     instance.on('online:count', (count) => {
-      // The server emits this to a specific room – we track via a room-aware event
-      // We use the communityId stored on the instance at the time of listening
       instance._currentCommunityId &&
         setOnlineMap((prev) => ({ ...prev, [instance._currentCommunityId]: count }));
     });
 
     return () => {
       instance.disconnect();
+      setSocket(null);
     };
-  }, []);
+  }, [user]);
 
   const joinCommunity = useCallback(
     (communityId) => {

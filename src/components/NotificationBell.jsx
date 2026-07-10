@@ -153,12 +153,14 @@ export default function NotificationBell() {
               notifications.map((notification) => (
                 <div
                   key={notification._id}
-                  className={`border-b border-white/10 px-4 py-3 last:border-0 ${
-                    notification.read ? 'bg-transparent' : 'bg-blue-500/10'
+                  className={`border-b border-slate-100 px-4 py-3 last:border-0 dark:border-white/10 ${
+                    notification.read
+                      ? 'bg-transparent'
+                      : 'bg-blue-50 dark:bg-blue-500/10'
                   }`}
                 >
-                  <p className="text-sm text-slate-200">{notification.message}</p>
-                  <p className="mt-1 text-xs text-slate-400">
+                  <p className="text-sm text-slate-700 dark:text-slate-200">{notification.message}</p>
+                  <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">
                     {formatDate(notification.createdAt)}
                   </p>
                 </div>

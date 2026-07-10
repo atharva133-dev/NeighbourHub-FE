@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useAuth } from '../../context/AuthContext';
+import { getApiErrorMessage } from '../../utils/apiError';
 
 function getPasswordStrength(password) {
   if (!password) return { score: 0, label: '', color: '' };
@@ -75,7 +76,7 @@ export default function RegisterForm({ onSwitchToLogin, onRegistered }) {
       toast.success('Account created — check your email for the OTP.');
       if (onRegistered) onRegistered(registeredEmail);
     } catch (err) {
-      const message = err.response?.data?.message || 'Registration failed';
+      const message = getApiErrorMessage(err, 'Registration failed');
       setError(message);
       toast.error(message);
     } finally {

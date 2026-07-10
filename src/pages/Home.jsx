@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { AlertTriangle, Pin, ArrowUp, Users } from 'lucide-react';
+import { AlertTriangle, Pin, ArrowUp, Users, X, FileText, BookOpen } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import api from '../api/axios';
@@ -9,6 +9,7 @@ import Layout from '../components/Layout';
 import NoticeCard from '../components/NoticeCard';
 import NoticeForm from '../components/NoticeForm';
 import { NoticeListSkeleton } from '../components/Skeletons';
+import GuidelinesModal from '../components/GuidelinesModal';
 
 function sortNotices(list) {
   return [...list].sort((a, b) => {
@@ -25,8 +26,11 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [showBackToTop, setShowBackToTop] = useState(false);
+  const [emergencyDismissed, setEmergencyDismissed] = useState(false);
+  const [guidelinesOpen, setGuidelinesOpen] = useState(false);
 
-  // Join / leave the community socket room
+  const onlineUsers = getOnlineCount(activeCommunityId);
+
   useEffect(() => {
     if (!socket || !activeCommunityId) return;
     joinCommunity(activeCommunityId);
@@ -34,10 +38,7 @@ export default function Home() {
   }, [socket, activeCommunityId, joinCommunity, leaveCommunity]);
 
   const fetchNotices = useCallback(async () => {
-    if (!activeCommunityId) {
-      setLoading(false);
-      return;
-    }
+    if (!activeCommunityId) { setLoading(false); return; }
     setLoading(true);
     try {
       const { data } = await api.get(`/notices?communityId=${activeCommunityId}`);
@@ -49,45 +50,31 @@ export default function Home() {
     }
   }, [activeCommunityId]);
 
-  useEffect(() => {
-    fetchNotices();
-  }, [fetchNotices]);
+  useEffect(() => { fetchNotices(); }, [fetchNotices]);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setShowBackToTop(window.scrollY > 400);
-    };
-
+    const handleScroll = () => setShowBackToTop(window.scrollY > 400);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
   useEffect(() => {
     if (!socket) return;
-
     const handleCreated = (notice) => {
       setNotices((prev) => {
         if (prev.some((n) => n._id === notice._id)) return prev;
         return sortNotices([notice, ...prev]);
       });
     };
-
     const handleUpdated = (notice) => {
       setNotices((prev) => sortNotices(prev.map((n) => (n._id === notice._id ? notice : n))));
     };
-
     const handleDeleted = ({ id }) => {
       setNotices((prev) => prev.filter((n) => n._id !== id));
     };
-
     socket.on('notice:created', handleCreated);
     socket.on('notice:updated', handleUpdated);
     socket.on('notice:deleted', handleDeleted);
-
     return () => {
       socket.off('notice:created', handleCreated);
       socket.off('notice:updated', handleUpdated);
@@ -95,7 +82,12 @@ export default function Home() {
     };
   }, [socket]);
 
-  // No community selected – prompt
+  // Reset dismiss when new emergency notices appear
+  useEffect(() => {
+    const hasEmergency = notices.some((n) => n.category === 'Emergency');
+    if (!hasEmergency) setEmergencyDismissed(false);
+  }, [notices]);
+
   if (!activeCommunityId) {
     return (
       <Layout onSearchChange={setSearchQuery}>
@@ -107,11 +99,8 @@ export default function Home() {
           <p className="mt-3 max-w-sm text-base text-slate-600 dark:text-slate-400 leading-relaxed">
             Join or create a community to see and post notices with your neighbours.
           </p>
-          <button
-            type="button"
-            onClick={() => navigate('/community')}
-            className="mt-8 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 px-8 py-3 text-sm font-bold text-white shadow-lg shadow-purple-500/25 transition-all hover:-translate-y-0.5 hover:shadow-purple-500/40"
-          >
+          <button type="button" onClick={() => navigate('/community')}
+            className="mt-8 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 px-8 py-3 text-sm font-bold text-white shadow-lg shadow-purple-500/25 transition-all hover:-translate-y-0.5 hover:shadow-purple-500/40">
             Go to Communities
           </button>
         </div>
@@ -119,33 +108,77 @@ export default function Home() {
     );
   }
 
-  const filtered = notices.filter((notice) => {
-    const matchesSearch =
-      searchQuery === '' ||
-      notice.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      notice.content?.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesSearch;
-  });
+  const filtered = notices.filter((notice) =>
+    searchQuery === '' ||
+    notice.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    notice.content?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const hasEmergencyNotices = notices.some((n) => n.category === 'Emergency');
   const pinnedNotices = notices.filter((n) => n.pinned);
 
   return (
     <Layout onSearchChange={setSearchQuery}>
-      {hasEmergencyNotices && (
-        <div className="mb-8 rounded-2xl border-2 border-red-300 bg-red-50 p-5 shadow-sm animate-pulse dark:border-red-500/50 dark:bg-red-500/10">
+
+      {/* ── Emergency banner (dismissible) ── */}
+      {hasEmergencyNotices && !emergencyDismissed && (
+        <div className="mb-6 rounded-2xl border-2 border-red-300 bg-gradient-to-r from-red-50 to-orange-50 p-4 shadow-sm dark:border-red-500/40 dark:from-red-500/10 dark:to-orange-500/10 animate-fade-in">
           <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-500 shadow-inner">
-              <AlertTriangle className="h-6 w-6 text-white" />
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-red-500 shadow-md shadow-red-500/30">
+              <AlertTriangle className="h-5 w-5 text-white" />
             </div>
-            <div className="flex-1">
-              <p className="text-base font-bold text-red-800 dark:text-red-200">Emergency Alert Active</p>
-              <p className="text-sm text-red-600 dark:text-red-300 mt-0.5">There are emergency notices in your area. Check the Emergency tab for details.</p>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-bold text-red-800 dark:text-red-200">Emergency Alert Active</p>
+              <p className="text-xs text-red-600 dark:text-red-300 mt-0.5">There are emergency notices in your area. Check the Emergency tab for details.</p>
             </div>
+            <button type="button" onClick={() => setEmergencyDismissed(true)}
+              className="shrink-0 rounded-lg p-1.5 text-red-400 transition hover:bg-red-100 hover:text-red-600 dark:hover:bg-red-500/20 dark:hover:text-red-300"
+              aria-label="Dismiss">
+              <X className="h-4 w-4" />
+            </button>
           </div>
         </div>
       )}
 
+      {/* ── Stats bar ── */}
+      {!loading && (
+        <div className="mb-6 flex flex-wrap items-center gap-4 rounded-2xl border border-slate-200/60 bg-white/60 px-5 py-3 backdrop-blur-sm dark:border-white/5 dark:bg-white/3">
+          <div className="flex items-center gap-2 text-sm font-medium text-slate-600 dark:text-slate-300">
+            <FileText className="h-4 w-4 text-purple-500" />
+            <span><span className="font-bold text-slate-900 dark:text-white">{notices.length}</span> Notice{notices.length !== 1 ? 's' : ''}</span>
+          </div>
+          {pinnedNotices.length > 0 && (
+            <>
+              <span className="h-4 w-px bg-slate-200 dark:bg-white/10" />
+              <div className="flex items-center gap-2 text-sm font-medium text-slate-600 dark:text-slate-300">
+                <Pin className="h-4 w-4 text-violet-500" />
+                <span><span className="font-bold text-slate-900 dark:text-white">{pinnedNotices.length}</span> Pinned</span>
+              </div>
+            </>
+          )}
+          <span className="h-4 w-px bg-slate-200 dark:bg-white/10" />
+          {/* Online count */}
+          <div className="flex items-center gap-2 text-sm font-medium text-slate-600 dark:text-slate-300">
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
+            </span>
+            <span><span className="font-bold text-slate-900 dark:text-white">{onlineUsers}</span> Online</span>
+          </div>
+          <span className="h-4 w-px bg-slate-200 dark:bg-white/10" />
+          {/* Guidelines button */}
+          <button
+            type="button"
+            onClick={() => setGuidelinesOpen(true)}
+            className="flex items-center gap-1.5 text-sm font-medium text-slate-600 transition-colors hover:text-purple-600 dark:text-slate-300 dark:hover:text-purple-400"
+          >
+            <BookOpen className="h-4 w-4 text-emerald-500" />
+            <span>Guidelines</span>
+          </button>
+        </div>
+      )}
+
+      {/* ── Pinned notices carousel ── */}
       {pinnedNotices.length > 0 && (
         <div className="mb-8">
           <div className="mb-4 flex items-center gap-2">
@@ -157,8 +190,7 @@ export default function Home() {
               <div key={notice._id} className="flex-shrink-0 w-80 glass-card p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-violet-300 dark:hover:border-violet-400/30">
                 <div className="mb-3 flex items-center gap-2">
                   <span className="inline-flex items-center gap-1 rounded-full bg-violet-100 px-2.5 py-1 text-xs font-semibold text-violet-700 dark:bg-violet-500/15 dark:text-violet-200">
-                    <Pin className="h-3 w-3" />
-                    Pinned
+                    <Pin className="h-3 w-3" />Pinned
                   </span>
                   <span className="rounded-full bg-blue-100 px-2.5 py-1 text-xs font-semibold text-blue-700 dark:bg-blue-500/15 dark:text-blue-200">
                     {notice.category}
@@ -176,28 +208,30 @@ export default function Home() {
         </div>
       )}
 
+      {/* ── Main grid ── */}
       <div className="grid gap-8 lg:grid-cols-[1fr_380px]">
         <div>
           {loading ? (
             <NoticeListSkeleton />
           ) : filtered.length === 0 ? (
-            <div className="glass-card border-dashed border-2 border-slate-200 bg-slate-50 py-20 text-center dark:border-white/10 dark:bg-white/5">
-              <p className="text-slate-500 dark:text-slate-400 font-medium text-lg">No notices yet.</p>
-              <p className="text-slate-400 dark:text-slate-500 mt-1">Be the first to post something here.</p>
+            <div className="glass-card flex flex-col items-center justify-center border-dashed border-2 border-slate-200 bg-slate-50/50 py-20 text-center dark:border-white/10 dark:bg-white/3">
+              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-100 dark:bg-white/5">
+                <FileText className="h-8 w-8 text-slate-400 dark:text-slate-500" />
+              </div>
+              <p className="text-lg font-semibold text-slate-600 dark:text-slate-300">
+                {searchQuery ? 'No notices match your search.' : 'No notices yet.'}
+              </p>
+              <p className="mt-1 text-sm text-slate-400 dark:text-slate-500">
+                {searchQuery ? 'Try different keywords.' : 'Be the first to post something here.'}
+              </p>
             </div>
           ) : (
             <div className="space-y-6">
               {filtered.map((notice, index) => (
-                <div
-                  key={notice._id}
-                  className="animate-fade-in"
-                  style={{ animationDelay: `${index * 50}ms` }}
-                >
+                <div key={notice._id} className="animate-fade-in" style={{ animationDelay: `${index * 40}ms` }}>
                   <NoticeCard
                     notice={notice}
-                    onUpdate={(updated) =>
-                      setNotices((prev) => sortNotices(prev.map((n) => (n._id === updated._id ? updated : n))))
-                    }
+                    onUpdate={(updated) => setNotices((prev) => sortNotices(prev.map((n) => (n._id === updated._id ? updated : n))))}
                     onDelete={(id) => setNotices((prev) => prev.filter((n) => n._id !== id))}
                   />
                 </div>
@@ -218,15 +252,21 @@ export default function Home() {
         </aside>
       </div>
 
+      {/* Back to top */}
       {showBackToTop && (
-        <button
-          type="button"
-          onClick={scrollToTop}
+        <button type="button" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           className="fixed bottom-8 right-8 flex h-14 w-14 items-center justify-center rounded-full bg-slate-900 text-white shadow-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl dark:bg-gradient-to-br dark:from-purple-600 dark:to-blue-600 dark:shadow-purple-500/30 dark:hover:shadow-purple-500/50 z-50"
-          aria-label="Back to top"
-        >
+          aria-label="Back to top">
           <ArrowUp className="h-6 w-6" />
         </button>
+      )}
+
+      {/* Guidelines modal */}
+      {guidelinesOpen && (
+        <GuidelinesModal
+          communityId={activeCommunityId}
+          onClose={() => setGuidelinesOpen(false)}
+        />
       )}
     </Layout>
   );

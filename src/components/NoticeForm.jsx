@@ -5,8 +5,14 @@ import toast from 'react-hot-toast';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
 
-const CATEGORIES = ['General', 'Event', 'Lost & Found', 'Emergency'];
+const CATEGORIES = [
+  { label: 'General',      icon: '📋', color: 'border-blue-300 bg-blue-50 text-blue-700 dark:border-blue-500/40 dark:bg-blue-500/10 dark:text-blue-300',      active: 'border-blue-500 bg-blue-100 text-blue-800 dark:border-blue-400 dark:bg-blue-500/25 dark:text-blue-200' },
+  { label: 'Event',        icon: '🎉', color: 'border-emerald-300 bg-emerald-50 text-emerald-700 dark:border-emerald-500/40 dark:bg-emerald-500/10 dark:text-emerald-300', active: 'border-emerald-500 bg-emerald-100 text-emerald-800 dark:border-emerald-400 dark:bg-emerald-500/25 dark:text-emerald-200' },
+  { label: 'Lost & Found', icon: '🔍', color: 'border-amber-300 bg-amber-50 text-amber-700 dark:border-amber-500/40 dark:bg-amber-500/10 dark:text-amber-300',   active: 'border-amber-500 bg-amber-100 text-amber-800 dark:border-amber-400 dark:bg-amber-500/25 dark:text-amber-200' },
+  { label: 'Emergency',    icon: '🚨', color: 'border-red-300 bg-red-50 text-red-700 dark:border-red-500/40 dark:bg-red-500/10 dark:text-red-300',             active: 'border-red-500 bg-red-100 text-red-800 dark:border-red-400 dark:bg-red-500/25 dark:text-red-200' },
+];
 const PRIORITIES = ['Low', 'Medium', 'High', 'Urgent'];
+const MAX_CONTENT = 500;
 
 export default function NoticeForm({ onCreated, defaultCategory }) {
   const { activeCommunityId } = useAuth();
@@ -22,59 +28,39 @@ export default function NoticeForm({ onCreated, defaultCategory }) {
   const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef(null);
 
-  // AI states
-  const [aiLoading, setAiLoading] = useState(null); // 'suggest' | 'improve' | 'generate'
+  const [aiLoading, setAiLoading] = useState(null);
   const [generatePrompt, setGeneratePrompt] = useState('');
   const [showGenerateInput, setShowGenerateInput] = useState(false);
 
-  // ── File helpers ─────────────────────────────────────────────────────────
   const handleFileSelect = (file) => {
     if (file && file.type.startsWith('image/')) {
-      if (file.size > 5 * 1024 * 1024) {
-        toast.error('File size must be less than 5MB');
-        return;
-      }
+      if (file.size > 5 * 1024 * 1024) { toast.error('File size must be less than 5MB'); return; }
       setImageFile(file);
       setImagePreview(URL.createObjectURL(file));
     }
   };
 
   const handleDrag = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
+    e.preventDefault(); e.stopPropagation();
     if (e.type === 'dragenter' || e.type === 'dragover') setDragActive(true);
     else if (e.type === 'dragleave') setDragActive(false);
   };
 
   const handleDrop = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
+    e.preventDefault(); e.stopPropagation();
     setDragActive(false);
     if (e.dataTransfer.files?.[0]) handleFileSelect(e.dataTransfer.files[0]);
   };
 
-  const handleImageChange = (e) => {
-    if (e.target.files?.[0]) handleFileSelect(e.target.files[0]);
-  };
-
   const removeImage = () => {
-    setImageFile(null);
-    setImagePreview(null);
+    setImageFile(null); setImagePreview(null);
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
-  // ── AI helpers ───────────────────────────────────────────────────────────
   const callAI = async (mode, extra = {}) => {
     setAiLoading(mode);
     try {
-      const { data } = await api.post('/ai/notice-assist', {
-        mode,
-        title,
-        content,
-        category,
-        ...extra,
-      });
-
+      const { data } = await api.post('/ai/notice-assist', { mode, title, content, category, ...extra });
       if (mode === 'generate') {
         if (data.title) setTitle(data.title);
         if (data.content) setContent(data.content);
@@ -90,33 +76,18 @@ export default function NoticeForm({ onCreated, defaultCategory }) {
     }
   };
 
-  const handleSuggest = () => {
-    if (!title.trim()) { toast.error('Enter a title first so AI can suggest details'); return; }
-    callAI('suggest');
-  };
-
-  const handleImprove = () => {
-    if (!content.trim()) { toast.error('Write some content first for AI to improve'); return; }
-    callAI('improve');
-  };
-
+  const handleSuggest  = () => { if (!title.trim()) { toast.error('Enter a title first'); return; } callAI('suggest'); };
+  const handleImprove  = () => { if (!content.trim()) { toast.error('Write some content first'); return; } callAI('improve'); };
   const handleGenerate = () => {
-    if (!generatePrompt.trim()) { toast.error('Enter a short description for AI to generate from'); return; }
+    if (!generatePrompt.trim()) { toast.error('Enter a short description'); return; }
     callAI('generate', { prompt: generatePrompt });
-    setShowGenerateInput(false);
-    setGeneratePrompt('');
+    setShowGenerateInput(false); setGeneratePrompt('');
   };
 
-  // ── Submit ───────────────────────────────────────────────────────────────
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!activeCommunityId) {
-      toast.error('Please select a community first');
-      navigate('/community');
-      return;
-    }
-    setError('');
-    setLoading(true);
+    if (!activeCommunityId) { toast.error('Please select a community first'); navigate('/community'); return; }
+    setError(''); setLoading(true);
     try {
       const formData = new FormData();
       formData.append('title', title);
@@ -126,179 +97,132 @@ export default function NoticeForm({ onCreated, defaultCategory }) {
       formData.append('communityId', activeCommunityId);
       if (imageFile) formData.append('image', imageFile);
 
-      const { data } = await api.post('/notices', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
+      const { data } = await api.post('/notices', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
 
-      setTitle('');
-      setContent('');
-      setCategory('General');
-      setPriority('Medium');
-      setImageFile(null);
-      setImagePreview(null);
+      setTitle(''); setContent(''); setCategory('General'); setPriority('Medium');
+      setImageFile(null); setImagePreview(null);
       if (fileInputRef.current) fileInputRef.current.value = '';
-
       onCreated?.(data);
       toast.success(category === 'Emergency' ? 'Emergency notice posted' : 'Notice posted');
     } catch (err) {
       const message = err.response?.data?.message || 'Failed to post notice';
-      setError(message);
-      toast.error(message);
+      setError(message); toast.error(message);
     } finally {
       setLoading(false);
     }
   };
 
-  // ── Render ───────────────────────────────────────────────────────────────
+  const contentCharsLeft = MAX_CONTENT - content.length;
+
   return (
-    <form onSubmit={handleSubmit} className="glass-card p-5 lg:p-6 relative z-0">
+    <form onSubmit={handleSubmit} className="glass-card overflow-hidden relative z-0">
       {/* Header */}
-      <div className="mb-5 flex items-center gap-4">
-        <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-blue-500 text-white shadow-lg shadow-purple-500/20">
-          <Megaphone className="h-6 w-6" />
+      <div className="flex items-center gap-3 border-b border-slate-100 dark:border-white/5 px-5 py-4">
+        <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-blue-500 text-white shadow-md shadow-purple-500/20">
+          <Megaphone className="h-4 w-4" />
         </span>
         <div>
-          <h2 className="text-xl font-bold text-slate-900 dark:text-white">Post a Notice</h2>
-          <p className="text-sm text-slate-500 dark:text-slate-400">Share updates with your neighbours.</p>
+          <h2 className="text-base font-bold text-slate-900 dark:text-white leading-tight">Post a Notice</h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400">Share updates with your neighbours</p>
         </div>
       </div>
 
-      {error && (
-        <div className="mb-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600 dark:border-red-400/20 dark:bg-red-500/10 dark:text-red-200">
-          {error}
-        </div>
-      )}
+      <div className="p-5 lg:p-6 space-y-5">
+        {error && (
+          <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600 dark:border-red-400/20 dark:bg-red-500/10 dark:text-red-200">
+            {error}
+          </div>
+        )}
 
-      <div className="space-y-5">
         {/* Title */}
         <div>
-          <label htmlFor="title" className="mb-1.5 block text-sm font-semibold text-slate-700 dark:text-slate-200">
-            Title
-          </label>
-          <input
-            id="title"
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
-            placeholder="What's happening?"
-            className="glass-input w-full"
-          />
+          <label htmlFor="title" className="mb-1.5 block text-sm font-semibold text-slate-700 dark:text-slate-200">Title</label>
+          <input id="title" type="text" value={title} onChange={(e) => setTitle(e.target.value)}
+            required placeholder="What's happening?" className="glass-input w-full" />
         </div>
 
-        {/* Category + Priority */}
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-          <div>
-            <label htmlFor="category" className="mb-1.5 block text-sm font-semibold text-slate-700 dark:text-slate-200">
-              Category
-            </label>
-            <select id="category" value={category} onChange={(e) => setCategory(e.target.value)} className="glass-input w-full">
-              {CATEGORIES.map((cat) => <option key={cat} value={cat}>{cat}</option>)}
-            </select>
-          </div>
-          <div>
-            <label htmlFor="priority" className="mb-1.5 block text-sm font-semibold text-slate-700 dark:text-slate-200">
-              Priority
-            </label>
-            <select id="priority" value={priority} onChange={(e) => setPriority(e.target.value)} className="glass-input w-full">
-              {PRIORITIES.map((level) => <option key={level} value={level}>{level}</option>)}
-            </select>
+        {/* Category chips */}
+        <div>
+          <label className="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-200">Category</label>
+          <div className="flex flex-wrap gap-2">
+            {CATEGORIES.map((cat) => (
+              <button key={cat.label} type="button" onClick={() => {
+                  setCategory(cat.label);
+                  if (cat.label === 'Emergency') setPriority('Urgent');
+                  else if (priority === 'Urgent') setPriority('Medium');
+                }}
+                className={`inline-flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-bold transition-all duration-200 hover:-translate-y-0.5 ${
+                  category === cat.label ? cat.active + ' shadow-sm' : cat.color
+                }`}>
+                <span>{cat.icon}</span>
+                {cat.label}
+              </button>
+            ))}
           </div>
         </div>
 
-        {/* Details with AI toolbar */}
+        {/* Priority */}
+        <div>
+          <label htmlFor="priority" className="mb-1.5 block text-sm font-semibold text-slate-700 dark:text-slate-200">Priority</label>
+          <select id="priority" value={priority} onChange={(e) => setPriority(e.target.value)} className="glass-input w-full">
+            {PRIORITIES.map((level) => <option key={level} value={level}>{level}</option>)}
+          </select>
+        </div>
+
+        {/* Details with AI toolbar + char counter */}
         <div>
           <div className="mb-1.5 flex items-center justify-between gap-2 flex-wrap">
-            <label htmlFor="content" className="text-sm font-semibold text-slate-700 dark:text-slate-200">
-              Details
-            </label>
-
-            {/* AI Toolbar */}
+            <label htmlFor="content" className="text-sm font-semibold text-slate-700 dark:text-slate-200">Details</label>
             <div className="flex items-center gap-1.5">
-              {/* Suggest */}
-              <button
-                type="button"
-                onClick={handleSuggest}
-                disabled={!!aiLoading}
-                title="AI Suggest: fills Details from your Title"
-                className="flex items-center gap-1 rounded-lg border border-purple-200 bg-purple-50 px-2.5 py-1 text-xs font-semibold text-purple-700 transition-all hover:bg-purple-100 hover:border-purple-300 disabled:opacity-50 dark:border-purple-500/30 dark:bg-purple-500/10 dark:text-purple-300 dark:hover:bg-purple-500/20"
-              >
-                {aiLoading === 'suggest'
-                  ? <Loader2 className="h-3 w-3 animate-spin" />
-                  : <Sparkles className="h-3 w-3" />}
+              <button type="button" onClick={handleSuggest} disabled={!!aiLoading} title="AI Suggest"
+                className="flex items-center gap-1 rounded-lg border border-purple-200 bg-purple-50 px-2.5 py-1 text-xs font-semibold text-purple-700 transition-all hover:bg-purple-100 disabled:opacity-50 dark:border-purple-500/30 dark:bg-purple-500/10 dark:text-purple-300 dark:hover:bg-purple-500/20">
+                {aiLoading === 'suggest' ? <Loader2 className="h-3 w-3 animate-spin" /> : <Sparkles className="h-3 w-3" />}
                 Suggest
               </button>
-
-              {/* Improve */}
-              <button
-                type="button"
-                onClick={handleImprove}
-                disabled={!!aiLoading}
-                title="AI Improve: polishes your existing Details"
-                className="flex items-center gap-1 rounded-lg border border-blue-200 bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-700 transition-all hover:bg-blue-100 hover:border-blue-300 disabled:opacity-50 dark:border-blue-500/30 dark:bg-blue-500/10 dark:text-blue-300 dark:hover:bg-blue-500/20"
-              >
-                {aiLoading === 'improve'
-                  ? <Loader2 className="h-3 w-3 animate-spin" />
-                  : <Wand2 className="h-3 w-3" />}
+              <button type="button" onClick={handleImprove} disabled={!!aiLoading} title="AI Improve"
+                className="flex items-center gap-1 rounded-lg border border-blue-200 bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-700 transition-all hover:bg-blue-100 disabled:opacity-50 dark:border-blue-500/30 dark:bg-blue-500/10 dark:text-blue-300 dark:hover:bg-blue-500/20">
+                {aiLoading === 'improve' ? <Loader2 className="h-3 w-3 animate-spin" /> : <Wand2 className="h-3 w-3" />}
                 Improve
               </button>
-
-              {/* Generate */}
-              <button
-                type="button"
-                onClick={() => setShowGenerateInput((v) => !v)}
-                disabled={!!aiLoading}
-                title="AI Generate: creates Title + Details from a short prompt"
-                className="flex items-center gap-1 rounded-lg border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 transition-all hover:bg-emerald-100 hover:border-emerald-300 disabled:opacity-50 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-300 dark:hover:bg-emerald-500/20"
-              >
-                {aiLoading === 'generate'
-                  ? <Loader2 className="h-3 w-3 animate-spin" />
-                  : <Bot className="h-3 w-3" />}
+              <button type="button" onClick={() => setShowGenerateInput((v) => !v)} disabled={!!aiLoading} title="AI Generate"
+                className="flex items-center gap-1 rounded-lg border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 transition-all hover:bg-emerald-100 disabled:opacity-50 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-300 dark:hover:bg-emerald-500/20">
+                {aiLoading === 'generate' ? <Loader2 className="h-3 w-3 animate-spin" /> : <Bot className="h-3 w-3" />}
                 Generate
               </button>
             </div>
           </div>
 
-          {/* Generate prompt input (shown when Generate is toggled) */}
           {showGenerateInput && (
             <div className="mb-2 flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 p-2.5 dark:border-emerald-500/20 dark:bg-emerald-500/10">
               <Bot className="h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
-              <input
-                type="text"
-                value={generatePrompt}
-                onChange={(e) => setGeneratePrompt(e.target.value)}
+              <input type="text" value={generatePrompt} onChange={(e) => setGeneratePrompt(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleGenerate())}
                 placeholder="Describe your notice in a few words…"
-                className="flex-1 bg-transparent text-sm text-slate-800 outline-none placeholder-slate-400 dark:text-white dark:placeholder-slate-500"
-                autoFocus
-              />
-              <button
-                type="button"
-                onClick={handleGenerate}
-                disabled={aiLoading === 'generate'}
-                className="flex items-center gap-1 rounded-lg bg-emerald-600 px-3 py-1 text-xs font-bold text-white transition hover:bg-emerald-700 disabled:opacity-60"
-              >
+                className="flex-1 bg-transparent text-sm text-slate-800 outline-none placeholder-slate-400 dark:text-white dark:placeholder-slate-500" autoFocus />
+              <button type="button" onClick={handleGenerate} disabled={aiLoading === 'generate'}
+                className="flex items-center gap-1 rounded-lg bg-emerald-600 px-3 py-1 text-xs font-bold text-white transition hover:bg-emerald-700 disabled:opacity-60">
                 {aiLoading === 'generate' ? <Loader2 className="h-3 w-3 animate-spin" /> : 'Go'}
               </button>
-              <button
-                type="button"
-                onClick={() => { setShowGenerateInput(false); setGeneratePrompt(''); }}
-                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
-              >
+              <button type="button" onClick={() => { setShowGenerateInput(false); setGeneratePrompt(''); }}
+                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
                 <X className="h-4 w-4" />
               </button>
             </div>
           )}
 
-          <textarea
-            id="content"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            required
-            rows={4}
-            placeholder="Share the details with your neighbours…"
-            className="glass-input w-full resize-none"
-          />
+          <textarea id="content" value={content} onChange={(e) => setContent(e.target.value.slice(0, MAX_CONTENT))}
+            required rows={4} placeholder="Share the details with your neighbours…" className="glass-input w-full resize-none" />
+
+          {/* Character counter */}
+          <div className="mt-1 flex justify-end">
+            <span className={`text-xs font-medium tabular-nums ${
+              contentCharsLeft <= 50 ? 'text-red-500 dark:text-red-400'
+              : contentCharsLeft <= 100 ? 'text-amber-500 dark:text-amber-400'
+              : 'text-slate-400 dark:text-slate-500'
+            }`}>
+              {content.length} / {MAX_CONTENT}
+            </span>
+          </div>
         </div>
 
         {/* Media upload */}
@@ -306,27 +230,18 @@ export default function NoticeForm({ onCreated, defaultCategory }) {
           <label className="mb-1.5 block text-sm font-semibold text-slate-700 dark:text-slate-200">
             Media <span className="font-normal text-slate-400">(Optional)</span>
           </label>
-          <div
-            className={`relative cursor-pointer rounded-xl border-2 border-dashed transition-all duration-300 ${
-              dragActive
-                ? 'border-purple-400 bg-purple-50 dark:border-purple-500/50 dark:bg-purple-500/10'
-                : 'border-slate-200 bg-slate-50 hover:border-purple-300 hover:bg-white dark:border-white/10 dark:bg-transparent dark:hover:border-white/20 dark:hover:bg-white/5'
-            }`}
-            onDragEnter={handleDrag}
-            onDragLeave={handleDrag}
-            onDragOver={handleDrag}
-            onDrop={handleDrop}
-            onClick={() => fileInputRef.current?.click()}
-          >
-            <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
+          <div className={`relative cursor-pointer rounded-xl border-2 border-dashed transition-all duration-300 ${
+            dragActive ? 'border-purple-400 bg-purple-50 dark:border-purple-500/50 dark:bg-purple-500/10'
+            : 'border-slate-200 bg-slate-50 hover:border-purple-300 hover:bg-white dark:border-white/10 dark:bg-transparent dark:hover:border-white/20 dark:hover:bg-white/5'
+          }`}
+            onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}
+            onClick={() => fileInputRef.current?.click()}>
+            <input ref={fileInputRef} type="file" accept="image/*" onChange={(e) => { if (e.target.files?.[0]) handleFileSelect(e.target.files[0]); }} className="hidden" />
             {imagePreview ? (
               <div className="relative p-2">
                 <img src={imagePreview} alt="Preview" className="h-48 w-full rounded-lg object-cover shadow-sm" />
-                <button
-                  type="button"
-                  onClick={(e) => { e.stopPropagation(); removeImage(); }}
-                  className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-slate-900/60 text-white backdrop-blur-sm transition hover:bg-slate-900/80"
-                >
+                <button type="button" onClick={(e) => { e.stopPropagation(); removeImage(); }}
+                  className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-slate-900/60 text-white backdrop-blur-sm transition hover:bg-slate-900/80">
                   <X className="h-4 w-4" />
                 </button>
                 <div className="absolute bottom-4 left-4 rounded-lg bg-slate-900/60 px-3 py-1.5 text-xs font-medium text-white backdrop-blur-sm">
@@ -334,23 +249,20 @@ export default function NoticeForm({ onCreated, defaultCategory }) {
                 </div>
               </div>
             ) : (
-              <div className="flex flex-col items-center justify-center py-10">
-                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-white shadow-sm ring-1 ring-slate-100 dark:bg-white/5 dark:ring-white/10">
-                  <Image className="h-6 w-6 text-purple-500 dark:text-purple-400" />
+              <div className="flex flex-col items-center justify-center py-8">
+                <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-sm ring-1 ring-slate-100 dark:bg-white/5 dark:ring-white/10">
+                  <Image className="h-5 w-5 text-purple-500 dark:text-purple-400" />
                 </div>
-                <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">Click to upload or drag and drop</p>
-                <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">PNG, JPG, GIF up to 5MB</p>
+                <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">Click or drag to upload</p>
+                <p className="mt-0.5 text-xs text-slate-400">PNG, JPG, GIF · max 5 MB</p>
               </div>
             )}
           </div>
         </div>
 
         {/* Submit */}
-        <button
-          type="submit"
-          disabled={loading}
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 py-3 text-sm font-bold text-white shadow-lg shadow-purple-500/25 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-purple-500/40 disabled:opacity-60 disabled:hover:translate-y-0"
-        >
+        <button type="submit" disabled={loading}
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 py-3 text-sm font-bold text-white shadow-lg shadow-purple-500/25 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-purple-500/40 disabled:opacity-60 disabled:hover:translate-y-0">
           <Send className="h-4 w-4" />
           {loading ? 'Posting…' : 'Post Notice'}
         </button>
