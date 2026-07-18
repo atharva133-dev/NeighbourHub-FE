@@ -273,15 +273,6 @@ export default function LoginNew({ initialMode = 'login' }) {
                 </button>
               </form>
 
-              <div className="divider">or</div>
-
-              <button 
-                className="btn-code"
-                onClick={() => navigate('/register')}
-              >
-                🔑 Join with a 6-digit code
-              </button>
-
               <p className="switch-line">
                 First time here? <a href="#" onClick={(e) => { e.preventDefault(); setShowSignup(true); }}>Create your account</a>
               </p>
