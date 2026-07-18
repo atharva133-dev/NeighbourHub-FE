@@ -44,10 +44,10 @@ const socialLinks = [
 
 export default function Footer() {
   return (
-    <footer className="bg-[#050816] text-white pt-20 pb-10 border-t border-slate-900">
+    <footer className="pt-20 pb-10 border-t" style={{ background: '#FCFBF6', borderColor: 'rgba(32,38,31,0.12)' }}>
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 pb-16 border-b border-slate-900">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 pb-16 border-b" style={{ borderColor: 'rgba(32,38,31,0.12)' }}>
           
           <div className="lg:col-span-2 flex flex-col gap-6">
             <Link to="/" className="flex items-center gap-2.5">
@@ -58,19 +58,22 @@ export default function Footer() {
                   className="w-full h-full object-contain"
                 />
               </div>
-              <span className="text-2xl font-extrabold tracking-tight text-[#FCFBF6]">
+              <span className="text-2xl font-extrabold tracking-tight" style={{ color: '#20261F' }}>
                 Neighbour<span className="bg-gradient-to-r from-[#6E8F73] via-[#C97B5A] to-[#A8442F] bg-clip-text text-transparent">Hub</span>
               </span>
             </Link>
-            <p className="text-sm leading-relaxed text-[rgba(252,251,246,0.7)] max-w-sm">
+            <p className="text-sm leading-relaxed max-w-sm" style={{ color: 'rgba(32,38,31,0.7)' }}>
               The real-time community platform for buildings, colleges, and organizations. Share updates, manage amenities, and stay connected instantly.
             </p>
-            <div className="flex gap-4 text-[rgba(252,251,246,0.7)]">
+            <div className="flex gap-4" style={{ color: 'rgba(32,38,31,0.7)' }}>
               {socialLinks.map((item, idx) => (
                 <a
                   key={idx}
                   href={item.href}
-                  className="p-2 rounded-lg bg-[rgba(32,38,31,0.5)] hover:bg-[#C97B5A] hover:text-white transition-all duration-200"
+                  className="p-2 rounded-lg transition-all duration-200"
+                  style={{ background: 'rgba(32,38,31,0.05)' }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = '#C97B5A'; e.currentTarget.style.color = '#fff'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(32,38,31,0.05)'; e.currentTarget.style.color = 'rgba(32,38,31,0.7)'; }}
                 >
                   {item.icon}
                 </a>
@@ -79,47 +82,55 @@ export default function Footer() {
           </div>
 
           <div className="flex flex-col gap-4">
-            <h3 className="font-bold text-sm uppercase tracking-wider text-[rgba(252,251,246,0.9)]">Product</h3>
-            <ul className="space-y-2.5 text-sm text-[rgba(252,251,246,0.7)]">
-              <li><a href="#features" className="hover:text-[#FCFBF6] transition-colors">Features</a></li>
-              <li><a href="#how-it-works" className="hover:text-[#FCFBF6] transition-colors">How It Works</a></li>
-              <li><a href="#pricing" className="hover:text-[#FCFBF6] transition-colors">Pricing</a></li>
-              <li><a href="#" className="hover:text-[#FCFBF6] transition-colors">Changelog</a></li>
+            <h3 className="font-bold text-sm uppercase tracking-wider" style={{ color: '#20261F' }}>Product</h3>
+            <ul className="space-y-2.5 text-sm" style={{ color: 'rgba(32,38,31,0.7)' }}>
+              <li><a href="#features" className="hover:text-[#20261F] transition-colors">Features</a></li>
+              <li><a href="#how-it-works" className="hover:text-[#20261F] transition-colors">How It Works</a></li>
+              <li><a href="#pricing" className="hover:text-[#20261F] transition-colors">Pricing</a></li>
+              <li><a href="#" className="hover:text-[#20261F] transition-colors">Changelog</a></li>
             </ul>
           </div>
 
           <div className="flex flex-col gap-4">
-            <h3 className="font-bold text-sm uppercase tracking-wider text-[rgba(252,251,246,0.9)]">For Communities</h3>
-            <ul className="space-y-2.5 text-sm text-[rgba(252,251,246,0.7)]">
-              <li><a href="#cta" className="hover:text-[#FCFBF6] transition-colors">Building Societies</a></li>
-              <li><a href="#cta" className="hover:text-[#FCFBF6] transition-colors">Colleges & Schools</a></li>
-              <li><a href="#cta" className="hover:text-[#FCFBF6] transition-colors">Organizations</a></li>
-              <li><a href="#cta" className="hover:text-[#FCFBF6] transition-colors">Create Community</a></li>
+            <h3 className="font-bold text-sm uppercase tracking-wider" style={{ color: '#20261F' }}>For Communities</h3>
+            <ul className="space-y-2.5 text-sm" style={{ color: 'rgba(32,38,31,0.7)' }}>
+              <li><a href="#cta" className="hover:text-[#20261F] transition-colors">Building Societies</a></li>
+              <li><a href="#cta" className="hover:text-[#20261F] transition-colors">Colleges & Schools</a></li>
+              <li><a href="#cta" className="hover:text-[#20261F] transition-colors">Organizations</a></li>
+              <li><a href="#cta" className="hover:text-[#20261F] transition-colors">Create Community</a></li>
             </ul>
           </div>
 
           <div className="flex flex-col gap-4">
-            <h3 className="font-bold text-sm uppercase tracking-wider text-[rgba(252,251,246,0.9)]">Resources</h3>
-            <ul className="space-y-2.5 text-sm text-[rgba(252,251,246,0.7)]">
-              <li><a href="#" className="hover:text-[#FCFBF6] transition-colors">Help Center</a></li>
-              <li><a href="#" className="hover:text-[#FCFBF6] transition-colors">Blog</a></li>
-              <li><a href="#" className="hover:text-[#FCFBF6] transition-colors">Privacy Policy</a></li>
-              <li><a href="#" className="hover:text-[#FCFBF6] transition-colors">Terms of Service</a></li>
+            <h3 className="font-bold text-sm uppercase tracking-wider" style={{ color: '#20261F' }}>Resources</h3>
+            <ul className="space-y-2.5 text-sm" style={{ color: 'rgba(32,38,31,0.7)' }}>
+              <li><a href="#" className="hover:text-[#20261F] transition-colors">Help Center</a></li>
+              <li><a href="#" className="hover:text-[#20261F] transition-colors">Blog</a></li>
+              <li><a href="#" className="hover:text-[#20261F] transition-colors">Privacy Policy</a></li>
+              <li><a href="#" className="hover:text-[#20261F] transition-colors">Terms of Service</a></li>
             </ul>
           </div>
 
         </div>
 
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-6 pt-10 text-xs text-[rgba(252,251,246,0.7)]">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-6 pt-10 text-xs" style={{ color: 'rgba(32,38,31,0.7)' }}>
           <p>© {new Date().getFullYear()} NeighbourHub. All rights reserved.</p>
           
           <div className="flex items-center gap-2 w-full max-w-sm">
             <input
               type="email"
               placeholder="Enter your email"
-              className="flex-1 bg-[rgba(32,38,31,0.5)] border border-[rgba(32,38,31,0.3)] rounded-lg px-4 py-2 text-white placeholder-[rgba(252,251,246,0.5)] focus:outline-none focus:border-[#C97B5A] transition-colors text-xs"
+              className="flex-1 rounded-lg px-4 py-2 text-xs outline-none transition-all"
+              style={{ background: 'rgba(32,38,31,0.05)', border: '1px solid rgba(32,38,31,0.12)', color: '#20261F', placeholder: 'rgba(32,38,31,0.5)' }}
+              onFocus={(e) => { e.currentTarget.style.borderColor = '#C97B5A'; e.currentTarget.style.background = '#F6F5EF'; }}
+              onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(32,38,31,0.12)'; e.currentTarget.style.background = 'rgba(32,38,31,0.05)'; }}
             />
-            <button className="rounded-lg bg-[#C97B5A] hover:bg-[#A85C3F] text-white font-bold px-4 py-2 flex items-center gap-1 transition-colors">
+            <button 
+              className="rounded-lg font-bold px-4 py-2 flex items-center gap-1 transition-all text-white"
+              style={{ background: '#C97B5A' }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = '#A85C3F'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = '#C97B5A'; }}
+            >
               <span>Subscribe</span>
               <ArrowRight className="h-3.5 w-3.5" />
             </button>

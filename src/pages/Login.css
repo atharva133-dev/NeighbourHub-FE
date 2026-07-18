@@ -545,6 +545,88 @@
   }
 }
 
+@media (max-width: 640px) {
+  .story {
+    padding: 32px 20px 24px;
+  }
+  
+  .story h1 {
+    font-size: 1.8rem;
+  }
+  
+  .story p.lead {
+    font-size: 0.85rem;
+  }
+  
+  .feed-window {
+    min-height: 140px;
+  }
+  
+  .feed-item {
+    padding: 12px 14px;
+  }
+  
+  .story-foot {
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  
+  .foot-stat b {
+    font-size: 1.1rem;
+  }
+  
+  .authwrap {
+    padding: 24px 16px;
+  }
+  
+  .auth-card {
+    max-width: 100%;
+    padding: 28px 20px 28px;
+  }
+  
+  .auth-card-front,
+  .auth-card-back {
+    padding: 28px 20px 28px;
+  }
+  
+  .auth-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+    margin-bottom: 18px;
+  }
+  
+  .auth-card h2 {
+    font-size: 1.3rem;
+  }
+  
+  .auth-sub {
+    font-size: 0.8rem;
+    margin-bottom: 20px;
+  }
+  
+  .field input {
+    padding: 11px 14px;
+    font-size: 0.85rem;
+  }
+  
+  .btn-signin {
+    padding: 12px 0;
+    font-size: 0.9rem;
+  }
+  
+  .btn-code {
+    padding: 11px 0;
+    font-size: 0.85rem;
+  }
+  
+  .switch-line {
+    font-size: 0.8rem;
+    margin-top: 20px;
+    padding-bottom: 8px;
+  }
+}
+
 /* ============ OTP MODAL ============ */
 .otp-modal-overlay {
   position: fixed;
