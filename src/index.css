@@ -324,15 +324,17 @@ html.dark .glass-input {
 }
 
 /* ── Toast notification positioning ── */
-.Toastify {
-  position: fixed !important;
-  top: 24px !important;
-  left: 50% !important;
-  transform: translateX(-50%) !important;
-  right: auto !important;
-}
+@media (min-width: 640px) {
+  .Toastify {
+    position: fixed !important;
+    top: 24px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    right: auto !important;
+  }
 
-.Toastify__toast-container {
-  position: static !important;
-  transform: none !important;
+  .Toastify__toast-container {
+    position: static !important;
+    transform: none !important;
+  }
 }

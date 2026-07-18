@@ -739,3 +739,25 @@
   color: #1c1a17;
   text-decoration: underline;
 }
+
+/* Mobile responsive fix for OTP modal */
+@media (max-width: 640px) {
+  .otp-modal-overlay {
+    z-index: 9999;
+    padding: 16px;
+  }
+  
+  .otp-modal {
+    width: 100%;
+    max-width: 100%;
+    padding: 32px 24px 28px;
+  }
+  
+  .otp-input-row {
+    gap: 8px;
+  }
+  
+  .otp-box {
+    font-size: 20px;
+  }
+}

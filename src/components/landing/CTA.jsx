@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Play, MapPin } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function CTA() {
   return (
@@ -31,13 +32,13 @@ export default function CTA() {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 shrink-0 w-full lg:w-auto justify-center z-10">
-            <a
-              href="#cta"
+            <Link
+              to="/login"
               className="inline-flex items-center justify-center rounded-xl bg-white px-6 py-4 text-[15px] font-bold text-[#C97B5A] shadow-lg hover:bg-[#FCFBF6] transition-all duration-200 hover:scale-[1.02]"
             >
               Get Started for Free
               <ArrowRight className="h-4 w-4 ml-2" />
-            </a>
+            </Link>
             <a
               href="#showcase"
               className="inline-flex items-center justify-center rounded-xl border border-white/30 bg-white/10 px-6 py-4 text-[15px] font-bold text-white hover:bg-white/20 backdrop-blur-md transition-all duration-200 hover:scale-[1.02]"
