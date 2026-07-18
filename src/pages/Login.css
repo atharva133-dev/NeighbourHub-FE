@@ -642,7 +642,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 99999;
   animation: fadeIn 0.3s ease;
 }
 
@@ -828,7 +828,7 @@
 /* Mobile responsive fix for OTP modal */
 @media (max-width: 640px) {
   .otp-modal-overlay {
-    z-index: 9999;
+    z-index: 99999;
     padding: 16px;
   }
   
