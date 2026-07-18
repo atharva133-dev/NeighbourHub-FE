@@ -7,7 +7,7 @@ import Layout from '../components/Layout';
 import { useAuth } from '../context/AuthContext';
 
 export default function AdminUsers() {
-  const { isAdmin, user: currentUser } = useAuth();
+  const { isAdmin, user: currentUser, activeCommunityId } = useAuth();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -15,13 +15,18 @@ export default function AdminUsers() {
     setLoading(true);
     try {
       const { data } = await api.get('/auth/users');
-      setUsers(data);
+      // Filter users who have joined this community
+      const communityMembers = data.filter(u => {
+        const userCommunityId = typeof u.communityId === 'object' ? u.communityId?._id || u.communityId?.id : u.communityId;
+        return userCommunityId === activeCommunityId;
+      });
+      setUsers(communityMembers);
     } catch (err) {
       toast.error(err.response?.data?.message || 'Failed to load users');
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [activeCommunityId]);
 
   useEffect(() => {
     fetchUsers();
@@ -53,64 +58,68 @@ export default function AdminUsers() {
 
   return (
     <Layout>
-      <div className="mb-6 glass-card p-5">
-        <p className="text-xs font-semibold uppercase text-[#6E8F73]">Admin</p>
-        <h2 className="mt-2 text-2xl font-bold text-white sm:text-3xl">User Management</h2>
-        <p className="mt-2 max-w-2xl text-sm text-slate-300">
+      <div className="mb-6 p-5 rounded-2xl border" style={{ borderColor: 'rgba(32,38,31,0.12)', background: '#FCFBF6' }}>
+        <p className="text-xs font-semibold uppercase" style={{ color: '#6E8F73' }}>Admin</p>
+        <h2 className="mt-2 text-2xl font-bold sm:text-3xl" style={{ color: '#20261F' }}>User Management</h2>
+        <p className="mt-2 max-w-2xl text-sm" style={{ color: 'rgba(32,38,31,0.7)' }}>
           View all registered users, manage roles, and remove accounts.
         </p>
       </div>
 
-      <div className="glass-card overflow-hidden">
+      <div className="rounded-2xl border overflow-hidden" style={{ borderColor: 'rgba(32,38,31,0.12)', background: '#FCFBF6' }}>
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
             <thead>
-              <tr className="border-b border-white/10 bg-white/5">
-                <th className="px-6 py-3 font-semibold text-slate-200">User</th>
-                <th className="px-6 py-3 font-semibold text-slate-200">Email</th>
-                <th className="px-6 py-3 font-semibold text-slate-200">Role</th>
-                <th className="px-6 py-3 font-semibold text-slate-200">Joined</th>
-                <th className="px-6 py-3 font-semibold text-slate-200">Actions</th>
+              <tr className="border-b" style={{ borderColor: 'rgba(32,38,31,0.12)', background: 'rgba(32,38,31,0.03)' }}>
+                <th className="px-6 py-3 font-semibold" style={{ color: '#20261F' }}>User</th>
+                <th className="px-6 py-3 font-semibold" style={{ color: '#20261F' }}>Email</th>
+                <th className="px-6 py-3 font-semibold" style={{ color: '#20261F' }}>Role</th>
+                <th className="px-6 py-3 font-semibold" style={{ color: '#20261F' }}>Joined</th>
+                <th className="px-6 py-3 font-semibold" style={{ color: '#20261F' }}>Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/10">
+            <tbody className="divide-y" style={{ borderColor: 'rgba(32,38,31,0.08)' }}>
               {loading ? (
                 <tr>
-                  <td colSpan={5} className="px-6 py-12 text-center text-slate-400">Loading users...</td>
+                  <td colSpan={5} className="px-6 py-12 text-center" style={{ color: 'rgba(32,38,31,0.5)' }}>Loading users...</td>
                 </tr>
               ) : users.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-6 py-12 text-center text-slate-400">No users found.</td>
+                  <td colSpan={5} className="px-6 py-12 text-center" style={{ color: 'rgba(32,38,31,0.5)' }}>No users found.</td>
                 </tr>
               ) : (
                 users.map((u) => (
-                  <tr key={u._id} className="transition hover:bg-white/5">
+                  <tr key={u._id} className="transition hover:bg-[rgba(32,38,31,0.03)]">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-[#6E8F73] to-[#C97B5A] text-xs font-bold text-white">
+                        <div className="flex h-9 w-9 items-center justify-center rounded-full text-xs font-bold text-white" style={{ background: 'linear-gradient(135deg, #6E8F73, #C97B5A)' }}>
                           {u.name?.charAt(0)?.toUpperCase() || '?'}
                         </div>
                         <div>
-                          <p className="font-medium text-white">{u.name}</p>
-                          {u._id === currentUser?.id && <p className="text-xs text-[#6E8F73]">You</p>}
+                          <p className="font-medium" style={{ color: '#20261F' }}>{u.name}</p>
+                          {u._id === currentUser?.id && <p className="text-xs" style={{ color: '#6E8F73' }}>You</p>}
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-slate-300">{u.email}</td>
+                    <td className="px-6 py-4" style={{ color: 'rgba(32,38,31,0.7)' }}>{u.email}</td>
                     <td className="px-6 py-4">
                       <span
                         className={
                           'inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium ' +
                           (u.role === 'admin'
-                            ? 'bg-[#6E8F73]/15 text-[#6E8F73] ring-1 ring-[#6E8F73]/20'
-                            : 'bg-slate-500/15 text-slate-200 ring-1 ring-slate-400/20')
+                            ? ''
+                            : '')
+                        }
+                        style={u.role === 'admin' 
+                          ? { background: 'rgba(110,143,115,0.15)', color: '#6E8F73', border: '1px solid rgba(110,143,115,0.2)' }
+                          : { background: 'rgba(32,38,31,0.08)', color: 'rgba(32,38,31,0.7)', border: '1px solid rgba(32,38,31,0.12)' }
                         }
                       >
                         {u.role === 'admin' ? <Shield className="h-3 w-3" /> : <User className="h-3 w-3" />}
                         {u.role}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-slate-400">
+                    <td className="px-6 py-4" style={{ color: 'rgba(32,38,31,0.5)' }}>
                       {u.createdAt ? new Date(u.createdAt).toLocaleDateString() : 'Unknown'}
                     </td>
                     <td className="px-6 py-4">
@@ -119,7 +128,10 @@ export default function AdminUsers() {
                           type="button"
                           onClick={() => handleToggleRole(u._id, u.role)}
                           disabled={u._id === currentUser?.id}
-                          className="inline-flex items-center gap-1 rounded-lg border border-white/10 px-2.5 py-1.5 text-xs font-medium text-slate-300 transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-40"
+                          className="inline-flex items-center gap-1 rounded-lg border px-2.5 py-1.5 text-xs font-medium transition disabled:cursor-not-allowed disabled:opacity-40"
+                          style={{ borderColor: 'rgba(32,38,31,0.12)', color: 'rgba(32,38,31,0.7)' }}
+                          onMouseEnter={(e) => !e.currentTarget.disabled && (e.currentTarget.style.background = 'rgba(32,38,31,0.05)')}
+                          onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
                           title={u.role === 'admin' ? 'Demote to user' : 'Promote to admin'}
                         >
                           {u.role === 'admin' ? <ShieldOff className="h-3 w-3" /> : <Shield className="h-3 w-3" />}
@@ -129,7 +141,10 @@ export default function AdminUsers() {
                           type="button"
                           onClick={() => handleDeleteUser(u._id, u.name)}
                           disabled={u._id === currentUser?.id}
-                          className="inline-flex items-center gap-1 rounded-lg border border-red-400/20 px-2.5 py-1.5 text-xs font-medium text-red-200 transition hover:bg-red-500/10 disabled:cursor-not-allowed disabled:opacity-40"
+                          className="inline-flex items-center gap-1 rounded-lg border px-2.5 py-1.5 text-xs font-medium transition disabled:cursor-not-allowed disabled:opacity-40"
+                          style={{ borderColor: 'rgba(168,68,47,0.3)', color: '#A8442F' }}
+                          onMouseEnter={(e) => !e.currentTarget.disabled && (e.currentTarget.style.background = 'rgba(168,68,47,0.08)')}
+                          onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
                           title="Delete user"
                         >
                           <Trash2 className="h-3 w-3" /> Delete

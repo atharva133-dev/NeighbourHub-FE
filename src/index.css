@@ -322,3 +322,17 @@ html.dark .glass-input {
 .mobile-menu-slide {
   animation: mobile-menu-in 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+/* ── Toast notification positioning ── */
+.Toastify {
+  position: fixed !important;
+  top: 24px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  right: auto !important;
+}
+
+.Toastify__toast-container {
+  position: static !important;
+  transform: none !important;
+}

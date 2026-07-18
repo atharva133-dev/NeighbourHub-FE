@@ -88,9 +88,9 @@ export default function Emergency() {
 
   return (
     <Layout onSearchChange={setSearchQuery}>
-      <div className="mb-8 rounded-2xl border-2 border-red-300 bg-red-50 p-6 shadow-sm dark:border-red-500/50 dark:bg-red-500/10">
-        <h1 className="mb-2 text-2xl font-bold text-red-800 dark:text-red-200">Emergency Center</h1>
-        <p className="text-sm text-red-600 dark:text-red-300">
+      <div className="mb-8 rounded-2xl border-2 p-6 shadow-sm" style={{ borderColor: 'rgba(168,68,47,0.3)', background: 'rgba(168,68,47,0.08)' }}>
+        <h1 className="mb-2 text-2xl font-bold" style={{ color: '#A8442F' }}>Emergency Center</h1>
+        <p className="text-sm" style={{ color: 'rgba(168,68,47,0.8)' }}>
           Use this section ONLY for urgent community matters (security alerts, severe weather, urgent hazards).
           In case of a life-threatening emergency, always call local authorities (911) immediately.
         </p>
@@ -101,9 +101,9 @@ export default function Emergency() {
           {loading ? (
             <NoticeListSkeleton />
           ) : filtered.length === 0 ? (
-            <div className="glass-card border-dashed border-2 border-slate-200 bg-slate-50 py-20 text-center dark:border-white/10 dark:bg-white/5">
-              <p className="text-slate-500 dark:text-slate-400 font-medium text-lg">No active emergencies.</p>
-              <p className="text-slate-400 dark:text-slate-500 mt-1">Stay safe and report any issues promptly.</p>
+            <div className="border-dashed border-2 py-20 text-center rounded-2xl" style={{ borderColor: 'rgba(32,38,31,0.12)', background: '#FCFBF6' }}>
+              <p className="font-medium text-lg" style={{ color: '#20261F' }}>No active emergencies.</p>
+              <p className="mt-1" style={{ color: 'rgba(32,38,31,0.6)' }}>Stay safe and report any issues promptly.</p>
             </div>
           ) : (
             <div className="space-y-6">

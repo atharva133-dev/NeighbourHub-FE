@@ -6,10 +6,10 @@ import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
 
 const CATEGORIES = [
-  { label: 'General',      icon: '📋', active: 'bg-[#475569] text-white border-[#475569] ring-2 ring-[#475569]/20', color: 'border-[#cbd5e1] bg-white text-[#475569] hover:bg-[#f8fafc]' },
-  { label: 'Event',        icon: '🎉', active: 'bg-[#059669] text-white border-[#059669] ring-2 ring-[#059669]/20', color: 'border-[#cbd5e1] bg-white text-[#475569] hover:bg-[#f8fafc]' },
-  { label: 'Lost & Found', icon: '🔍', active: 'bg-[#d97706] text-white border-[#d97706] ring-2 ring-[#d97706]/20', color: 'border-[#fef3c7] bg-[#fffbeb] text-[#b45309] hover:bg-[#fffbeb]/80' },
-  { label: 'Emergency',    icon: '🚨', active: 'bg-[#dc2626] text-white border-[#dc2626] ring-2 ring-[#dc2626]/20', color: 'border-[#fee2e2] bg-[#fef2f2] text-[#b91c1c] hover:bg-[#fef2f2]/80' },
+  { label: 'General',      icon: '📋', active: 'bg-[#E4EBE1] text-[#4E6B54] border-[#6E8F73] ring-2 ring-[#6E8F73]/20', color: 'border-[#ddd7ca] bg-[#FCFBF6] text-[#656f5f] hover:bg-[#F6F5EF]' },
+  { label: 'Event',        icon: '🎉', active: 'bg-[#F3DFD1] text-[#A85C3F] border-[#C97B5A] ring-2 ring-[#C97B5A]/20', color: 'border-[#ddd7ca] bg-[#FCFBF6] text-[#656f5f] hover:bg-[#F6F5EF]' },
+  { label: 'Lost & Found', icon: '🔍', active: 'bg-[#EAD6CE] text-[#A8442F] border-[#C97B5A] ring-2 ring-[#C97B5A]/20', color: 'border-[#ddd7ca] bg-[#FCFBF6] text-[#656f5f] hover:bg-[#F6F5EF]' },
+  { label: 'Emergency',    icon: '🚨', active: 'bg-[#EAD6CE] text-[#A8442F] border-[#A8442F] ring-2 ring-[#A8442F]/20 font-bold', color: 'border-[#ddd7ca] bg-[#FCFBF6] text-[#656f5f] hover:bg-[#F6F5EF]' },
 ];
 const PRIORITIES = ['Low', 'Medium', 'High', 'Urgent'];
 const MAX_CONTENT = 500;
@@ -117,35 +117,39 @@ export default function NoticeForm({ onCreated, defaultCategory }) {
   const contentCharsLeft = MAX_CONTENT - content.length;
 
   return (
-    <form onSubmit={handleSubmit} className="relative overflow-hidden rounded-[20px] border border-[#e2e8f0] bg-white shadow-[0_1px_3px_rgba(0,0,0,0.02)] z-0">
+    <form onSubmit={handleSubmit} className="relative overflow-hidden rounded-2xl border z-0" style={{ borderColor: 'rgba(32,38,31,0.12)', background: '#FCFBF6' }}>
       {/* Header */}
-      <div className="flex items-center gap-3 border-b border-[#f1f5f9] px-5 py-4">
-        <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#0f172a] text-white shadow-xs">
+      <div className="flex items-center gap-3 px-5 py-4" style={{ borderBottom: '1px solid rgba(32,38,31,0.08)' }}>
+        <span className="flex h-9 w-9 items-center justify-center rounded-xl text-white shadow-xs" style={{ background: 'linear-gradient(135deg, #6E8F73, #C97B5A)' }}>
           <Megaphone className="h-4 w-4" />
         </span>
         <div>
-          <h2 className="text-base font-bold text-[#0f172a] leading-tight" style={{ fontFamily: '"Space Grotesk", sans-serif' }}>Post a Notice</h2>
-          <p className="text-xs text-[#64748b]">Share updates with your neighbours</p>
+          <h2 className="text-base font-bold leading-tight" style={{ fontFamily: '"Space Grotesk", sans-serif', color: '#20261F' }}>Post a Notice</h2>
+          <p className="text-xs" style={{ color: 'rgba(32,38,31,0.6)' }}>Share updates with your neighbours</p>
         </div>
       </div>
 
       <div className="p-5 lg:p-6 space-y-5">
         {error && (
-          <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+          <div className="rounded-xl border px-4 py-3 text-sm" style={{ borderColor: 'rgba(168,68,47,0.3)', background: 'rgba(168,68,47,0.1)', color: '#A8442F' }}>
             {error}
           </div>
         )}
 
         {/* Title */}
         <div>
-          <label htmlFor="title" className="mb-1.5 block text-sm font-semibold text-[#334155]">Title</label>
+          <label htmlFor="title" className="mb-1.5 block text-sm font-semibold" style={{ color: '#20261F' }}>Title</label>
           <input id="title" type="text" value={title} onChange={(e) => setTitle(e.target.value)}
-            required placeholder="What's happening?" className="w-full rounded-xl border border-[#cbd5e1] bg-white px-4 py-3 text-sm text-[#0f172a] outline-none transition-all duration-150 placeholder:text-[#94a3b8] focus:border-[#0f172a]" />
+            required placeholder="What's happening?" className="w-full rounded-xl border px-4 py-3 text-sm outline-none transition-all duration-150 resize-none"
+            style={{ borderColor: '#ddd7ca', background: '#FCFBF6', color: '#20261F', placeholderColor: '#8B7B6B' }}
+            onFocus={(e) => { e.currentTarget.style.borderColor = '#C97B5A'; e.currentTarget.style.background = '#F6F5EF'; }}
+            onBlur={(e) => { e.currentTarget.style.borderColor = '#ddd7ca'; e.currentTarget.style.background = '#FCFBF6'; }}
+          />
         </div>
 
         {/* Category chips */}
         <div>
-          <label className="mb-2 block text-sm font-semibold text-[#334155]">Category</label>
+          <label className="mb-2 block text-sm font-semibold" style={{ color: '#20261F' }}>Category</label>
           <div className="flex flex-wrap gap-2">
             {CATEGORIES.map((cat) => (
               <button key={cat.label} type="button" onClick={() => {
@@ -165,8 +169,13 @@ export default function NoticeForm({ onCreated, defaultCategory }) {
 
         {/* Priority */}
         <div>
-          <label htmlFor="priority" className="mb-1.5 block text-sm font-semibold text-[#334155]">Priority</label>
-          <select id="priority" value={priority} onChange={(e) => setPriority(e.target.value)} className="w-full rounded-xl border border-[#cbd5e1] bg-white px-4 py-3 text-sm text-[#0f172a] outline-none transition-all duration-150 focus:border-[#0f172a]">
+          <label htmlFor="priority" className="mb-1.5 block text-sm font-semibold" style={{ color: '#20261F' }}>Priority</label>
+          <select id="priority" value={priority} onChange={(e) => setPriority(e.target.value)} 
+            className="w-full rounded-xl border px-4 py-3 text-sm outline-none transition-all duration-150 cursor-pointer"
+            style={{ borderColor: '#ddd7ca', background: '#FCFBF6', color: '#20261F' }}
+            onFocus={(e) => { e.currentTarget.style.borderColor = '#C97B5A'; e.currentTarget.style.background = '#F6F5EF'; }}
+            onBlur={(e) => { e.currentTarget.style.borderColor = '#ddd7ca'; e.currentTarget.style.background = '#FCFBF6'; }}
+          >
             {PRIORITIES.map((level) => <option key={level} value={level}>{level}</option>)}
           </select>
         </div>
@@ -174,55 +183,79 @@ export default function NoticeForm({ onCreated, defaultCategory }) {
         {/* Details with AI toolbar + char counter */}
         <div>
           <div className="mb-2 flex items-center justify-between gap-2 flex-wrap">
-            <label htmlFor="content" className="text-sm font-semibold text-[#334155]">Details</label>
+            <label htmlFor="content" className="text-sm font-semibold" style={{ color: '#20261F' }}>Details</label>
             
             {/* AI Assistant Toolbar */}
-            <div className="flex items-center gap-1 rounded-xl border border-[#e2e8f0] bg-[#f8fafc] p-1 shadow-xs">
+            <div className="flex items-center gap-1 rounded-xl border p-1 shadow-xs" style={{ borderColor: 'rgba(32,38,31,0.12)', background: '#F6F5EF' }}>
               <button type="button" onClick={handleSuggest} disabled={!!aiLoading} title="AI Suggest Details"
-                className="flex items-center gap-1.5 rounded-lg bg-white border border-[#e2e8f0]/80 px-2.5 py-1.5 text-xs font-bold text-[#0f172a] transition-all hover:bg-[#f1f5f9] disabled:opacity-50">
-                {aiLoading === 'suggest' ? <Loader2 className="h-3.5 w-3.5 animate-spin text-[#4f46e5]" /> : <Sparkles className="h-3.5 w-3.5 text-[#4f46e5]" />}
+                className="flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs font-bold transition-all disabled:opacity-50"
+                style={{ borderColor: 'rgba(32,38,31,0.12)', background: '#FCFBF6', color: '#20261F' }}
+                onMouseEnter={(e) => !e.currentTarget.disabled && (e.currentTarget.style.background = 'rgba(32,38,31,0.05)')}
+                onMouseLeave={(e) => e.currentTarget.style.background = '#FCFBF6'}
+              >
+                {aiLoading === 'suggest' ? <Loader2 className="h-3.5 w-3.5 animate-spin" style={{ color: '#C97B5A' }} /> : <Sparkles className="h-3.5 w-3.5" style={{ color: '#C97B5A' }} />}
                 Suggest
               </button>
               <button type="button" onClick={handleImprove} disabled={!!aiLoading} title="AI Improve content"
-                className="flex items-center gap-1.5 rounded-lg bg-white border border-[#e2e8f0]/80 px-2.5 py-1.5 text-xs font-bold text-[#0f172a] transition-all hover:bg-[#f1f5f9] disabled:opacity-50">
-                {aiLoading === 'improve' ? <Loader2 className="h-3.5 w-3.5 animate-spin text-[#0284c7]" /> : <Wand2 className="h-3.5 w-3.5 text-[#0284c7]" />}
+                className="flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs font-bold transition-all disabled:opacity-50"
+                style={{ borderColor: 'rgba(32,38,31,0.12)', background: '#FCFBF6', color: '#20261F' }}
+                onMouseEnter={(e) => !e.currentTarget.disabled && (e.currentTarget.style.background = 'rgba(32,38,31,0.05)')}
+                onMouseLeave={(e) => e.currentTarget.style.background = '#FCFBF6'}
+              >
+                {aiLoading === 'improve' ? <Loader2 className="h-3.5 w-3.5 animate-spin" style={{ color: '#6E8F73' }} /> : <Wand2 className="h-3.5 w-3.5" style={{ color: '#6E8F73' }} />}
                 Improve
               </button>
               <button type="button" onClick={() => setShowGenerateInput((v) => !v)} disabled={!!aiLoading} title="AI Prompt Generation"
-                className="flex items-center gap-1.5 rounded-lg bg-white border border-[#e2e8f0]/80 px-2.5 py-1.5 text-xs font-bold text-[#0f172a] transition-all hover:bg-[#f1f5f9] disabled:opacity-50">
-                {aiLoading === 'generate' ? <Loader2 className="h-3.5 w-3.5 animate-spin text-[#059669]" /> : <Bot className="h-3.5 w-3.5 text-[#059669]" />}
+                className="flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs font-bold transition-all disabled:opacity-50"
+                style={{ borderColor: 'rgba(32,38,31,0.12)', background: '#FCFBF6', color: '#20261F' }}
+                onMouseEnter={(e) => !e.currentTarget.disabled && (e.currentTarget.style.background = 'rgba(32,38,31,0.05)')}
+                onMouseLeave={(e) => e.currentTarget.style.background = '#FCFBF6'}
+              >
+                {aiLoading === 'generate' ? <Loader2 className="h-3.5 w-3.5 animate-spin" style={{ color: '#A85C3F' }} /> : <Bot className="h-3.5 w-3.5" style={{ color: '#A85C3F' }} />}
                 Generate
               </button>
             </div>
           </div>
 
           {showGenerateInput && (
-            <div className="mb-2.5 flex items-center gap-2 rounded-xl border border-[#cbd5e1] bg-[#f8fafc] p-2.5">
-              <Bot className="h-4 w-4 shrink-0 text-[#475569]" />
+            <div className="mb-2.5 flex items-center gap-2 rounded-xl border p-2.5" style={{ borderColor: '#ddd7ca', background: '#F6F5EF' }}>
+              <Bot className="h-4 w-4 shrink-0" style={{ color: 'rgba(32,38,31,0.6)' }} />
               <input type="text" value={generatePrompt} onChange={(e) => setGeneratePrompt(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleGenerate())}
                 placeholder="Describe your notice in a few words…"
-                className="flex-1 bg-transparent text-sm text-[#0f172a] outline-none placeholder-[#94a3b8]" autoFocus />
+                className="flex-1 bg-transparent text-sm outline-none"
+                style={{ color: '#20261F', placeholderColor: '#8B7B6B' }} autoFocus />
               <button type="button" onClick={handleGenerate} disabled={aiLoading === 'generate'}
-                className="flex items-center gap-1 rounded-lg bg-[#0f172a] px-3 py-1.5 text-xs font-bold text-white transition hover:bg-[#1e293b] disabled:opacity-60">
+                className="flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs font-bold text-white transition disabled:opacity-60"
+                style={{ background: 'linear-gradient(135deg, #C97B5A, #A85C3F)' }}
+                onMouseEnter={(e) => !e.currentTarget.disabled && (e.currentTarget.style.background = 'linear-gradient(135deg, #A85C3F, #A8442F)')}
+                onMouseLeave={(e) => e.currentTarget.style.background = 'linear-gradient(135deg, #C97B5A, #A85C3F)'}
+              >
                 {aiLoading === 'generate' ? <Loader2 className="h-3 w-3 animate-spin" /> : 'Go'}
               </button>
               <button type="button" onClick={() => { setShowGenerateInput(false); setGeneratePrompt(''); }}
-                className="text-[#64748b] hover:text-[#0f172a]">
+                style={{ color: 'rgba(32,38,31,0.6)' }}
+                onMouseEnter={(e) => e.currentTarget.style.color = '#20261F'}
+                onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(32,38,31,0.6)'}
+              >
                 <X className="h-4 w-4" />
               </button>
             </div>
           )}
 
           <textarea id="content" value={content} onChange={(e) => setContent(e.target.value.slice(0, MAX_CONTENT))}
-            required rows={4} placeholder="Share the details with your neighbours…" className="w-full rounded-xl border border-[#cbd5e1] bg-white px-4 py-3 text-sm text-[#0f172a] outline-none transition-all duration-150 placeholder:text-[#94a3b8] focus:border-[#0f172a] resize-none" />
+            required rows={4} placeholder="Share the details with your neighbours…" className="w-full rounded-xl border px-4 py-3 text-sm outline-none transition-all duration-150 resize-none"
+            style={{ borderColor: '#ddd7ca', background: '#FCFBF6', color: '#20261F', placeholderColor: '#8B7B6B' }}
+            onFocus={(e) => { e.currentTarget.style.borderColor = '#C97B5A'; e.currentTarget.style.background = '#F6F5EF'; }}
+            onBlur={(e) => { e.currentTarget.style.borderColor = '#ddd7ca'; e.currentTarget.style.background = '#FCFBF6'; }}
+          />
 
           {/* Character counter */}
           <div className="mt-1 flex justify-end">
             <span className={`text-xs font-medium tabular-nums ${
-              contentCharsLeft <= 50 ? 'text-[#b91c1c]'
-              : contentCharsLeft <= 100 ? 'text-[#d97706]'
-              : 'text-[#64748b]'
+              contentCharsLeft <= 50 ? 'text-[#A8442F]'
+              : contentCharsLeft <= 100 ? 'text-[#A85C3F]'
+              : 'text-[rgba(32,38,31,0.6)]'
             }`}>
               {content.length} / {MAX_CONTENT}
             </span>
@@ -230,23 +263,29 @@ export default function NoticeForm({ onCreated, defaultCategory }) {
         </div>
 
         {/* Collapsible Optional Media upload dropdown */}
-        <div className="border-t border-[#f1f5f9] pt-4">
+        <div className="pt-4" style={{ borderTop: '1px solid rgba(32,38,31,0.08)' }}>
           <button
             type="button"
             onClick={() => setMediaOpen(!mediaOpen)}
-            className="flex w-full items-center justify-between text-sm font-semibold text-[#475569] hover:text-[#0f172a] transition-colors"
+            className="flex w-full items-center justify-between text-sm font-semibold transition-colors"
+            style={{ color: 'rgba(32,38,31,0.7)' }}
+            onMouseEnter={(e) => e.currentTarget.style.color = '#20261F'}
+            onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(32,38,31,0.7)'}
           >
             <span className="flex items-center gap-2">
-              <Image className="h-4 w-4 text-[#64748b]" />
+              <Image className="h-4 w-4" style={{ color: 'rgba(32,38,31,0.6)' }} />
               Add Media
-              <span className="text-xs font-normal text-[#94a3b8]">(Optional)</span>
-              {imageFile && <span className="h-1.5 w-1.5 rounded-full bg-[#10b981]" />}
+              <span className="text-xs font-normal" style={{ color: 'rgba(32,38,31,0.4)' }}>(Optional)</span>
+              {imageFile && <span className="h-1.5 w-1.5 rounded-full" style={{ background: '#6E8F73' }} />}
             </span>
             {mediaOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
           </button>
 
           {mediaOpen && (
-            <div className="mt-3 relative cursor-pointer rounded-xl border-2 border-dashed transition-all duration-200 animate-fade-in border-[#cbd5e1] bg-white hover:border-[#0f172a] hover:bg-[#f8fafc]"
+            <div className="mt-3 relative cursor-pointer rounded-xl border-2 border-dashed transition-all duration-200 animate-fade-in"
+              style={{ borderColor: '#ddd7ca', background: '#FCFBF6' }}
+              onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#C97B5A'; e.currentTarget.style.background = '#F6F5EF'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#ddd7ca'; e.currentTarget.style.background = '#FCFBF6'; }}
               onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}
               onClick={() => fileInputRef.current?.click()}>
               <input ref={fileInputRef} type="file" accept="image/*" onChange={(e) => { if (e.target.files?.[0]) handleFileSelect(e.target.files[0]); }} className="hidden" />
@@ -254,20 +293,24 @@ export default function NoticeForm({ onCreated, defaultCategory }) {
                 <div className="relative p-2" onClick={(e) => e.stopPropagation()}>
                   <img src={imagePreview} alt="Preview" className="h-48 w-full rounded-lg object-cover shadow-sm" />
                   <button type="button" onClick={removeImage}
-                    className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-slate-900/60 text-white backdrop-blur-sm transition hover:bg-slate-900/80">
+                    className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full text-white backdrop-blur-sm transition"
+                    style={{ background: 'rgba(32,38,31,0.6)' }}
+                    onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(32,38,31,0.8)'}
+                    onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(32,38,31,0.6)'}
+                  >
                     <X className="h-4 w-4" />
                   </button>
-                  <div className="absolute bottom-4 left-4 rounded-lg bg-slate-900/60 px-3 py-1.5 text-xs font-medium text-white backdrop-blur-sm">
+                  <div className="absolute bottom-4 left-4 rounded-lg px-3 py-1.5 text-xs font-medium text-white backdrop-blur-sm" style={{ background: 'rgba(32,38,31,0.6)' }}>
                     {imageFile?.name} ({(imageFile?.size / 1024 / 1024).toFixed(2)} MB)
                   </div>
                 </div>
               ) : (
                 <div className="flex flex-col items-center justify-center py-8">
-                  <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-xs ring-1 ring-slate-100">
-                    <Image className="h-5 w-5 text-[#475569]" />
+                  <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full shadow-xs" style={{ background: '#FCFBF6', border: '1px solid rgba(32,38,31,0.08)' }}>
+                    <Image className="h-5 w-5" style={{ color: 'rgba(32,38,31,0.6)' }} />
                   </div>
-                  <p className="text-sm font-semibold text-[#0f172a]">Click or drag to upload</p>
-                  <p className="mt-0.5 text-xs text-[#64748b]">PNG, JPG, GIF · max 5 MB</p>
+                  <p className="text-sm font-semibold" style={{ color: '#20261F' }}>Click or drag to upload</p>
+                  <p className="mt-0.5 text-xs" style={{ color: 'rgba(32,38,31,0.6)' }}>PNG, JPG, GIF · max 5 MB</p>
                 </div>
               )}
             </div>
@@ -276,7 +319,11 @@ export default function NoticeForm({ onCreated, defaultCategory }) {
 
         {/* Submit */}
         <button type="submit" disabled={loading}
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#0f172a] py-3 text-sm font-bold text-white shadow-sm transition-all duration-150 hover:bg-[#1e293b] disabled:opacity-60">
+          className="flex w-full items-center justify-center gap-2 rounded-xl py-3 text-sm font-bold text-white shadow-sm transition-all duration-150 disabled:opacity-60"
+          style={{ background: 'linear-gradient(135deg, #C97B5A, #A85C3F)' }}
+          onMouseEnter={(e) => !e.currentTarget.disabled && (e.currentTarget.style.background = 'linear-gradient(135deg, #A85C3F, #A8442F)')}
+          onMouseLeave={(e) => e.currentTarget.style.background = 'linear-gradient(135deg, #C97B5A, #A85C3F)'}
+        >
           <Send className="h-4 w-4" />
           {loading ? 'Posting…' : 'Post Notice'}
         </button>

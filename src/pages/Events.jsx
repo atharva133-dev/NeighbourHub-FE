@@ -93,9 +93,9 @@ export default function Events() {
           {loading ? (
             <NoticeListSkeleton />
           ) : filtered.length === 0 ? (
-            <div className="glass-card border-dashed border-2 border-slate-200 bg-slate-50 py-20 text-center dark:border-white/10 dark:bg-white/5">
-              <p className="text-slate-500 dark:text-slate-400 font-medium text-lg">No events yet.</p>
-              <p className="text-slate-400 dark:text-slate-500 mt-1">Be the first to post one!</p>
+            <div className="border-dashed border-2 py-20 text-center rounded-2xl" style={{ borderColor: 'rgba(32,38,31,0.12)', background: '#FCFBF6' }}>
+              <p className="font-medium text-lg" style={{ color: '#20261F' }}>No events yet.</p>
+              <p className="mt-1" style={{ color: 'rgba(32,38,31,0.6)' }}>Be the first to post one!</p>
             </div>
           ) : (
             <div className="space-y-6">

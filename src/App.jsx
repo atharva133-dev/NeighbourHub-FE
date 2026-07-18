@@ -92,16 +92,43 @@ export default function App() {
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
             <Toaster
-              position="top-right"
+              position="top-center"
+              gutter={12}
               toastOptions={{
                 duration: 2800,
                 style: {
-                  background: '#ffffff',
-                  border: '1px solid #e2e8f0',
-                  color: '#0f172a',
-                  boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+                  background: '#FCFBF6',
+                  border: '1px solid rgba(32,38,31,0.12)',
+                  color: '#20261F',
+                  boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
                   fontWeight: '500',
                   fontSize: '14px',
+                  padding: '16px 20px',
+                  borderRadius: '12px',
+                  minWidth: '280px',
+                  maxWidth: '400px',
+                },
+                success: {
+                  style: {
+                    background: '#FCFBF6',
+                    border: '1px solid rgba(110,143,115,0.3)',
+                    color: '#20261F',
+                  },
+                  iconTheme: {
+                    primary: '#6E8F73',
+                    secondary: '#FCFBF6',
+                  },
+                },
+                error: {
+                  style: {
+                    background: '#FCFBF6',
+                    border: '1px solid rgba(168,68,47,0.3)',
+                    color: '#20261F',
+                  },
+                  iconTheme: {
+                    primary: '#A8442F',
+                    secondary: '#FCFBF6',
+                  },
                 },
               }}
             />

@@ -140,44 +140,6 @@ export default function Home() {
         </div>
       )}
 
-      {/* ── Stats bar ── */}
-      {!loading && (
-        <div className="mb-6 flex flex-wrap items-center gap-4 rounded-2xl border border-slate-200/60 bg-white/60 px-5 py-3 backdrop-blur-sm dark:border-white/5 dark:bg-white/3">
-          <div className="flex items-center gap-2 text-sm font-medium text-slate-600 dark:text-slate-300">
-            <FileText className="h-4 w-4 text-[#6E8F73]" />
-            <span><span className="font-bold text-slate-900 dark:text-white">{notices.length}</span> Notice{notices.length !== 1 ? 's' : ''}</span>
-          </div>
-          {pinnedNotices.length > 0 && (
-            <>
-              <span className="h-4 w-px bg-slate-200 dark:bg-white/10" />
-              <div className="flex items-center gap-2 text-sm font-medium text-slate-600 dark:text-slate-300">
-                <Pin className="h-4 w-4 text-violet-500" />
-                <span><span className="font-bold text-slate-900 dark:text-white">{pinnedNotices.length}</span> Pinned</span>
-              </div>
-            </>
-          )}
-          <span className="h-4 w-px bg-slate-200 dark:bg-white/10" />
-          {/* Online count */}
-          <div className="flex items-center gap-2 text-sm font-medium text-slate-600 dark:text-slate-300">
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
-            </span>
-            <span><span className="font-bold text-slate-900 dark:text-white">{onlineUsers}</span> Online</span>
-          </div>
-          <span className="h-4 w-px bg-slate-200 dark:bg-white/10" />
-          {/* Guidelines button */}
-          <button
-            type="button"
-            onClick={() => setGuidelinesOpen(true)}
-            className="flex items-center gap-1.5 text-sm font-medium text-slate-600 transition-colors hover:text-[#6E8F73] dark:text-slate-300 dark:hover:text-[#6E8F73]"
-          >
-            <BookOpen className="h-4 w-4 text-emerald-500" />
-            <span>Guidelines</span>
-          </button>
-        </div>
-      )}
-
       {/* ── Pinned notices carousel ── */}
       {pinnedNotices.length > 0 && (
         <div className="mb-8">
