@@ -7,8 +7,8 @@ export default function ToggleSwitch({ checked, onChange, disabled = false, id }
       aria-checked={checked}
       disabled={disabled}
       onClick={() => onChange(!checked)}
-      className={`relative inline-flex h-7 w-12 shrink-0 cursor-pointer items-center rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500/40 disabled:cursor-not-allowed disabled:opacity-50 ${
-        checked ? 'bg-purple-600' : 'bg-slate-600'
+      className={`relative inline-flex h-7 w-12 shrink-0 cursor-pointer items-center rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#6E8F73]/40 disabled:cursor-not-allowed disabled:opacity-50 ${
+        checked ? 'bg-[#6E8F73]' : 'bg-slate-600'
       }`}
     >
       <span

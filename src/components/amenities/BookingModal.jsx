@@ -131,7 +131,7 @@ export default function BookingModal({ amenity, communityId, onClose, onBooked }
           {/* Date */}
           <div>
             <label className="mb-1.5 flex items-center gap-1.5 text-sm font-semibold text-slate-700 dark:text-slate-200">
-              <CalendarDays className="h-3.5 w-3.5 text-purple-500" />
+              <CalendarDays className="h-3.5 w-3.5 text-[#6E8F73]" />
               Date
             </label>
             <input type="date" value={date} min={today}
@@ -143,7 +143,7 @@ export default function BookingModal({ amenity, communityId, onClose, onBooked }
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="mb-1.5 flex items-center gap-1.5 text-sm font-semibold text-slate-700 dark:text-slate-200">
-                <Clock className="h-3.5 w-3.5 text-purple-500" />
+                <Clock className="h-3.5 w-3.5 text-[#6E8F73]" />
                 Start
               </label>
               <input type="time" value={startTime}
@@ -184,7 +184,7 @@ export default function BookingModal({ amenity, communityId, onClose, onBooked }
           </div>
 
           <button type="submit" disabled={loading}
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 py-2.5 text-sm font-bold text-white shadow-lg shadow-purple-500/25 transition-all hover:-translate-y-0.5 hover:shadow-purple-500/40 disabled:opacity-60 disabled:hover:translate-y-0">
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#6E8F73] to-[#C97B5A] py-2.5 text-sm font-bold text-white shadow-lg shadow-[#6E8F73]/25 transition-all hover:-translate-y-0.5 hover:shadow-[#6E8F73]/40 disabled:opacity-60 disabled:hover:translate-y-0">
             {loading ? <><Loader2 className="h-4 w-4 animate-spin" />Booking…</> : 'Confirm Booking'}
           </button>
         </form>

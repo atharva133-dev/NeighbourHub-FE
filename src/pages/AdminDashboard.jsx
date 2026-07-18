@@ -1,4 +1,4 @@
-﻿import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { Activity, AlertTriangle, FileText, Flag, Users, Trash2, Loader2, RefreshCw, Settings2 } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -104,7 +104,7 @@ export default function AdminDashboard() {
   return (
     <Layout>
       <div className="mb-6 glass-card p-5">
-        <p className="text-xs font-semibold uppercase text-purple-600 dark:text-blue-300">Admin dashboard</p>
+        <p className="text-xs font-semibold uppercase text-[#6E8F73] dark:text-[#6E8F73]">Admin dashboard</p>
         <h2 className="mt-2 text-2xl font-bold text-slate-900 dark:text-white sm:text-3xl">Community Insights</h2>
         <p className="mt-2 max-w-2xl text-sm text-slate-600 dark:text-slate-300">
           Monitor notice volume, emergency activity, and community engagement.

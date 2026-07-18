@@ -92,15 +92,15 @@ export default function Home() {
     return (
       <Layout onSearchChange={setSearchQuery}>
         <div className="glass-card flex flex-col items-center justify-center rounded-2xl px-6 py-24 text-center border border-slate-200 bg-white/50 dark:border-white/10 dark:bg-white/5">
-          <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-3xl bg-purple-100 dark:bg-purple-500/20 shadow-inner">
-            <Users className="h-10 w-10 text-purple-600 dark:text-purple-400" />
+          <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-3xl bg-[#E4EBE1] dark:bg-[#6E8F73]/20 shadow-inner">
+            <Users className="h-10 w-10 text-[#6E8F73] dark:text-[#6E8F73]" />
           </div>
           <h2 className="text-2xl font-bold text-slate-900 dark:text-white">No community selected</h2>
           <p className="mt-3 max-w-sm text-base text-slate-600 dark:text-slate-400 leading-relaxed">
             Join or create a community to see and post notices with your neighbours.
           </p>
           <button type="button" onClick={() => navigate('/community')}
-            className="mt-8 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 px-8 py-3 text-sm font-bold text-white shadow-lg shadow-purple-500/25 transition-all hover:-translate-y-0.5 hover:shadow-purple-500/40">
+            className="mt-8 rounded-xl bg-gradient-to-r from-[#6E8F73] to-[#C97B5A] px-8 py-3 text-sm font-bold text-white shadow-lg shadow-[#6E8F73]/25 transition-all hover:-translate-y-0.5 hover:shadow-[#6E8F73]/40">
             Go to Communities
           </button>
         </div>
@@ -144,7 +144,7 @@ export default function Home() {
       {!loading && (
         <div className="mb-6 flex flex-wrap items-center gap-4 rounded-2xl border border-slate-200/60 bg-white/60 px-5 py-3 backdrop-blur-sm dark:border-white/5 dark:bg-white/3">
           <div className="flex items-center gap-2 text-sm font-medium text-slate-600 dark:text-slate-300">
-            <FileText className="h-4 w-4 text-purple-500" />
+            <FileText className="h-4 w-4 text-[#6E8F73]" />
             <span><span className="font-bold text-slate-900 dark:text-white">{notices.length}</span> Notice{notices.length !== 1 ? 's' : ''}</span>
           </div>
           {pinnedNotices.length > 0 && (
@@ -170,7 +170,7 @@ export default function Home() {
           <button
             type="button"
             onClick={() => setGuidelinesOpen(true)}
-            className="flex items-center gap-1.5 text-sm font-medium text-slate-600 transition-colors hover:text-purple-600 dark:text-slate-300 dark:hover:text-purple-400"
+            className="flex items-center gap-1.5 text-sm font-medium text-slate-600 transition-colors hover:text-[#6E8F73] dark:text-slate-300 dark:hover:text-[#6E8F73]"
           >
             <BookOpen className="h-4 w-4 text-emerald-500" />
             <span>Guidelines</span>
@@ -255,7 +255,7 @@ export default function Home() {
       {/* Back to top */}
       {showBackToTop && (
         <button type="button" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="fixed bottom-8 right-8 flex h-14 w-14 items-center justify-center rounded-full bg-slate-900 text-white shadow-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl dark:bg-gradient-to-br dark:from-purple-600 dark:to-blue-600 dark:shadow-purple-500/30 dark:hover:shadow-purple-500/50 z-50"
+          className="fixed bottom-8 right-8 flex h-14 w-14 items-center justify-center rounded-full bg-slate-900 text-white shadow-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl dark:bg-gradient-to-br dark:from-[#6E8F73] dark:to-[#C97B5A] dark:shadow-[#6E8F73]/30 dark:hover:shadow-[#6E8F73]/50 z-50"
           aria-label="Back to top">
           <ArrowUp className="h-6 w-6" />
         </button>

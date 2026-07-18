@@ -44,7 +44,7 @@ export default function Navbar({ onSearchChange }) {
   };
 
   const navItems = [
-    { label: 'Board', to: '/', icon: Home },
+    { label: 'Board', to: '/board', icon: Home },
     { label: 'Events', to: '/events', icon: Calendar },
     { label: 'Lost & Found', to: '/lost-found', icon: SearchIcon },
     { label: 'Emergency', to: '/emergency', icon: AlertTriangle },
@@ -63,36 +63,46 @@ export default function Navbar({ onSearchChange }) {
   }, []);
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur-xl dark:border-white/10 dark:bg-[#0f0f1a]/80 transition-colors duration-500">
+    <nav className="sticky top-0 z-50 border-b backdrop-blur-xl transition-colors duration-500" style={{ borderColor: '#ddd7ca', background: 'rgba(246,245,239,0.9)' }}>
       <div className="w-full px-8 flex items-center justify-between h-16">
           {/* Logo + Community Name */}
-          <Link to="/" className="flex flex-shrink-0 items-center gap-3 group min-w-[180px] mr-6">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-purple-600 to-blue-600 shadow-lg shadow-purple-500/20 overflow-hidden transition-transform duration-300 group-hover:scale-105">
-              <img src="/logo.png" alt="NH Logo" className="h-full w-full object-cover" />
+          <Link to="/board" className="flex flex-shrink-0 items-center gap-3 group min-w-[180px] mr-6">
+            <div className="relative h-12 w-12 overflow-hidden rounded-xl shadow-sm transition-transform duration-300 group-hover:scale-105">
+              <img
+                src="/logo2.png"
+                alt="NeighbourHub Logo"
+                className="w-full h-full object-contain"
+              />
             </div>
             <div className="hidden sm:block">
-              <p className="text-base font-bold text-slate-900 dark:text-white transition-colors duration-500">NeighbourHub</p>
+              <p className="text-xl font-extrabold tracking-tight" style={{ color: '#20261F' }}>
+                Neighbour<span className="bg-gradient-to-r from-[#6E8F73] via-[#C97B5A] to-[#A8442F] bg-clip-text text-transparent">Hub</span>
+              </p>
               {communityName ? (
-                <p className="text-xs text-purple-600 dark:text-purple-400 font-medium">{communityName}</p>
+                <p className="text-xs font-semibold" style={{ color: '#6E8F73' }}>{communityName}</p>
               ) : (
-                <p className="text-xs text-slate-500 dark:text-slate-400">Community board</p>
+                <p className="text-xs" style={{ color: 'rgba(32,38,31,0.7)' }}>Community board</p>
               )}
             </div>
           </Link>
 
           {/* Desktop Navigation Links */}
-          <div className="hidden lg:flex items-center gap-1">
+          <div className="hidden lg:flex items-center gap-1.5">
             {navItems.map(({ label, to, icon: Icon }) => (
               <NavLink
                 key={to}
                 to={to}
                 className={({ isActive }) =>
-                  `flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-200 ${
+                  `flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-150 ${
                     isActive
-                      ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-md shadow-purple-500/25'
-                      : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-white/10 dark:hover:text-white'
+                      ? 'text-white shadow-sm'
+                      : 'hover:bg-[#fdfaf4]'
                   }`
                 }
+                style={(({ isActive }) => ({
+                  background: isActive ? 'linear-gradient(135deg, #c97b5a, #ad6247)' : undefined,
+                  color: isActive ? undefined : '#656f5f'
+                }))}
               >
                 <Icon className="h-4 w-4" />
                 {label}
@@ -101,15 +111,16 @@ export default function Navbar({ onSearchChange }) {
           </div>
 
           {/* Search Bar */}
-          <div className="hidden md:flex w-56 min-w-[200px] flex-1">
+          <div className="hidden md:flex w-56 min-w-[200px] flex-1 mr-6">
             <div className="relative w-full group">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 transition-colors group-focus-within:text-purple-500" />
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transition-colors" style={{ color: '#656f5f' }} />
               <input
                 type="text"
                 placeholder="Search notices, events..."
                 value={searchQuery}
                 onChange={handleSearchChange}
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-10 py-2 text-sm text-slate-900 placeholder-slate-400 transition-all duration-300 focus:border-purple-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-purple-500/10 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder-slate-500 dark:focus:border-purple-500/50 dark:focus:bg-white/10 dark:focus:ring-purple-500/20"
+                className="w-full rounded-xl border px-10 py-2 text-sm placeholder transition-all duration-350 focus:outline-none focus:ring-2"
+                style={{ borderColor: '#ddd7ca', background: '#fdfaf4', color: '#20261f', placeholderColor: '#8B7B6B', focusRingColor: 'rgba(201,123,90,0.3)', focusBorderColor: '#c97b5a', focusBackground: '#f6f5ef' }}
               />
             </div>
           </div>
@@ -122,7 +133,10 @@ export default function Navbar({ onSearchChange }) {
                 type="button"
                 onClick={() => navigate('/community')}
                 title="Switch Community"
-                className="hidden sm:flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-600 shadow-sm transition-all duration-300 hover:bg-slate-50 hover:text-slate-900 dark:border-white/10 dark:bg-white/5 dark:text-slate-300 dark:shadow-none dark:hover:bg-white/10 dark:hover:text-white"
+                className="hidden sm:flex items-center gap-1.5 rounded-xl border px-3 py-2 text-sm font-medium shadow-sm transition-all duration-300"
+                style={{ borderColor: '#ddd7ca', background: '#fdfaf4', color: '#656f5f' }}
+                onMouseEnter={(e) => e.currentTarget.style.background = '#f6f5ef'}
+                onMouseLeave={(e) => e.currentTarget.style.background = '#fdfaf4'}
               >
                 <ArrowLeftRight className="h-4 w-4" />
                 <span className="hidden lg:inline">Switch</span>
@@ -138,34 +152,40 @@ export default function Navbar({ onSearchChange }) {
               <button
                 type="button"
                 onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-2 py-1.5 shadow-sm transition-all duration-300 hover:bg-slate-50 dark:border-white/10 dark:bg-white/5 dark:shadow-none dark:hover:bg-white/10"
+                className="flex items-center gap-2 rounded-xl border px-2 py-1.5 shadow-sm transition-all duration-300"
+                style={{ borderColor: '#ddd7ca', background: '#fdfaf4' }}
+                onMouseEnter={(e) => e.currentTarget.style.background = '#f6f5ef'}
+                onMouseLeave={(e) => e.currentTarget.style.background = '#fdfaf4'}
               >
-                <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-lg bg-gradient-to-br from-purple-600 to-blue-600 text-sm font-bold text-white shadow-inner">
+                <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-lg text-sm font-bold text-white shadow-inner" style={{ background: 'linear-gradient(135deg, #c97b5a, #ad6247)' }}>
                   {user?.avatarUrl ? (
                     <img src={user.avatarUrl} alt="" className="h-full w-full object-cover" />
                   ) : (
                     user?.name?.charAt(0).toUpperCase() || 'U'
                   )}
                 </div>
-                <span className="hidden sm:block text-sm font-medium text-slate-700 dark:text-slate-300 pr-1 transition-colors">
+                <span className="hidden sm:block text-sm font-semibold pr-1 transition-colors" style={{ color: '#656f5f' }}>
                   {user?.name?.split(' ')[0] || 'User'}
                 </span>
               </button>
 
               {userDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-56 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl backdrop-blur-xl dark:border-white/10 dark:bg-[#0f0f1a]/95 dark:shadow-2xl dark:shadow-black/40 animate-fade-in z-50">
-                  <div className="border-b border-slate-100 dark:border-white/10 px-4 py-3">
-                    <p className="text-sm font-semibold text-slate-900 dark:text-white">{user?.name}</p>
-                    <p className="text-xs text-slate-500 dark:text-slate-400">{user?.email}</p>
+                <div className="absolute right-0 mt-2 w-56 overflow-hidden rounded-2xl border shadow-xl backdrop-blur-xl animate-fade-in z-50" style={{ borderColor: '#ddd7ca', background: '#fdfaf4' }}>
+                  <div className="px-4 py-3" style={{ borderBottom: '1px solid #ddd7ca' }}>
+                    <p className="text-sm font-bold" style={{ color: '#20261f' }}>{user?.name}</p>
+                    <p className="text-xs" style={{ color: '#656f5f' }}>{user?.email}</p>
                     {communityName && (
-                      <p className="mt-1 text-xs font-medium text-purple-600 dark:text-purple-300">{communityName}</p>
+                      <p className="mt-1 text-xs font-semibold" style={{ color: '#c97b5a' }}>{communityName}</p>
                     )}
                   </div>
-                  <div className="py-2">
+                  <div className="py-1.5">
                     <Link
                       to="/profile"
                       onClick={() => setUserDropdownOpen(false)}
-                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-white/10 dark:hover:text-white"
+                      className="flex items-center gap-3 px-4 py-2.5 text-sm transition-colors"
+                      style={{ color: '#656f5f' }}
+                      onMouseEnter={(e) => e.currentTarget.style.background = '#f6f5ef'}
+                      onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
                     >
                       <User className="h-4 w-4" />
                       Profile
@@ -174,7 +194,10 @@ export default function Navbar({ onSearchChange }) {
                       <Link
                         to="/my-bookings"
                         onClick={() => setUserDropdownOpen(false)}
-                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-white/10 dark:hover:text-white"
+                        className="flex items-center gap-3 px-4 py-2.5 text-sm transition-colors"
+                        style={{ color: '#656f5f' }}
+                        onMouseEnter={(e) => e.currentTarget.style.background = '#f6f5ef'}
+                        onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
                       >
                         <Dumbbell className="h-4 w-4" />
                         My Bookings
@@ -183,7 +206,10 @@ export default function Navbar({ onSearchChange }) {
                     <Link
                       to="/settings"
                       onClick={() => setUserDropdownOpen(false)}
-                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-white/10 dark:hover:text-white"
+                      className="flex items-center gap-3 px-4 py-2.5 text-sm transition-colors"
+                      style={{ color: '#656f5f' }}
+                      onMouseEnter={(e) => e.currentTarget.style.background = '#f6f5ef'}
+                      onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
                     >
                       <Settings className="h-4 w-4" />
                       Settings
@@ -191,7 +217,10 @@ export default function Navbar({ onSearchChange }) {
                     <Link
                       to="/community"
                       onClick={() => setUserDropdownOpen(false)}
-                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-white/10 dark:hover:text-white"
+                      className="flex items-center gap-3 px-4 py-2.5 text-sm transition-colors"
+                      style={{ color: '#656f5f' }}
+                      onMouseEnter={(e) => e.currentTarget.style.background = '#f6f5ef'}
+                      onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
                     >
                       <ArrowLeftRight className="h-4 w-4" />
                       Switch Community
@@ -201,7 +230,10 @@ export default function Navbar({ onSearchChange }) {
                         <Link
                           to="/admin"
                           onClick={() => setUserDropdownOpen(false)}
-                          className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-white/10 dark:hover:text-white"
+                          className="flex items-center gap-3 px-4 py-2.5 text-sm transition-colors"
+                          style={{ color: '#656f5f' }}
+                          onMouseEnter={(e) => e.currentTarget.style.background = '#f6f5ef'}
+                          onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
                         >
                           <Shield className="h-4 w-4" />
                           Dashboard
@@ -209,7 +241,10 @@ export default function Navbar({ onSearchChange }) {
                         <Link
                           to="/admin/users"
                           onClick={() => setUserDropdownOpen(false)}
-                          className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-white/10 dark:hover:text-white"
+                          className="flex items-center gap-3 px-4 py-2.5 text-sm transition-colors"
+                          style={{ color: '#656f5f' }}
+                          onMouseEnter={(e) => e.currentTarget.style.background = '#f6f5ef'}
+                          onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
                         >
                           <Users className="h-4 w-4" />
                           Users
@@ -219,7 +254,10 @@ export default function Navbar({ onSearchChange }) {
                     <button
                       type="button"
                       onClick={handleLogout}
-                      className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-red-500 transition-colors hover:bg-red-50 hover:text-red-600 dark:text-red-400 dark:hover:bg-red-500/10 dark:hover:text-red-300"
+                      className="flex w-full items-center gap-3 px-4 py-2.5 text-sm transition-colors"
+                      style={{ color: '#c97b5a' }}
+                      onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(201,123,90,0.1)'}
+                      onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
                     >
                       <LogOut className="h-4 w-4" />
                       Logout
@@ -233,7 +271,10 @@ export default function Navbar({ onSearchChange }) {
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden rounded-xl border border-slate-200 bg-white p-2 text-slate-600 shadow-sm transition-colors hover:bg-slate-50 hover:text-slate-900 dark:border-white/10 dark:bg-white/5 dark:text-slate-300 dark:shadow-none dark:hover:bg-white/10 dark:hover:text-white"
+              className="lg:hidden rounded-xl border p-2 shadow-sm transition-colors"
+              style={{ borderColor: '#ddd7ca', background: '#fdfaf4', color: '#656f5f' }}
+              onMouseEnter={(e) => e.currentTarget.style.background = '#f6f5ef'}
+              onMouseLeave={(e) => e.currentTarget.style.background = '#fdfaf4'}
             >
               {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
@@ -244,61 +285,85 @@ export default function Navbar({ onSearchChange }) {
       {mobileMenuOpen && (
         <>
           {/* Backdrop */}
-          <div className="lg:hidden fixed inset-0 top-16 z-40 bg-slate-900/30 backdrop-blur-sm dark:bg-black/40"
+          <div className="lg:hidden fixed inset-0 top-16 z-40 backdrop-blur-xs"
+            style={{ background: 'rgba(32,38,31,0.2)' }}
             onClick={() => setMobileMenuOpen(false)} />
           {/* Menu panel */}
-          <div className="lg:hidden relative z-50 border-t border-slate-200 bg-white/95 backdrop-blur-xl dark:border-white/10 dark:bg-[#0f0f1a]/95 mobile-menu-slide">
+          <div className="lg:hidden relative z-50 border-t backdrop-blur-xl mobile-menu-slide" style={{ borderColor: '#ddd7ca', background: 'rgba(246,245,239,0.95)' }}>
             <div className="px-4 py-4 space-y-4">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2" style={{ color: '#656f5f' }} />
                 <input type="text" placeholder="Search notices, events..." value={searchQuery} onChange={handleSearchChange}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-10 py-2.5 text-sm text-slate-900 placeholder-slate-400 transition-all focus:border-purple-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-purple-500/10 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder-slate-500 dark:focus:border-purple-500/50 dark:focus:bg-white/10" />
+                  className="w-full rounded-xl border px-10 py-2.5 text-sm outline-none focus:ring-2"
+                  style={{ borderColor: '#ddd7ca', background: '#fdfaf4', color: '#20261f', placeholderColor: '#8B7B6B', focusRingColor: 'rgba(201,123,90,0.3)', focusBorderColor: '#c97b5a', focusBackground: '#f6f5ef' }}
+                />
               </div>
 
               <nav className="space-y-1">
                 {navItems.map(({ label, to, icon: Icon }) => (
                   <NavLink key={to} to={to} onClick={() => setMobileMenuOpen(false)}
                     className={({ isActive }) =>
-                      `flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold transition-all duration-200 ${
-                        isActive
-                          ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-md shadow-purple-500/20'
-                          : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-white/10 dark:hover:text-white'
+                      `flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold transition-all duration-150 ${
+                        isActive ? 'text-white shadow-sm' : 'hover:bg-[#fdfaf4]'
                       }`
-                    }>
+                    }
+                    style={(({ isActive }) => ({
+                      background: isActive ? 'linear-gradient(135deg, #c97b5a, #ad6247)' : undefined,
+                      color: isActive ? undefined : '#656f5f'
+                    }))}
+                    >
                     <Icon className="h-5 w-5" />
                     {label}
                   </NavLink>
                 ))}
               </nav>
 
-              <div className="border-t border-slate-200 pt-4 space-y-1 dark:border-white/10">
+              <div className="border-t pt-4 space-y-1" style={{ borderColor: '#ddd7ca' }}>
                 <Link to="/profile" onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-white/10 dark:hover:text-white">
+                  className="flex items-center gain-3 rounded-xl px-4 py-3 text-sm transition-colors"
+                  style={{ color: '#656f5f' }}
+                  onMouseEnter={(e) => e.currentTarget.style.background = '#f6f5ef'}
+                  onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>
                   <User className="h-5 w-5" />Profile
                 </Link>
                 {isSociety && (
                   <Link to="/my-bookings" onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-white/10 dark:hover:text-white">
+                    className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-colors"
+                    style={{ color: '#656f5f' }}
+                    onMouseEnter={(e) => e.currentTarget.style.background = '#f6f5ef'}
+                    onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>
                     <Dumbbell className="h-5 w-5" />My Bookings
                   </Link>
                 )}
                 <Link to="/settings" onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-white/10 dark:hover:text-white">
+                  className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-colors"
+                  style={{ color: '#656f5f' }}
+                  onMouseEnter={(e) => e.currentTarget.style.background = '#f6f5ef'}
+                  onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>
                   <Settings className="h-5 w-5" />Settings
                 </Link>
                 <Link to="/community" onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-white/10 dark:hover:text-white">
+                  className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-colors"
+                  style={{ color: '#656f5f' }}
+                  onMouseEnter={(e) => e.currentTarget.style.background = '#f6f5ef'}
+                  onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>
                   <ArrowLeftRight className="h-5 w-5" />Switch Community
                 </Link>
                 {activeCommunityId && (
                   <button type="button"
                     onClick={() => { setMobileMenuOpen(false); setGuidelinesOpen(true); }}
-                    className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-white/10 dark:hover:text-white">
+                    className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm transition-colors"
+                    style={{ color: '#656f5f' }}
+                    onMouseEnter={(e) => e.currentTarget.style.background = '#f6f5ef'}
+                    onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>
                     <BookOpen className="h-5 w-5" />Guidelines
                   </button>
                 )}
                 <button type="button" onClick={handleLogout}
-                  className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-red-500 transition-colors hover:bg-red-50 hover:text-red-600 dark:text-red-400 dark:hover:bg-red-500/10 dark:hover:text-red-300">
+                  className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm transition-colors"
+                  style={{ color: '#c97b5a' }}
+                  onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(201,123,90,0.1)'}
+                  onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>
                   <LogOut className="h-5 w-5" />Logout
                 </button>
               </div>

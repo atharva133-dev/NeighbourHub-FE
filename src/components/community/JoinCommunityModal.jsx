@@ -48,17 +48,17 @@ export default function JoinCommunityModal({ open, onClose, onJoined }) {
 
   return (
     <div className="modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4">
-      <button type="button" className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={handleClose} aria-label="Close" />
+      <button type="button" className="absolute inset-0 bg-[#20261f]/60 backdrop-blur-sm" onClick={handleClose} aria-label="Close" />
 
-      <div className="modal-content glass-card relative z-10 w-full max-w-sm rounded-2xl p-6">
+      <div className="modal-content relative z-10 w-full max-w-sm rounded-2xl p-6" style={{ background: '#f6f5ef', border: '1px solid #ddd7ca', boxShadow: '0 20px 50px rgba(32,38,31,0.12)' }}>
         <div className="mb-5 flex items-center justify-between">
-          <h2 className="text-xl font-bold text-white">Join Community</h2>
-          <button type="button" onClick={handleClose} className="rounded-lg p-1 text-slate-400 transition hover:bg-white/10 hover:text-white">
+          <h2 className="text-xl font-bold" style={{ fontFamily: '"Fraunces", serif', color: '#20261f' }}>Join Community</h2>
+          <button type="button" onClick={handleClose} className="rounded-lg p-1 text-[#656f5f] transition hover:bg-[#20261f]/5 hover:text-[#20261f]">
             <X className="h-5 w-5" />
           </button>
         </div>
 
-        <p className="mb-4 text-sm text-slate-400">
+        <p className="mb-4 text-sm" style={{ color: '#656f5f' }}>
           Enter the 6-digit code shared by a community admin
         </p>
 
@@ -71,16 +71,20 @@ export default function JoinCommunityModal({ open, onClose, onJoined }) {
               onChange={handleCodeChange}
               placeholder="000000"
               maxLength={6}
-              className="glass-input w-full text-center font-mono text-2xl tracking-[0.5em] text-white"
+              className="w-full rounded-xl border px-4 py-3 text-center font-mono text-2xl tracking-[0.5em] transition-all focus:outline-none focus:ring-2"
+              style={{ background: '#fdfaf4', borderColor: '#ddd7ca', color: '#20261f', focusRingColor: 'rgba(201,123,90,0.3)' }}
               autoFocus
             />
-            {error && <p className="mt-2 text-center text-sm text-red-400">{error}</p>}
+            {error && <p className="mt-2 text-center text-sm" style={{ color: '#c97b5a' }}>{error}</p>}
           </div>
 
           <button
             type="submit"
             disabled={loading || code.length !== 6}
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 py-2.5 text-sm font-semibold text-white disabled:opacity-60"
+            className="flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 disabled:opacity-60"
+            style={{ background: 'linear-gradient(135deg, #c97b5a, #ad6247)', boxShadow: '0 8px 20px rgba(201,123,90,0.3)' }}
+            onMouseEnter={(e) => !loading && code.length === 6 && (e.currentTarget.style.boxShadow = '0 12px 28px rgba(201,123,90,0.42)')}
+            onMouseLeave={(e) => !loading && code.length === 6 && (e.currentTarget.style.boxShadow = '0 8px 20px rgba(201,123,90,0.3)')}
           >
             {loading ? (
               <>

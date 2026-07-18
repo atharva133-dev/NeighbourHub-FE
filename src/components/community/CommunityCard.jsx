@@ -1,26 +1,12 @@
-import { Users, Shield, ArrowRight, Hash, Building2, GraduationCap, Globe } from 'lucide-react';
-
-const GRADIENTS = [
-  'from-purple-600 to-blue-600',
-  'from-emerald-500 to-teal-600',
-  'from-rose-500 to-pink-600',
-  'from-amber-500 to-orange-500',
-  'from-cyan-500 to-blue-500',
-  'from-violet-600 to-purple-500',
-];
+import { ArrowRight, Hash, Building2, GraduationCap, Globe, LogOut } from 'lucide-react';
 
 const TYPE_META = {
-  society:        { label: 'Society / Building', Icon: Building2,     color: 'bg-purple-100 text-purple-700 dark:bg-purple-500/15 dark:text-purple-300' },
-  college_school: { label: 'College / School',   Icon: GraduationCap, color: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300' },
-  other:          { label: 'Other',              Icon: Globe,         color: 'bg-blue-100 text-blue-700 dark:bg-blue-500/15 dark:text-blue-300' },
+  society:        { label: 'Society', Icon: Building2,     typeClass: 'type-society' },
+  college_school: { label: 'College', Icon: GraduationCap, typeClass: 'type-college' },
+  other:          { label: 'Other',   Icon: Globe,         typeClass: 'type-other' },
 };
 
-function pickGradient(name = '') {
-  const code = name.charCodeAt(0) || 0;
-  return GRADIENTS[code % GRADIENTS.length];
-}
-
-export default function CommunityCard({ community, onEnter }) {
+export default function CommunityCard({ community, onEnter, onLeave }) {
   const initials = community.name
     .split(' ')
     .map((w) => w[0])
@@ -28,85 +14,134 @@ export default function CommunityCard({ community, onEnter }) {
     .slice(0, 2)
     .toUpperCase();
 
-  const gradient = pickGradient(community.name);
-  const typeMeta = TYPE_META[community.type] || TYPE_META.other;
-  const TypeIcon = typeMeta.Icon;
+  const meta = TYPE_META[community.type] || TYPE_META.other;
+  const MetaIcon = meta.Icon;
+  
+  const isAdmin = community.isAdmin;
+  const typeClass = meta.typeClass;
+  
+  const bgStyles = {
+    'type-society': 'radial-gradient(circle, rgba(110,143,115,0.28), transparent 70%)',
+    'type-college': 'radial-gradient(circle, rgba(201,123,90,0.28), transparent 70%)',
+    'type-other': 'radial-gradient(circle, rgba(168,68,47,0.24), transparent 70%)',
+  };
+  
+  const adminGlow = 'radial-gradient(circle, rgba(201,123,90,0.32), transparent 70%)';
+  
+  const avatarStyles = {
+    'type-society': { background: 'linear-gradient(135deg, #6e8f73, #55735a)', color: '#f3f8f2' },
+    'type-college': { background: 'linear-gradient(135deg, #c97b5a, #ad6247)', color: '#fdf6f1' },
+    'type-other': { background: 'linear-gradient(135deg, #a8442f, #8c3626)', color: '#fbeeea' },
+  };
+  
+  const pillStyles = {
+    'type-society': { color: '#6e8f73', borderColor: 'rgba(110,143,115,0.3)', background: 'rgba(110,143,115,0.08)' },
+    'type-college': { color: '#c97b5a', borderColor: 'rgba(201,123,90,0.3)', background: 'rgba(201,123,90,0.08)' },
+    'type-other': { color: '#a8442f', borderColor: 'rgba(168,68,47,0.3)', background: 'rgba(168,68,47,0.08)' },
+  };
 
   return (
-    <div className="community-card group glass-card relative overflow-hidden rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl">
-      <div className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100 community-card-glow" />
-
-      {/* Gradient banner header */}
-      <div className={`relative h-24 bg-gradient-to-br ${gradient} overflow-hidden`}>
-        {/* Subtle pattern overlay */}
-        <div className="absolute inset-0 opacity-20"
-          style={{ backgroundImage: 'radial-gradient(circle at 20% 50%, white 1px, transparent 1px), radial-gradient(circle at 80% 20%, white 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
-
-        {/* Large initial in header */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-5xl font-black text-white/20 select-none tracking-tight">{initials}</span>
+    <div 
+      className="group relative overflow-hidden rounded-[22px] border border-[#161c14]/9 bg-[#fdfcf7] shadow-[0_2px_10px_rgba(22,28,20,0.05)] transition-all duration-400 hover:-translate-y-[6px] hover:border-[#161c14]/17 hover:shadow-[0_26px_50px_rgba(22,28,20,0.14)]"
+    >
+      <div 
+        className="relative flex h-[150px] items-start justify-between overflow-hidden p-[18px_20px]"
+        style={{ background: 'linear-gradient(150deg, #efede3, #fdfcf7)' }}
+      >
+        <div 
+          className="absolute inset-0 opacity-[0.55]"
+          style={{ backgroundImage: 'radial-gradient(rgba(22,28,20,0.06) 1px, transparent 1px)', backgroundSize: '16px 16px' }}
+        />
+        <div 
+          className="absolute -right-[60px] -top-[70px] h-[220px] w-[220px] rounded-full blur-[30px]"
+          style={{ background: isAdmin ? adminGlow : bgStyles[typeClass] }}
+        />
+        
+        <span 
+          className={`relative z-10 flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[12px] font-semibold ${
+            isAdmin 
+              ? 'border border-[#c97b5a]/35 bg-[#c97b5a]/15 text-[#c97b5a]' 
+              : 'border border-[#161c14]/9 bg-[#161c14]/[0.045] text-[#656f5f]'
+          }`}
+        >
+          {isAdmin ? '🛡 Admin' : 'Member'}
+        </span>
+        
+        <div 
+          className="absolute -bottom-[18px] right-[14px] z-0 font-bold tracking-[-0.04em] text-[#161c14]/[0.045] select-none"
+          style={{ fontFamily: '"Space Grotesk", sans-serif', fontSize: '84px' }}
+        >
+          {initials}
         </div>
-
-        {/* Avatar overlapping the banner bottom */}
-        <div className={`absolute -bottom-5 left-5 flex h-14 w-14 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br ${gradient} text-lg font-black text-white shadow-xl ring-4 ring-white dark:ring-[#171725]`}>
-          {community.avatar
-            ? <img src={community.avatar} alt="" className="h-full w-full object-cover" />
-            : initials
-          }
+        
+        <div 
+          className="relative z-10 mt-[38px] flex h-[60px] w-[60px] items-center justify-center rounded-[16px] border border-white/40 text-[20px] font-bold shadow-[0_10px_22px_rgba(22,28,20,0.2)]"
+          style={{ fontFamily: '"Space Grotesk", sans-serif', ...avatarStyles[typeClass] }}
+        >
+          {community.avatar ? <img src={community.avatar} alt="" className="h-full w-full object-cover rounded-[15px]" /> : initials}
         </div>
-
-        {/* Admin badge top-right */}
-        {community.isAdmin && (
-          <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-white/20 px-2.5 py-1 text-xs font-bold text-white backdrop-blur-sm">
-            <Shield className="h-3 w-3" />
-            Admin
-          </span>
-        )}
       </div>
 
-      {/* Card body */}
-      <div className="px-5 pb-5 pt-8">
-        <h3 className="text-base font-bold text-slate-900 dark:text-white truncate" title={community.name}>
-          {community.name || 'Unnamed Community'}
-        </h3>
-
+      <div className="p-[20px_22px_22px]">
+        <div className="flex items-center justify-between gap-2.5">
+          <h3 className="overflow-hidden text-ellipsis whitespace-nowrap text-[18px] font-bold text-[#20261f]" style={{ fontFamily: '"Inter", sans-serif' }}>
+            {community.name || 'Unnamed Community'}
+          </h3>
+          <div className="flex shrink-0 items-center gap-1.5 rounded-full border border-[#6e8f73]/30 bg-[#6e8f73]/14 px-2.5 py-1 text-[11px] font-bold text-[#6e8f73]">
+             <span className="relative flex h-[5px] w-[5px]">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#6e8f73] opacity-75"></span>
+                <span className="relative inline-flex h-[5px] w-[5px] rounded-full bg-[#6e8f73]" style={{ boxShadow: '0 0 6px #6e8f73' }}></span>
+              </span>
+              LIVE
+          </div>
+        </div>
+        
         {community.description && (
-          <p className="mt-1 line-clamp-2 text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-            {community.description}
-          </p>
+          <p className="mt-2 line-clamp-2 text-[13px] text-[#656f5f]">{community.description}</p>
         )}
 
-        {/* Meta row */}
-        <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
-          {/* Type badge */}
-          <span className={`inline-flex items-center gap-1 rounded-lg px-2.5 py-1 font-semibold ${typeMeta.color}`}>
-            <TypeIcon className="h-3 w-3" />
-            {typeMeta.label}
+        <div className="mt-3.5 flex flex-wrap gap-2">
+          <span 
+            className="flex items-center gap-1.5 rounded-full border px-[11px] py-1.5 text-[12px] font-semibold"
+            style={pillStyles[typeClass]}
+          >
+            <MetaIcon className="h-3 w-3" />
+            {meta.label}
           </span>
-          <span className="inline-flex items-center gap-1 rounded-lg bg-slate-100 dark:bg-white/5 px-2.5 py-1 font-medium">
-            <Users className="h-3.5 w-3.5" />
-            {community.memberCount} {community.memberCount === 1 ? 'member' : 'members'}
+          <span className="flex items-center gap-1.5 rounded-full border border-[#161c14]/9 bg-[#161c14]/[0.045] px-[11px] py-1.5 text-[12px] font-medium text-[#656f5f]">
+            👤 {community.memberCount}
           </span>
           {community.code && (
-            <span className="inline-flex items-center gap-1 rounded-lg bg-slate-100 dark:bg-white/5 px-2.5 py-1 font-mono font-medium tracking-wider">
-              <Hash className="h-3.5 w-3.5" />
-              {community.code}
+            <span className="flex items-center gap-1.5 rounded-full border border-[#161c14]/9 bg-[#161c14]/[0.045] px-[11px] py-1.5 text-[12px] font-mono text-[#656f5f]">
+              # {community.code}
             </span>
           )}
         </div>
 
         {community.admin && (
-          <p className="mt-2 text-xs text-slate-400 dark:text-slate-500">
-            Admin: <span className="font-semibold text-slate-600 dark:text-slate-300">{community.admin.name}</span>
-          </p>
+          <div className="mt-3.5 text-[13px] text-[#656f5f]">
+            By <b className="font-semibold text-[#20261f]">{community.admin.name}</b>
+          </div>
         )}
 
-        {/* Enter button */}
-        <button type="button" onClick={() => onEnter(community)}
-          className={`relative mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r ${gradient} py-2.5 text-sm font-bold text-white shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0`}>
-          Enter Community
-          <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
-        </button>
+        <div className="mt-5 flex gap-2.5">
+          <button 
+            onClick={() => onLeave && onLeave(community)}
+            className="flex flex-1 items-center justify-center gap-[7px] rounded-[11px] border border-[#a8442f]/25 bg-[#a8442f]/8 py-[11px] text-[13.5px] font-semibold text-[#a8442f] transition-all hover:-translate-y-[1px] hover:bg-[#a8442f]/14"
+          >
+            <LogOut className="h-4 w-4" />
+            Leave
+          </button>
+          <button 
+            onClick={() => onEnter(community)}
+            className="flex flex-[1.6] items-center justify-center gap-[7px] rounded-[11px] py-[11px] text-[13.5px] font-bold text-[#fdf6f1] transition-all hover:-translate-y-[2px]"
+            style={{ background: 'linear-gradient(135deg, #c97b5a, #ad6247)', boxShadow: '0 8px 18px rgba(201,123,90,0.3)' }}
+            onMouseEnter={(e) => e.currentTarget.style.boxShadow = '0 12px 26px rgba(201,123,90,0.42)'}
+            onMouseLeave={(e) => e.currentTarget.style.boxShadow = '0 8px 18px rgba(201,123,90,0.3)'}
+          >
+            Enter <ArrowRight className="h-4 w-4" />
+          </button>
+        </div>
       </div>
     </div>
   );

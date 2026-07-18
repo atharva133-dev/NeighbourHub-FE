@@ -70,15 +70,15 @@ export default function Profile() {
   return (
     <Layout>
       <div className="mb-8 glass-card rounded-2xl bg-white p-6 shadow-sm border border-slate-200 dark:border-white/10 dark:bg-white/5">
-        <p className="text-xs font-bold uppercase tracking-wider text-purple-600 dark:text-blue-300">Profile</p>
+        <p className="text-xs font-bold uppercase tracking-wider text-[#6E8F73] dark:text-[#6E8F73]">Profile</p>
         <h2 className="mt-2 text-3xl font-extrabold text-slate-900 dark:text-white">My Account</h2>
       </div>
 
       {/* Profile Card */}
       <div className="mb-10 overflow-hidden rounded-2xl bg-white shadow-md border border-slate-200 dark:border-white/10 dark:bg-[#13131f] transition-all hover:shadow-lg">
-        <div className="bg-gradient-to-r from-purple-100 to-blue-100 px-6 py-8 sm:px-8 dark:from-purple-600/20 dark:to-blue-600/20">
+        <div className="bg-gradient-to-r from-[#E4EBE1] to-[#F3DFD1] px-6 py-8 sm:px-8 dark:from-[#6E8F73]/20 dark:to-[#C97B5A]/20">
           <div className="flex flex-col items-center gap-6 sm:flex-row">
-            <div className="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-purple-600 to-blue-600 text-3xl font-bold text-white shadow-xl shadow-purple-500/30">
+            <div className="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-[#6E8F73] to-[#C97B5A] text-3xl font-bold text-white shadow-xl shadow-[#6E8F73]/30">
               {user?.avatarUrl ? (
                 <img src={user.avatarUrl} alt="Avatar" className="h-full w-full object-cover" />
               ) : (
@@ -99,7 +99,7 @@ export default function Profile() {
               ) : (
                 <div className="flex items-center gap-3 justify-center sm:justify-start">
                   <h3 className="text-2xl font-extrabold text-slate-900 dark:text-white">{user.name}</h3>
-                  <button type="button" onClick={() => setEditing(true)} className="inline-flex items-center gap-1.5 rounded-lg border border-purple-200 bg-white/60 px-3 py-1.5 text-xs font-bold text-purple-700 shadow-sm transition-all hover:bg-white dark:border-white/20 dark:bg-black/20 dark:text-slate-300 dark:hover:bg-black/40">
+                  <button type="button" onClick={() => setEditing(true)} className="inline-flex items-center gap-1.5 rounded-lg border border-[#6E8F73] bg-white/60 px-3 py-1.5 text-xs font-bold text-[#6E8F73] shadow-sm transition-all hover:bg-white dark:border-white/20 dark:bg-black/20 dark:text-slate-300 dark:hover:bg-black/40">
                     <Edit3 className="h-3.5 w-3.5" /> Edit
                   </button>
                 </div>
@@ -118,7 +118,7 @@ export default function Profile() {
       <div>
         <h3 className="mb-6 text-xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
           My Notices
-          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-purple-100 text-xs text-purple-700 dark:bg-purple-500/20 dark:text-purple-300">{myNotices.length}</span>
+          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#E4EBE1] text-xs text-[#4E6B54] dark:bg-[#6E8F73]/20 dark:text-[#6E8F73]">{myNotices.length}</span>
         </h3>        
         {loadingNotices ? (
           <NoticeListSkeleton />

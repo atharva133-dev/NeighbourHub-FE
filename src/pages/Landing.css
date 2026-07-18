@@ -1,0 +1,83 @@
+@theme {
+  --color-parchment: #F6F5EF;
+  --color-parchment-light: #FCFBF6;
+  --color-sage: #6E8F73;
+  --color-sage-soft: #E4EBE1;
+  --color-sage-deep: #4E6B54;
+  --color-clay: #C97B5A;
+  --color-clay-soft: #F3DFD1;
+  --color-clay-deep: #A85C3F;
+  --color-brick: #A8442F;
+  --color-brick-soft: #EAD6CE;
+  --color-ink: #20261F;
+  --color-ink-secondary: rgba(32, 38, 31, 0.7);
+  --color-ink-tertiary: rgba(32, 38, 31, 0.5);
+  --color-border: rgba(32, 38, 31, 0.12);
+
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-mesh: mesh 12s ease infinite;
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  @keyframes mesh {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+}
+
+:root {
+  --font-sans: "Inter", sans-serif;
+}
+
+body {
+  background-color: var(--color-parchment);
+  color: var(--color-ink);
+  overflow-x: hidden;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.mesh-gradient-bg {
+  background: linear-gradient(-45deg, var(--color-sage), var(--color-clay), var(--color-brick));
+  background-size: 400% 400%;
+}
+
+.glow-orb {
+  filter: blur(100px);
+  pointer-events: none;
+  border-radius: 9999px;
+  position: absolute;
+}
+
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.transform-style-3d {
+  transform-style: preserve-3d;
+}
+
+/* Hide scrollbar for clean horizontal scrolls */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

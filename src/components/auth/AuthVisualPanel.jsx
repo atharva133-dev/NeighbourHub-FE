@@ -25,13 +25,13 @@ export default function AuthVisualPanel() {
       </div>
 
       <div className="relative z-10">
-        <div className="auth-logo-glow mb-2 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500 to-violet-700 text-2xl font-extrabold text-white shadow-2xl">
-          NH
+        <div className="auth-logo-glow mb-2 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-sage-600 to-clay-600 text-2xl font-extrabold text-white shadow-2xl overflow-hidden">
+          <img src="/logo.png" alt="NeighbourHub Logo" className="h-full w-full object-cover p-1.5" />
         </div>
         <h1 className="auth-logo-glow text-4xl font-extrabold tracking-tight text-white xl:text-5xl">
           NeighbourHub
         </h1>
-        <p className="mt-3 max-w-sm text-lg text-purple-100/80">
+        <p className="mt-3 max-w-sm text-lg text-sage-100/80">
           Your community, connected in real time
         </p>
       </div>
@@ -45,7 +45,7 @@ export default function AuthVisualPanel() {
             <span className="text-2xl">{icon}</span>
             <div>
               <p className="font-semibold text-white">{title}</p>
-              <p className="text-sm text-purple-200/70">{desc}</p>
+              <p className="text-sm text-sage-200/70">{desc}</p>
             </div>
           </div>
         ))}
@@ -57,18 +57,18 @@ export default function AuthVisualPanel() {
             <span className="rounded-full bg-red-500/20 px-2 py-0.5 text-xs font-medium text-red-300">
               Emergency
             </span>
-            <span className="text-xs text-purple-200/60">Just now</span>
+            <span className="text-xs text-sage-200/60">Just now</span>
           </div>
           <p className="text-sm font-medium text-white">Power outage on Oak Street</p>
-          <p className="mt-1 text-xs text-purple-200/70">Expected restore by 6 PM</p>
+          <p className="mt-1 text-xs text-sage-200/70">Expected restore by 6 PM</p>
           <div className="mt-3 flex items-center gap-2">
-            <div className="h-6 w-6 rounded-full bg-gradient-to-br from-purple-400 to-blue-500" />
-            <span className="text-xs text-purple-200/80">Posted by Admin</span>
+            <div className="h-6 w-6 rounded-full bg-gradient-to-br from-sage-400 to-clay-500" />
+            <span className="text-xs text-sage-200/80">Posted by Admin</span>
           </div>
         </div>
       </div>
 
-      <p className="relative z-10 text-center text-sm font-medium tracking-wide text-purple-200/60">
+      <p className="relative z-10 text-center text-sm font-medium tracking-wide text-sage-200/60">
         500+ Members · 1000+ Notices · Always Live
       </p>
     </div>

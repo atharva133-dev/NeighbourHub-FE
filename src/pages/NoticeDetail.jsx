@@ -9,19 +9,23 @@ import { PageLoader } from '../components/Skeletons';
 import { useAuth } from '../context/AuthContext';
 
 const CATEGORY_STYLES = {
-  General: 'bg-blue-500/15 text-blue-200 ring-blue-400/20',
-  Event: 'bg-emerald-500/15 text-emerald-200 ring-emerald-400/20',
-  'Lost & Found': 'bg-amber-500/15 text-amber-200 ring-amber-400/20',
-  Emergency: 'bg-red-500/15 text-red-200 ring-red-400/20',
+  General:        'bg-[#f1f5f9] text-[#475569] border border-[#e2e8f0]',
+  Event:          'bg-[#ecfdf5] text-[#047857] border border-[#d1fae5]',
+  'Lost & Found': 'bg-[#fffbeb] text-[#b45309] border border-[#fef3c7]',
+  Emergency:      'bg-[#fef2f2] text-[#b91c1c] border border-[#fee2e2]',
+};
+
+const PRIORITY_STYLES = {
+  Low:    'bg-[#f1f5f9] text-[#475569] border border-[#e2e8f0]',
+  Medium: 'bg-[#fffbeb] text-[#b45309] border border-[#fef3c7]',
+  High:   'bg-[#ffedd5] text-[#c2410c] border border-[#ffedd5]',
+  Urgent: 'bg-[#fef2f2] text-[#b91c1c] border border-[#fee2e2] font-bold',
 };
 
 function formatDate(date) {
   return new Date(date).toLocaleString(undefined, {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-    hour: 'numeric',
-    minute: '2-digit',
+    month: 'short', day: 'numeric', year: 'numeric',
+    hour: 'numeric', minute: '2-digit',
   });
 }
 
@@ -39,7 +43,7 @@ export default function NoticeDetail() {
       try {
         const { data } = await api.get(`/notices/${id}`);
         setNotice(data);
-      } catch (err) {
+      } catch {
         toast.error('Notice not found');
         navigate('/', { replace: true });
       } finally {
@@ -76,73 +80,82 @@ export default function NoticeDetail() {
       <button
         type="button"
         onClick={() => navigate(-1)}
-        className="mb-4 inline-flex items-center gap-2 rounded-lg border border-white/10 px-4 py-2 text-sm font-medium text-slate-300 transition hover:bg-white/10"
+        className="mb-5 inline-flex items-center gap-2 rounded-xl border border-[#e2e8f0] bg-white px-4 py-2 text-sm font-semibold text-[#475569] shadow-xs transition hover:bg-[#f8fafc] hover:text-[#0f172a]"
       >
         <ArrowLeft className="h-4 w-4" />
         Back
       </button>
 
-      <article className="glass-card overflow-hidden">
-        <div className="border-b border-white/10 px-6 py-5 sm:px-8">
+      <article className="overflow-hidden rounded-[20px] border border-[#e2e8f0] bg-white shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+        {/* Header */}
+        <div className="border-b border-[#f1f5f9] px-6 py-6 sm:px-8">
           <div className="mb-4 flex flex-wrap items-center gap-2">
             {notice.pinned && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-violet-500/15 px-2.5 py-1 text-xs font-semibold text-violet-200 ring-1 ring-violet-400/20">
-                <Pin className="h-3 w-3" />
-                Pinned
+              <span className="inline-flex items-center gap-1 rounded-full bg-[#4f46e5]/10 px-2.5 py-1 text-xs font-semibold text-[#4f46e5] border border-[#4f46e5]/20">
+                <Pin className="h-3 w-3" /> Pinned
               </span>
             )}
-            <span
-              className={`rounded-full px-2.5 py-1 text-xs font-medium ring-1 ${CATEGORY_STYLES[notice.category] || CATEGORY_STYLES.General}`}
-            >
+            <span className={`rounded-full px-2.5 py-1 text-xs font-semibold border ${CATEGORY_STYLES[notice.category] || CATEGORY_STYLES.General}`}>
               {notice.category}
             </span>
-            <span className="rounded-full bg-orange-500/15 px-2.5 py-1 text-xs font-medium text-orange-200 ring-1 ring-orange-400/25">
+            <span className={`rounded-full px-2.5 py-1 text-xs font-semibold border ${PRIORITY_STYLES[priority] || PRIORITY_STYLES.Medium}`}>
               {priority}
             </span>
           </div>
 
-          <h1 className="text-2xl font-bold text-white sm:text-3xl">{notice.title}</h1>
+          <h1 className="text-2xl font-bold text-[#0f172a] sm:text-3xl" style={{ fontFamily: '"Space Grotesk", sans-serif' }}>
+            {notice.title}
+          </h1>
 
-          <div className="mt-4 flex flex-wrap items-center justify-between gap-2 text-sm text-slate-400">
-            <span>
-              Posted by{' '}
-              <span className="font-medium text-slate-200">
-                {notice.author?.name || 'Anonymous'}
-              </span>
-            </span>
-            <span className="flex items-center gap-1">
-              <Clock className="h-4 w-4" />
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-2 text-sm text-[#64748b]">
+            <div className="flex items-center gap-2">
+              <div className="flex h-7 w-7 items-center justify-center overflow-hidden rounded-lg bg-[#0f172a] text-xs font-bold text-white">
+                {notice.author?.avatarUrl
+                  ? <img src={notice.author.avatarUrl} alt="" className="h-full w-full object-cover" />
+                  : notice.author?.name?.charAt(0).toUpperCase() || 'A'}
+              </div>
+              <span>Posted by <span className="font-semibold text-[#334155]">{notice.author?.name || 'Anonymous'}</span></span>
+            </div>
+            <span className="flex items-center gap-1.5 bg-[#f1f5f9] px-2.5 py-1 rounded-md text-xs font-medium">
+              <Clock className="h-3.5 w-3.5" />
               {formatDate(notice.createdAt)}
             </span>
           </div>
         </div>
 
+        {/* Body */}
         <div className="px-6 py-6 sm:px-8">
-          <p className="whitespace-pre-wrap text-base leading-relaxed text-slate-200">
+          <p className="whitespace-pre-wrap text-base leading-relaxed text-[#334155]">
             {notice.content}
           </p>
 
-          <div className="mt-6 flex items-center gap-4">
+          {notice.imageUrl && (
+            <div className="mt-6 overflow-hidden rounded-xl border border-[#e2e8f0] bg-[#f8fafc]">
+              <img src={notice.imageUrl} alt="Notice media" className="w-full max-h-[500px] object-contain" />
+            </div>
+          )}
+
+          <div className="mt-6 flex items-center gap-3">
             <button
               type="button"
               onClick={handleLike}
               disabled={likeLoading}
-              className={`inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition duration-200 disabled:opacity-50 ${
+              className={`inline-flex items-center gap-2 rounded-xl border px-4 py-2 text-sm font-semibold transition-all duration-150 disabled:opacity-50 shadow-xs ${
                 likedByUser
-                  ? 'border-blue-400/30 bg-blue-500/15 text-blue-100'
-                  : 'border-white/10 text-slate-300 hover:-translate-y-0.5 hover:bg-white/10'
+                  ? 'border-[#fca5a5] bg-[#fef2f2] text-[#b91c1c]'
+                  : 'border-[#e2e8f0] bg-white text-[#475569] hover:bg-[#f8fafc] hover:text-[#0f172a]'
               }`}
             >
               <Heart className={`h-5 w-5 ${likedByUser ? 'fill-current' : ''}`} />
               {likedByUser ? 'Liked' : 'Like'} ({likes.length})
             </button>
-            <span className="flex items-center gap-2 text-sm text-slate-400">
+            <span className="flex items-center gap-2 text-sm font-semibold text-[#475569]">
               <MessageCircle className="h-5 w-5" />
               Comments
             </span>
           </div>
 
-          <div className="mt-8">
+          <div className="mt-8 border-t border-[#f1f5f9] pt-6">
             <CommentSection noticeId={notice._id} />
           </div>
         </div>

@@ -6,12 +6,12 @@ import { SocketProvider } from './context/SocketContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminUsers from './pages/AdminUsers';
+import Landing from './pages/Landing';
 import Home from './pages/Home';
 import Events from './pages/Events';
 import LostFound from './pages/LostFound';
 import Emergency from './pages/Emergency';
-import Login from './pages/Login';
-import Register from './pages/Register';
+import LoginNew from './pages/LoginNew';
 import Profile from './pages/Profile';
 import NoticeDetail from './pages/NoticeDetail';
 import Settings from './pages/Settings';
@@ -26,8 +26,9 @@ export default function App() {
         <SocketProvider>
           <BrowserRouter>
             <Routes>
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
+              <Route path="/" element={<Landing />} />
+              <Route path="/login" element={<LoginNew />} />
+              <Route path="/register" element={<LoginNew initialMode="signup" />} />
               <Route
                 path="/community"
                 element={
@@ -37,7 +38,7 @@ export default function App() {
                 }
               />
               <Route
-                path="/"
+                path="/board"
                 element={
                   <ProtectedRoute>
                     <Home />
@@ -95,10 +96,12 @@ export default function App() {
               toastOptions={{
                 duration: 2800,
                 style: {
-                  background: 'rgba(15, 23, 42, 0.92)',
-                  border: '1px solid rgba(255, 255, 255, 0.12)',
-                  color: '#f8fafc',
-                  backdropFilter: 'blur(16px)',
+                  background: '#ffffff',
+                  border: '1px solid #e2e8f0',
+                  color: '#0f172a',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+                  fontWeight: '500',
+                  fontSize: '14px',
                 },
               }}
             />

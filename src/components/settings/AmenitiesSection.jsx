@@ -182,7 +182,7 @@ export default function AmenitiesSection() {
       <div className="space-y-4">
         <div className="glass-card rounded-2xl border border-slate-200 bg-white/60 p-6 dark:border-white/10 dark:bg-white/5">
           <div className="mb-5 flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-blue-500 shadow-md shadow-purple-500/20">
+            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#6E8F73] to-[#C97B5A] shadow-md shadow-[#6E8F73]/20">
               <Dumbbell className="h-5 w-5 text-white" />
             </span>
             <div>
@@ -220,7 +220,7 @@ export default function AmenitiesSection() {
                         </span>
                       )}
                       {(amenity.operatingHours || (amenity.operatingDays && amenity.operatingDays.length > 0)) && (
-                        <span className="inline-flex items-center gap-1 rounded-lg bg-purple-50 text-purple-700 dark:bg-purple-500/10 dark:text-purple-300 px-2 py-0.5 text-xs font-medium ring-1 ring-purple-200 dark:ring-purple-500/20">
+                        <span className="inline-flex items-center gap-1 rounded-lg bg-[#E4EBE1] text-[#4E6B54] dark:bg-[#6E8F73]/10 dark:text-[#6E8F73] px-2 py-0.5 text-xs font-medium ring-1 ring-[#6E8F73]/20 dark:ring-[#6E8F73]/20">
                           <Clock className="h-3 w-3" />
                           {amenity.operatingHours || 'Available'}
                           {amenity.operatingDays && amenity.operatingDays.length > 0 && ` (${amenity.operatingDays.length === 7 ? 'Everyday' : amenity.operatingDays.join(', ')})`}
@@ -239,7 +239,7 @@ export default function AmenitiesSection() {
           <button
             type="button"
             onClick={() => navigate('/amenities')}
-            className="mt-5 flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-purple-500/25 transition-all hover:-translate-y-0.5 hover:shadow-purple-500/40"
+            className="mt-5 flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#6E8F73] to-[#C97B5A] px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-[#6E8F73]/25 transition-all hover:-translate-y-0.5 hover:shadow-[#6E8F73]/40"
           >
             <ExternalLink className="h-4 w-4" />
             Go to Amenities & Book
@@ -255,7 +255,7 @@ export default function AmenitiesSection() {
       {/* Current amenities list */}
       <div className="glass-card rounded-2xl border border-slate-200 bg-white/60 p-6 dark:border-white/10 dark:bg-white/5">
         <div className="mb-5 flex items-center gap-3">
-          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-blue-500 shadow-md shadow-purple-500/20">
+          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#6E8F73] to-[#C97B5A] shadow-md shadow-[#6E8F73]/20">
             <Dumbbell className="h-5 w-5 text-white" />
           </span>
           <div>
@@ -296,7 +296,7 @@ export default function AmenitiesSection() {
                         </span>
                       )}
                       {(amenity.operatingHours || (amenity.operatingDays && amenity.operatingDays.length > 0)) && (
-                        <span className="inline-flex items-center gap-1 rounded-lg bg-purple-50 text-purple-700 dark:bg-purple-500/10 dark:text-purple-300 px-2 py-0.5 text-xs font-medium ring-1 ring-purple-200 dark:ring-purple-500/20">
+                        <span className="inline-flex items-center gap-1 rounded-lg bg-[#E4EBE1] text-[#4E6B54] dark:bg-[#6E8F73]/10 dark:text-[#6E8F73] px-2 py-0.5 text-xs font-medium ring-1 ring-[#6E8F73]/20 dark:ring-[#6E8F73]/20">
                           <Clock className="h-3 w-3" />
                           {amenity.operatingHours || 'Available'}
                           {amenity.operatingDays && amenity.operatingDays.length > 0 && ` (${amenity.operatingDays.length === 7 ? 'Everyday' : amenity.operatingDays.join(', ')})`}
@@ -548,7 +548,7 @@ export default function AmenitiesSection() {
           </div>
 
           <button type="submit" disabled={adding}
-            className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-purple-500/25 transition-all hover:-translate-y-0.5 hover:shadow-purple-500/40 disabled:opacity-60 disabled:hover:translate-y-0">
+            className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#6E8F73] to-[#C97B5A] px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-[#6E8F73]/25 transition-all hover:-translate-y-0.5 hover:shadow-[#6E8F73]/40 disabled:opacity-60 disabled:hover:translate-y-0">
             {adding ? <><Loader2 className="h-4 w-4 animate-spin" />Adding…</> : <><Plus className="h-4 w-4" />Add Amenity</>}
           </button>
         </form>

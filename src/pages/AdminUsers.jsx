@@ -49,12 +49,12 @@ export default function AdminUsers() {
     }
   };
 
-  if (!isAdmin) return <Navigate to="/" replace />;
+  if (!isAdmin) return <Navigate to="/board" replace />;
 
   return (
     <Layout>
       <div className="mb-6 glass-card p-5">
-        <p className="text-xs font-semibold uppercase text-blue-300">Admin</p>
+        <p className="text-xs font-semibold uppercase text-[#6E8F73]">Admin</p>
         <h2 className="mt-2 text-2xl font-bold text-white sm:text-3xl">User Management</h2>
         <p className="mt-2 max-w-2xl text-sm text-slate-300">
           View all registered users, manage roles, and remove accounts.
@@ -87,12 +87,12 @@ export default function AdminUsers() {
                   <tr key={u._id} className="transition hover:bg-white/5">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-blue-500 text-xs font-bold text-white">
+                        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-[#6E8F73] to-[#C97B5A] text-xs font-bold text-white">
                           {u.name?.charAt(0)?.toUpperCase() || '?'}
                         </div>
                         <div>
                           <p className="font-medium text-white">{u.name}</p>
-                          {u._id === currentUser?.id && <p className="text-xs text-blue-300">You</p>}
+                          {u._id === currentUser?.id && <p className="text-xs text-[#6E8F73]">You</p>}
                         </div>
                       </div>
                     </td>
@@ -102,7 +102,7 @@ export default function AdminUsers() {
                         className={
                           'inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium ' +
                           (u.role === 'admin'
-                            ? 'bg-purple-500/15 text-purple-200 ring-1 ring-purple-400/20'
+                            ? 'bg-[#6E8F73]/15 text-[#6E8F73] ring-1 ring-[#6E8F73]/20'
                             : 'bg-slate-500/15 text-slate-200 ring-1 ring-slate-400/20')
                         }
                       >

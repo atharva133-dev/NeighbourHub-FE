@@ -40,11 +40,11 @@ export default function LoginForm({ onSwitchToRegister }) {
   if (success) {
     return (
       <div className="flex flex-col items-center justify-center py-12">
-        <div className="auth-success-check flex h-20 w-20 items-center justify-center rounded-full bg-green-100 dark:bg-green-500/20">
-          <CheckCircle2 className="h-12 w-12 text-green-600 dark:text-green-400" strokeWidth={2} />
+        <div className="auth-success-check flex h-20 w-20 items-center justify-center rounded-full bg-green-100">
+          <CheckCircle2 className="h-12 w-12 text-green-600" strokeWidth={2} />
         </div>
-        <p className="mt-4 text-xl font-bold text-slate-900 dark:text-white">Welcome back!</p>
-        <p className="mt-1 text-sm font-medium text-slate-500 dark:text-slate-400">Redirecting to your communities...</p>
+        <p className="mt-4 text-xl font-bold text-slate-900">Welcome back!</p>
+        <p className="mt-1 text-sm font-medium text-slate-500">Redirecting to your communities...</p>
       </div>
     );
   }
@@ -52,19 +52,19 @@ export default function LoginForm({ onSwitchToRegister }) {
   return (
     <>
       <div className="mb-8">
-        <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Welcome back</h2>
-        <p className="mt-1.5 text-sm font-medium text-slate-600 dark:text-slate-400">Sign in to your NeighbourHub account</p>
+        <h2 className="text-2xl font-bold text-slate-900">Welcome back</h2>
+        <p className="mt-1.5 text-sm font-medium text-slate-600">Sign in to your NeighbourHub account</p>
       </div>
 
       {error && (
-        <div className="mb-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-600 dark:border-red-400/20 dark:bg-red-500/10 dark:text-red-200">
+        <div className="mb-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-600">
           {error}
         </div>
       )}
 
       <form onSubmit={handleSubmit} className={`space-y-5 ${shake ? 'auth-shake' : ''}`}>
         <div>
-          <label htmlFor="email" className="mb-1.5 block text-sm font-bold text-slate-700 dark:text-slate-200">
+          <label htmlFor="email" className="mb-1.5 block text-sm font-bold text-slate-700">
             Email
           </label>
           <input
@@ -73,13 +73,13 @@ export default function LoginForm({ onSwitchToRegister }) {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="auth-input glass-input w-full"
-            placeholder="Enter here "
+            className="auth-input glass-input w-full bg-white border-slate-200 text-slate-900 placeholder-slate-400 focus:border-indigo-500 focus:ring-indigo-500/10"
+            placeholder="Enter here"
           />
         </div>
 
         <div>
-          <label htmlFor="password" className="mb-1.5 block text-sm font-bold text-slate-700 dark:text-slate-200">
+          <label htmlFor="password" className="mb-1.5 block text-sm font-bold text-slate-700">
             Password
           </label>
           <div className="relative">
@@ -89,13 +89,13 @@ export default function LoginForm({ onSwitchToRegister }) {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="auth-input glass-input w-full pr-10"
+              className="auth-input glass-input w-full pr-10 bg-white border-slate-200 text-slate-900 placeholder-slate-400 focus:border-indigo-500 focus:ring-indigo-500/10"
               placeholder="••••••••"
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-slate-600 dark:hover:text-white"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-slate-600"
               aria-label={showPassword ? 'Hide password' : 'Show password'}
             >
               {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -104,18 +104,18 @@ export default function LoginForm({ onSwitchToRegister }) {
         </div>
 
         <div className="flex items-center justify-between">
-          <label className="flex cursor-pointer items-center gap-2 text-sm font-medium text-slate-600 dark:text-slate-300">
+          <label className="flex cursor-pointer items-center gap-2 text-sm font-medium text-slate-600">
             <input
               type="checkbox"
               checked={rememberMe}
               onChange={(e) => setRememberMe(e.target.checked)}
-              className="h-4 w-4 rounded border-slate-300 bg-white text-purple-600 focus:ring-purple-500/40 dark:border-white/20 dark:bg-slate-900/50"
+              className="h-4 w-4 rounded border-slate-300 bg-white text-indigo-600 focus:ring-indigo-500/40"
             />
             Remember me
           </label>
           <button
             type="button"
-            className="text-sm font-bold text-purple-600 transition hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300"
+            className="text-sm font-bold text-indigo-600 transition hover:text-indigo-700"
           >
             Forgot password?
           </button>
@@ -124,7 +124,7 @@ export default function LoginForm({ onSwitchToRegister }) {
         <button
           type="submit"
           disabled={loading}
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 py-3 text-sm font-bold text-white shadow-lg shadow-purple-500/25 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-purple-500/40 disabled:opacity-60 disabled:hover:translate-y-0"
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#c026ff] via-[#8b5cf6] to-[#3b82f6] py-3 text-sm font-bold text-white shadow-lg shadow-indigo-500/25 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-indigo-500/40 disabled:opacity-60 disabled:hover:translate-y-0"
         >
           {loading ? (
             <>
@@ -137,12 +137,12 @@ export default function LoginForm({ onSwitchToRegister }) {
         </button>
       </form>
 
-      <p className="mt-8 text-center text-sm font-medium text-slate-600 dark:text-slate-400">
+      <p className="mt-8 text-center text-sm font-medium text-slate-600">
         Don&apos;t have an account?{' '}
         <button
           type="button"
           onClick={onSwitchToRegister}
-          className="font-bold text-purple-600 transition hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300"
+          className="font-bold text-indigo-600 transition hover:text-indigo-700"
         >
           Register
         </button>

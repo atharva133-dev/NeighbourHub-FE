@@ -61,7 +61,7 @@ export default function Settings() {
                       onClick={() => setActiveTab(tab.id)}
                       className={`flex shrink-0 items-center gap-3 rounded-xl px-4 py-3 text-sm font-bold transition-all duration-300 lg:w-full ${
                         isActive
-                          ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg shadow-purple-500/25 scale-[1.02]'
+                          ? 'bg-gradient-to-r from-[#6E8F73] to-[#C97B5A] text-white shadow-lg shadow-[#6E8F73]/25 scale-[1.02]'
                           : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-white/5 dark:hover:text-white'
                       }`}
                     >

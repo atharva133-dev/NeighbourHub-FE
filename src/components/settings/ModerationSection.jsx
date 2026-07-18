@@ -87,7 +87,7 @@ export default function ModerationSection() {
       {/* Content Moderation card */}
       <div className="glass-card rounded-2xl border border-slate-200 bg-white/60 p-6 dark:border-white/10 dark:bg-white/5">
         <div className="mb-5 flex items-center gap-3">
-          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-blue-500 shadow-md shadow-purple-500/20">
+          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#6E8F73] to-[#C97B5A] shadow-md shadow-[#6E8F73]/20">
             <ShieldCheck className="h-5 w-5 text-white" />
           </span>
           <div>

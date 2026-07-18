@@ -3,15 +3,15 @@ import { createContext, useContext, useEffect, useState } from 'react';
 const STORAGE_KEY = 'neighbourhub-appearance';
 
 export const ACCENT_COLORS = {
-  purple: { primary: '#9333ea', secondary: '#2563eb', label: 'Purple' },
-  blue: { primary: '#2563eb', secondary: '#0891b2', label: 'Blue' },
-  green: { primary: '#16a34a', secondary: '#059669', label: 'Green' },
-  rose: { primary: '#e11d48', secondary: '#db2777', label: 'Rose' },
+  sage: { primary: '#6E8F73', secondary: '#C97B5A', label: 'Sage & Clay' },
+  clay: { primary: '#C97B5A', secondary: '#A8442F', label: 'Clay & Brick' },
+  brick: { primary: '#A8442F', secondary: '#6E8F73', label: 'Brick & Sage' },
+  forest: { primary: '#4E6B54', secondary: '#6E8F73', label: 'Forest' },
 };
 
 const DEFAULT_APPEARANCE = {
-  theme: 'dark',
-  accentColor: 'purple',
+  theme: 'light',
+  accentColor: 'sage',
   fontSize: 'medium',
   compactView: false,
 };
@@ -28,7 +28,7 @@ function applyAppearance(settings) {
     root.classList.remove('dark');
   }
 
-  const accent = ACCENT_COLORS[settings.accentColor] || ACCENT_COLORS.purple;
+  const accent = ACCENT_COLORS[settings.accentColor] || ACCENT_COLORS.sage;
 
   root.dataset.theme = settings.theme;
   root.dataset.fontSize = settings.fontSize;

@@ -18,17 +18,49 @@
 }
 
 html {
-  --accent-primary: #8b5cf6;
-  --accent-secondary: #3b82f6;
-  background-color: #f8fafc;
-  color: #0f172a;
+  --accent-primary: #6E8F73;
+  --accent-secondary: #C97B5A;
+  --accent-tertiary: #A8442F;
+  --parchment: #F6F5EF;
+  --parchment-card: #FCFBF6;
+  --sage: #6E8F73;
+  --sage-soft: #E4EBE1;
+  --sage-deep: #4E6B54;
+  --clay: #C97B5A;
+  --clay-soft: #F3DFD1;
+  --clay-deep: #A85C3F;
+  --brick: #A8442F;
+  --brick-soft: #EAD6CE;
+  --ink: #20261F;
+  --ink-70: rgba(32,38,31,0.7);
+  --ink-50: rgba(32,38,31,0.5);
+  --line: rgba(32,38,31,0.12);
+  --line-soft: rgba(32,38,31,0.08);
+  background-color: var(--parchment);
+  color: var(--ink);
 }
 
 html.dark {
-  --accent-primary: #a855f7;
-  --accent-secondary: #3b82f6;
-  background-color: #0a0a0f;
-  color: #f8fafc;
+  --accent-primary: #6E8F73;
+  --accent-secondary: #C97B5A;
+  --accent-tertiary: #A8442F;
+  --parchment: #0a0a0f;
+  --parchment-card: #13131f;
+  --sage: #6E8F73;
+  --sage-soft: #4E6B54;
+  --sage-deep: #6E8F73;
+  --clay: #C97B5A;
+  --clay-soft: #A85C3F;
+  --clay-deep: #C97B5A;
+  --brick: #A8442F;
+  --brick-soft: #A8442F;
+  --ink: #f8fafc;
+  --ink-70: rgba(248,250,252,0.7);
+  --ink-50: rgba(248,250,252,0.5);
+  --line: rgba(255,255,255,0.12);
+  --line-soft: rgba(255,255,255,0.08);
+  background-color: var(--parchment);
+  color: var(--ink);
 }
 
 html[data-font-size='small'] { font-size: 14px; }
@@ -80,32 +112,42 @@ button, a, input, select, textarea {
   position: fixed;
   inset: 0;
   background:
-    radial-gradient(circle at top left, color-mix(in srgb, var(--accent-primary) 8%, transparent), transparent 40rem),
-    radial-gradient(circle at top right, color-mix(in srgb, var(--accent-secondary) 8%, transparent), transparent 35rem),
-    linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+    radial-gradient(circle at top left, color-mix(in srgb, var(--sage) 8%, transparent), transparent 40rem),
+    radial-gradient(circle at top right, color-mix(in srgb, var(--clay) 8%, transparent), transparent 35rem),
+    linear-gradient(180deg, var(--parchment) 0%, var(--parchment-card) 100%);
   z-index: -1;
   transition: all 0.5s ease;
 }
 
 html.dark .app-shell::before {
   background:
-    radial-gradient(circle at top left, color-mix(in srgb, var(--accent-primary) 12%, transparent), transparent 40rem),
-    radial-gradient(circle at top right, color-mix(in srgb, var(--accent-secondary) 12%, transparent), transparent 35rem),
-    linear-gradient(180deg, #0a0a0f 0%, #13131f 100%);
+    radial-gradient(circle at top left, color-mix(in srgb, var(--sage) 12%, transparent), transparent 40rem),
+    radial-gradient(circle at top right, color-mix(in srgb, var(--clay) 12%, transparent), transparent 35rem),
+    linear-gradient(180deg, var(--parchment) 0%, var(--parchment-card) 100%);
 }
 
 .glass-card {
   @apply rounded-2xl border border-slate-200/60 bg-white/70 shadow-xl shadow-slate-200/40 backdrop-blur-xl transition-all duration-300;
+  border-color: var(--line);
+  background: var(--parchment-card);
 }
 html.dark .glass-card {
   @apply border-white/5 bg-[#171725]/60 shadow-2xl shadow-black/40;
+  border-color: var(--line);
+  background: var(--parchment-card);
 }
 
 .glass-input {
   @apply rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition-all duration-300 placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10;
+  border-color: var(--line);
+  background: var(--parchment-card);
+  color: var(--ink);
 }
 html.dark .glass-input {
   @apply border-white/10 bg-[#1e1e2d] text-slate-100 placeholder:text-slate-500 focus:border-blue-400 focus:ring-blue-500/20;
+  border-color: var(--line);
+  background: var(--parchment-card);
+  color: var(--ink);
 }
 
 .skeleton {
@@ -132,19 +174,19 @@ html.dark .glass-input {
 
 /* ── Auth split-screen ── */
 .auth-gradient-panel {
-  background: linear-gradient(145deg, #1a0533 0%, #2d1b69 35%, #4c1d95 65%, #1e1b4b 100%);
+  background: linear-gradient(155deg, var(--sage-deep) 0%, var(--sage) 35%, var(--clay) 65%, var(--brick) 100%);
   background-size: 200% 200%;
   animation: gradient-shift 12s ease infinite;
 }
 
 .auth-visual-panel {
   background:
-    radial-gradient(circle at 30% 20%, rgba(168, 85, 247, 0.25), transparent 50%),
-    radial-gradient(circle at 70% 80%, rgba(99, 102, 241, 0.2), transparent 45%);
+    radial-gradient(circle at 30% 20%, rgba(110, 143, 115, 0.25), transparent 50%),
+    radial-gradient(circle at 70% 80%, rgba(201, 123, 90, 0.2), transparent 45%);
 }
 
 .auth-logo-glow {
-  text-shadow: 0 0 40px rgba(168, 85, 247, 0.5), 0 0 80px rgba(124, 58, 237, 0.3);
+  text-shadow: 0 0 40px rgba(110, 143, 115, 0.5), 0 0 80px rgba(201, 123, 90, 0.3);
 }
 
 .auth-particle {
@@ -160,8 +202,8 @@ html.dark .glass-input {
 }
 
 .auth-input:focus {
-  border-color: rgba(168, 85, 247, 0.7) !important;
-  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.25), 0 0 20px rgba(168, 85, 247, 0.15);
+  border-color: rgba(110, 143, 115, 0.7) !important;
+  box-shadow: 0 0 0 3px rgba(110, 143, 115, 0.25), 0 0 20px rgba(110, 143, 115, 0.15);
 }
 
 .auth-shake {
@@ -234,7 +276,7 @@ html.dark .glass-input {
 
 /* ── Community & modals ── */
 .community-card-glow {
-  background: linear-gradient(135deg, rgba(147, 51, 234, 0.3), rgba(37, 99, 235, 0.3));
+  background: linear-gradient(135deg, rgba(110, 143, 115, 0.3), rgba(201, 123, 90, 0.3));
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask-composite: exclude;
   -webkit-mask-composite: xor;

@@ -87,19 +87,19 @@ export default function RegisterForm({ onSwitchToLogin, onRegistered }) {
   return (
     <>
       <div className="mb-8">
-        <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Join NeighbourHub</h2>
-        <p className="mt-1.5 text-sm font-medium text-slate-600 dark:text-slate-400">Connect with your local community</p>
+        <h2 className="text-2xl font-bold text-slate-900">Join NeighbourHub</h2>
+        <p className="mt-1.5 text-sm font-medium text-slate-600">Connect with your local community</p>
       </div>
 
       {error && (
-        <div className="mb-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-600 dark:border-red-400/20 dark:bg-red-500/10 dark:text-red-200">
+        <div className="mb-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-600">
           {error}
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-5">
         <div>
-          <label htmlFor="name" className="mb-1.5 block text-sm font-bold text-slate-700 dark:text-slate-200">
+          <label htmlFor="name" className="mb-1.5 block text-sm font-bold text-slate-700">
             Full name
           </label>
           <input
@@ -109,16 +109,16 @@ export default function RegisterForm({ onSwitchToLogin, onRegistered }) {
             onChange={(e) => setName(e.target.value)}
             onBlur={() => markTouched('name')}
             required
-            className="auth-input glass-input w-full"
+            className="auth-input glass-input w-full bg-white border-slate-200 text-slate-900 placeholder-slate-400 focus:border-indigo-500 focus:ring-indigo-500/10"
             placeholder="Jane Doe"
           />
           {fieldErrors.name && (
-            <p className="mt-1.5 text-xs font-semibold text-red-500 dark:text-red-400">{fieldErrors.name}</p>
+            <p className="mt-1.5 text-xs font-semibold text-red-500">{fieldErrors.name}</p>
           )}
         </div>
 
         <div>
-          <label htmlFor="email" className="mb-1.5 block text-sm font-bold text-slate-700 dark:text-slate-200">
+          <label htmlFor="email" className="mb-1.5 block text-sm font-bold text-slate-700">
             Email
           </label>
           <input
@@ -128,16 +128,16 @@ export default function RegisterForm({ onSwitchToLogin, onRegistered }) {
             onChange={(e) => setEmail(e.target.value)}
             onBlur={() => markTouched('email')}
             required
-            className="auth-input glass-input w-full"
+            className="auth-input glass-input w-full bg-white border-slate-200 text-slate-900 placeholder-slate-400 focus:border-indigo-500 focus:ring-indigo-500/10"
             placeholder="you@example.com"
           />
           {fieldErrors.email && (
-            <p className="mt-1.5 text-xs font-semibold text-red-500 dark:text-red-400">{fieldErrors.email}</p>
+            <p className="mt-1.5 text-xs font-semibold text-red-500">{fieldErrors.email}</p>
           )}
         </div>
 
         <div>
-          <label htmlFor="password" className="mb-1.5 block text-sm font-bold text-slate-700 dark:text-slate-200">
+          <label htmlFor="password" className="mb-1.5 block text-sm font-bold text-slate-700">
             Password
           </label>
           <div className="relative">
@@ -149,13 +149,13 @@ export default function RegisterForm({ onSwitchToLogin, onRegistered }) {
               onBlur={() => markTouched('password')}
               required
               minLength={6}
-              className="auth-input glass-input w-full pr-10"
+              className="auth-input glass-input w-full pr-10 bg-white border-slate-200 text-slate-900 placeholder-slate-400 focus:border-indigo-500 focus:ring-indigo-500/10"
               placeholder="At least 6 characters"
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-slate-600 dark:hover:text-white"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-slate-600"
               aria-label={showPassword ? 'Hide password' : 'Show password'}
             >
               {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -163,7 +163,7 @@ export default function RegisterForm({ onSwitchToLogin, onRegistered }) {
           </div>
           {password && (
             <div className="mt-2.5">
-              <div className="flex h-1.5 overflow-hidden rounded-full bg-slate-200 dark:bg-white/10">
+              <div className="flex h-1.5 overflow-hidden rounded-full bg-slate-200">
                 <div
                   className={`h-full transition-all duration-300 ${strength.color}`}
                   style={{ width: `${(strength.score / 3) * 100}%` }}
@@ -173,10 +173,10 @@ export default function RegisterForm({ onSwitchToLogin, onRegistered }) {
                 <p
                   className={`mt-1.5 text-xs font-bold ${
                     strength.label === 'Weak'
-                      ? 'text-red-500 dark:text-red-400'
+                      ? 'text-red-500'
                       : strength.label === 'Fair'
-                        ? 'text-yellow-500 dark:text-yellow-400'
-                        : 'text-green-500 dark:text-green-400'
+                        ? 'text-yellow-500'
+                        : 'text-green-500'
                   }`}
                 >
                   {strength.label}
@@ -185,12 +185,12 @@ export default function RegisterForm({ onSwitchToLogin, onRegistered }) {
             </div>
           )}
           {fieldErrors.password && (
-            <p className="mt-1.5 text-xs font-semibold text-red-500 dark:text-red-400">{fieldErrors.password}</p>
+            <p className="mt-1.5 text-xs font-semibold text-red-500">{fieldErrors.password}</p>
           )}
         </div>
 
         <div>
-          <label htmlFor="confirmPassword" className="mb-1.5 block text-sm font-bold text-slate-700 dark:text-slate-200">
+          <label htmlFor="confirmPassword" className="mb-1.5 block text-sm font-bold text-slate-700">
             Confirm Password
           </label>
           <div className="relative">
@@ -201,33 +201,33 @@ export default function RegisterForm({ onSwitchToLogin, onRegistered }) {
               onChange={(e) => setConfirmPassword(e.target.value)}
               onBlur={() => markTouched('confirmPassword')}
               required
-              className="auth-input glass-input w-full pr-10"
+              className="auth-input glass-input w-full pr-10 bg-white border-slate-200 text-slate-900 placeholder-slate-400 focus:border-indigo-500 focus:ring-indigo-500/10"
               placeholder="Re-enter your password"
             />
             <button
               type="button"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-slate-600 dark:hover:text-white"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-slate-600"
               aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
             >
               {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
             </button>
           </div>
           {fieldErrors.confirmPassword && (
-            <p className="mt-1.5 text-xs font-semibold text-red-500 dark:text-red-400">{fieldErrors.confirmPassword}</p>
+            <p className="mt-1.5 text-xs font-semibold text-red-500">{fieldErrors.confirmPassword}</p>
           )}
         </div>
 
-        <label className="flex cursor-pointer items-start gap-2.5 text-sm font-medium text-slate-600 dark:text-slate-300">
+        <label className="flex cursor-pointer items-start gap-2.5 text-sm font-medium text-slate-600">
           <input
             type="checkbox"
             checked={acceptedTerms}
             onChange={(e) => setAcceptedTerms(e.target.checked)}
-            className="mt-0.5 h-4 w-4 rounded border-slate-300 bg-white text-purple-600 focus:ring-purple-500/40 dark:border-white/20 dark:bg-slate-900/50"
+            className="mt-0.5 h-4 w-4 rounded border-slate-300 bg-white text-indigo-600 focus:ring-indigo-500/40"
           />
           <span>
             I agree to the{' '}
-            <button type="button" className="font-bold text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300 transition-colors">
+            <button type="button" className="font-bold text-indigo-600 hover:text-indigo-700 transition-colors">
               Terms and Conditions
             </button>
           </span>
@@ -236,7 +236,7 @@ export default function RegisterForm({ onSwitchToLogin, onRegistered }) {
         <button
           type="submit"
           disabled={loading}
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 py-3 text-sm font-bold text-white shadow-lg shadow-purple-500/25 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-purple-500/40 disabled:opacity-60 disabled:hover:translate-y-0"
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#c026ff] via-[#8b5cf6] to-[#3b82f6] py-3 text-sm font-bold text-white shadow-lg shadow-indigo-500/25 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-indigo-500/40 disabled:opacity-60 disabled:hover:translate-y-0"
         >
           {loading ? (
             <>
@@ -249,12 +249,12 @@ export default function RegisterForm({ onSwitchToLogin, onRegistered }) {
         </button>
       </form>
 
-      <p className="mt-8 text-center text-sm font-medium text-slate-600 dark:text-slate-400">
+      <p className="mt-8 text-center text-sm font-medium text-slate-600">
         Already have an account?{' '}
         <button
           type="button"
           onClick={onSwitchToLogin}
-          className="font-bold text-purple-600 transition hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300"
+          className="font-bold text-indigo-600 transition hover:text-indigo-700"
         >
           Sign in
         </button>

@@ -1,15 +1,15 @@
 import { useState, useRef } from 'react';
-import { Megaphone, Send, Image, X, Sparkles, Wand2, Bot, Loader2 } from 'lucide-react';
+import { Megaphone, Send, Image, X, Sparkles, Wand2, Bot, Loader2, ChevronDown, ChevronUp } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
 
 const CATEGORIES = [
-  { label: 'General',      icon: '📋', color: 'border-blue-300 bg-blue-50 text-blue-700 dark:border-blue-500/40 dark:bg-blue-500/10 dark:text-blue-300',      active: 'border-blue-500 bg-blue-100 text-blue-800 dark:border-blue-400 dark:bg-blue-500/25 dark:text-blue-200' },
-  { label: 'Event',        icon: '🎉', color: 'border-emerald-300 bg-emerald-50 text-emerald-700 dark:border-emerald-500/40 dark:bg-emerald-500/10 dark:text-emerald-300', active: 'border-emerald-500 bg-emerald-100 text-emerald-800 dark:border-emerald-400 dark:bg-emerald-500/25 dark:text-emerald-200' },
-  { label: 'Lost & Found', icon: '🔍', color: 'border-amber-300 bg-amber-50 text-amber-700 dark:border-amber-500/40 dark:bg-amber-500/10 dark:text-amber-300',   active: 'border-amber-500 bg-amber-100 text-amber-800 dark:border-amber-400 dark:bg-amber-500/25 dark:text-amber-200' },
-  { label: 'Emergency',    icon: '🚨', color: 'border-red-300 bg-red-50 text-red-700 dark:border-red-500/40 dark:bg-red-500/10 dark:text-red-300',             active: 'border-red-500 bg-red-100 text-red-800 dark:border-red-400 dark:bg-red-500/25 dark:text-red-200' },
+  { label: 'General',      icon: '📋', active: 'bg-[#475569] text-white border-[#475569] ring-2 ring-[#475569]/20', color: 'border-[#cbd5e1] bg-white text-[#475569] hover:bg-[#f8fafc]' },
+  { label: 'Event',        icon: '🎉', active: 'bg-[#059669] text-white border-[#059669] ring-2 ring-[#059669]/20', color: 'border-[#cbd5e1] bg-white text-[#475569] hover:bg-[#f8fafc]' },
+  { label: 'Lost & Found', icon: '🔍', active: 'bg-[#d97706] text-white border-[#d97706] ring-2 ring-[#d97706]/20', color: 'border-[#fef3c7] bg-[#fffbeb] text-[#b45309] hover:bg-[#fffbeb]/80' },
+  { label: 'Emergency',    icon: '🚨', active: 'bg-[#dc2626] text-white border-[#dc2626] ring-2 ring-[#dc2626]/20', color: 'border-[#fee2e2] bg-[#fef2f2] text-[#b91c1c] hover:bg-[#fef2f2]/80' },
 ];
 const PRIORITIES = ['Low', 'Medium', 'High', 'Urgent'];
 const MAX_CONTENT = 500;
@@ -26,6 +26,7 @@ export default function NoticeForm({ onCreated, defaultCategory }) {
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [dragActive, setDragActive] = useState(false);
+  const [mediaOpen, setMediaOpen] = useState(false);
   const fileInputRef = useRef(null);
 
   const [aiLoading, setAiLoading] = useState(null);
@@ -37,6 +38,7 @@ export default function NoticeForm({ onCreated, defaultCategory }) {
       if (file.size > 5 * 1024 * 1024) { toast.error('File size must be less than 5MB'); return; }
       setImageFile(file);
       setImagePreview(URL.createObjectURL(file));
+      setMediaOpen(true);
     }
   };
 
@@ -115,35 +117,35 @@ export default function NoticeForm({ onCreated, defaultCategory }) {
   const contentCharsLeft = MAX_CONTENT - content.length;
 
   return (
-    <form onSubmit={handleSubmit} className="glass-card overflow-hidden relative z-0">
+    <form onSubmit={handleSubmit} className="relative overflow-hidden rounded-[20px] border border-[#e2e8f0] bg-white shadow-[0_1px_3px_rgba(0,0,0,0.02)] z-0">
       {/* Header */}
-      <div className="flex items-center gap-3 border-b border-slate-100 dark:border-white/5 px-5 py-4">
-        <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-blue-500 text-white shadow-md shadow-purple-500/20">
+      <div className="flex items-center gap-3 border-b border-[#f1f5f9] px-5 py-4">
+        <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#0f172a] text-white shadow-xs">
           <Megaphone className="h-4 w-4" />
         </span>
         <div>
-          <h2 className="text-base font-bold text-slate-900 dark:text-white leading-tight">Post a Notice</h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400">Share updates with your neighbours</p>
+          <h2 className="text-base font-bold text-[#0f172a] leading-tight" style={{ fontFamily: '"Space Grotesk", sans-serif' }}>Post a Notice</h2>
+          <p className="text-xs text-[#64748b]">Share updates with your neighbours</p>
         </div>
       </div>
 
       <div className="p-5 lg:p-6 space-y-5">
         {error && (
-          <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600 dark:border-red-400/20 dark:bg-red-500/10 dark:text-red-200">
+          <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
             {error}
           </div>
         )}
 
         {/* Title */}
         <div>
-          <label htmlFor="title" className="mb-1.5 block text-sm font-semibold text-slate-700 dark:text-slate-200">Title</label>
+          <label htmlFor="title" className="mb-1.5 block text-sm font-semibold text-[#334155]">Title</label>
           <input id="title" type="text" value={title} onChange={(e) => setTitle(e.target.value)}
-            required placeholder="What's happening?" className="glass-input w-full" />
+            required placeholder="What's happening?" className="w-full rounded-xl border border-[#cbd5e1] bg-white px-4 py-3 text-sm text-[#0f172a] outline-none transition-all duration-150 placeholder:text-[#94a3b8] focus:border-[#0f172a]" />
         </div>
 
         {/* Category chips */}
         <div>
-          <label className="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-200">Category</label>
+          <label className="mb-2 block text-sm font-semibold text-[#334155]">Category</label>
           <div className="flex flex-wrap gap-2">
             {CATEGORIES.map((cat) => (
               <button key={cat.label} type="button" onClick={() => {
@@ -151,8 +153,8 @@ export default function NoticeForm({ onCreated, defaultCategory }) {
                   if (cat.label === 'Emergency') setPriority('Urgent');
                   else if (priority === 'Urgent') setPriority('Medium');
                 }}
-                className={`inline-flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-bold transition-all duration-200 hover:-translate-y-0.5 ${
-                  category === cat.label ? cat.active + ' shadow-sm' : cat.color
+                className={`inline-flex items-center gap-1.5 rounded-xl border px-3.5 py-2 text-xs font-bold transition-all duration-150 hover:-translate-y-0.5 ${
+                  category === cat.label ? cat.active : cat.color
                 }`}>
                 <span>{cat.icon}</span>
                 {cat.label}
@@ -163,106 +165,118 @@ export default function NoticeForm({ onCreated, defaultCategory }) {
 
         {/* Priority */}
         <div>
-          <label htmlFor="priority" className="mb-1.5 block text-sm font-semibold text-slate-700 dark:text-slate-200">Priority</label>
-          <select id="priority" value={priority} onChange={(e) => setPriority(e.target.value)} className="glass-input w-full">
+          <label htmlFor="priority" className="mb-1.5 block text-sm font-semibold text-[#334155]">Priority</label>
+          <select id="priority" value={priority} onChange={(e) => setPriority(e.target.value)} className="w-full rounded-xl border border-[#cbd5e1] bg-white px-4 py-3 text-sm text-[#0f172a] outline-none transition-all duration-150 focus:border-[#0f172a]">
             {PRIORITIES.map((level) => <option key={level} value={level}>{level}</option>)}
           </select>
         </div>
 
         {/* Details with AI toolbar + char counter */}
         <div>
-          <div className="mb-1.5 flex items-center justify-between gap-2 flex-wrap">
-            <label htmlFor="content" className="text-sm font-semibold text-slate-700 dark:text-slate-200">Details</label>
-            <div className="flex items-center gap-1.5">
-              <button type="button" onClick={handleSuggest} disabled={!!aiLoading} title="AI Suggest"
-                className="flex items-center gap-1 rounded-lg border border-purple-200 bg-purple-50 px-2.5 py-1 text-xs font-semibold text-purple-700 transition-all hover:bg-purple-100 disabled:opacity-50 dark:border-purple-500/30 dark:bg-purple-500/10 dark:text-purple-300 dark:hover:bg-purple-500/20">
-                {aiLoading === 'suggest' ? <Loader2 className="h-3 w-3 animate-spin" /> : <Sparkles className="h-3 w-3" />}
+          <div className="mb-2 flex items-center justify-between gap-2 flex-wrap">
+            <label htmlFor="content" className="text-sm font-semibold text-[#334155]">Details</label>
+            
+            {/* AI Assistant Toolbar */}
+            <div className="flex items-center gap-1 rounded-xl border border-[#e2e8f0] bg-[#f8fafc] p-1 shadow-xs">
+              <button type="button" onClick={handleSuggest} disabled={!!aiLoading} title="AI Suggest Details"
+                className="flex items-center gap-1.5 rounded-lg bg-white border border-[#e2e8f0]/80 px-2.5 py-1.5 text-xs font-bold text-[#0f172a] transition-all hover:bg-[#f1f5f9] disabled:opacity-50">
+                {aiLoading === 'suggest' ? <Loader2 className="h-3.5 w-3.5 animate-spin text-[#4f46e5]" /> : <Sparkles className="h-3.5 w-3.5 text-[#4f46e5]" />}
                 Suggest
               </button>
-              <button type="button" onClick={handleImprove} disabled={!!aiLoading} title="AI Improve"
-                className="flex items-center gap-1 rounded-lg border border-blue-200 bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-700 transition-all hover:bg-blue-100 disabled:opacity-50 dark:border-blue-500/30 dark:bg-blue-500/10 dark:text-blue-300 dark:hover:bg-blue-500/20">
-                {aiLoading === 'improve' ? <Loader2 className="h-3 w-3 animate-spin" /> : <Wand2 className="h-3 w-3" />}
+              <button type="button" onClick={handleImprove} disabled={!!aiLoading} title="AI Improve content"
+                className="flex items-center gap-1.5 rounded-lg bg-white border border-[#e2e8f0]/80 px-2.5 py-1.5 text-xs font-bold text-[#0f172a] transition-all hover:bg-[#f1f5f9] disabled:opacity-50">
+                {aiLoading === 'improve' ? <Loader2 className="h-3.5 w-3.5 animate-spin text-[#0284c7]" /> : <Wand2 className="h-3.5 w-3.5 text-[#0284c7]" />}
                 Improve
               </button>
-              <button type="button" onClick={() => setShowGenerateInput((v) => !v)} disabled={!!aiLoading} title="AI Generate"
-                className="flex items-center gap-1 rounded-lg border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 transition-all hover:bg-emerald-100 disabled:opacity-50 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-300 dark:hover:bg-emerald-500/20">
-                {aiLoading === 'generate' ? <Loader2 className="h-3 w-3 animate-spin" /> : <Bot className="h-3 w-3" />}
+              <button type="button" onClick={() => setShowGenerateInput((v) => !v)} disabled={!!aiLoading} title="AI Prompt Generation"
+                className="flex items-center gap-1.5 rounded-lg bg-white border border-[#e2e8f0]/80 px-2.5 py-1.5 text-xs font-bold text-[#0f172a] transition-all hover:bg-[#f1f5f9] disabled:opacity-50">
+                {aiLoading === 'generate' ? <Loader2 className="h-3.5 w-3.5 animate-spin text-[#059669]" /> : <Bot className="h-3.5 w-3.5 text-[#059669]" />}
                 Generate
               </button>
             </div>
           </div>
 
           {showGenerateInput && (
-            <div className="mb-2 flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 p-2.5 dark:border-emerald-500/20 dark:bg-emerald-500/10">
-              <Bot className="h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
+            <div className="mb-2.5 flex items-center gap-2 rounded-xl border border-[#cbd5e1] bg-[#f8fafc] p-2.5">
+              <Bot className="h-4 w-4 shrink-0 text-[#475569]" />
               <input type="text" value={generatePrompt} onChange={(e) => setGeneratePrompt(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleGenerate())}
                 placeholder="Describe your notice in a few words…"
-                className="flex-1 bg-transparent text-sm text-slate-800 outline-none placeholder-slate-400 dark:text-white dark:placeholder-slate-500" autoFocus />
+                className="flex-1 bg-transparent text-sm text-[#0f172a] outline-none placeholder-[#94a3b8]" autoFocus />
               <button type="button" onClick={handleGenerate} disabled={aiLoading === 'generate'}
-                className="flex items-center gap-1 rounded-lg bg-emerald-600 px-3 py-1 text-xs font-bold text-white transition hover:bg-emerald-700 disabled:opacity-60">
+                className="flex items-center gap-1 rounded-lg bg-[#0f172a] px-3 py-1.5 text-xs font-bold text-white transition hover:bg-[#1e293b] disabled:opacity-60">
                 {aiLoading === 'generate' ? <Loader2 className="h-3 w-3 animate-spin" /> : 'Go'}
               </button>
               <button type="button" onClick={() => { setShowGenerateInput(false); setGeneratePrompt(''); }}
-                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                className="text-[#64748b] hover:text-[#0f172a]">
                 <X className="h-4 w-4" />
               </button>
             </div>
           )}
 
           <textarea id="content" value={content} onChange={(e) => setContent(e.target.value.slice(0, MAX_CONTENT))}
-            required rows={4} placeholder="Share the details with your neighbours…" className="glass-input w-full resize-none" />
+            required rows={4} placeholder="Share the details with your neighbours…" className="w-full rounded-xl border border-[#cbd5e1] bg-white px-4 py-3 text-sm text-[#0f172a] outline-none transition-all duration-150 placeholder:text-[#94a3b8] focus:border-[#0f172a] resize-none" />
 
           {/* Character counter */}
           <div className="mt-1 flex justify-end">
             <span className={`text-xs font-medium tabular-nums ${
-              contentCharsLeft <= 50 ? 'text-red-500 dark:text-red-400'
-              : contentCharsLeft <= 100 ? 'text-amber-500 dark:text-amber-400'
-              : 'text-slate-400 dark:text-slate-500'
+              contentCharsLeft <= 50 ? 'text-[#b91c1c]'
+              : contentCharsLeft <= 100 ? 'text-[#d97706]'
+              : 'text-[#64748b]'
             }`}>
               {content.length} / {MAX_CONTENT}
             </span>
           </div>
         </div>
 
-        {/* Media upload */}
-        <div>
-          <label className="mb-1.5 block text-sm font-semibold text-slate-700 dark:text-slate-200">
-            Media <span className="font-normal text-slate-400">(Optional)</span>
-          </label>
-          <div className={`relative cursor-pointer rounded-xl border-2 border-dashed transition-all duration-300 ${
-            dragActive ? 'border-purple-400 bg-purple-50 dark:border-purple-500/50 dark:bg-purple-500/10'
-            : 'border-slate-200 bg-slate-50 hover:border-purple-300 hover:bg-white dark:border-white/10 dark:bg-transparent dark:hover:border-white/20 dark:hover:bg-white/5'
-          }`}
-            onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}
-            onClick={() => fileInputRef.current?.click()}>
-            <input ref={fileInputRef} type="file" accept="image/*" onChange={(e) => { if (e.target.files?.[0]) handleFileSelect(e.target.files[0]); }} className="hidden" />
-            {imagePreview ? (
-              <div className="relative p-2">
-                <img src={imagePreview} alt="Preview" className="h-48 w-full rounded-lg object-cover shadow-sm" />
-                <button type="button" onClick={(e) => { e.stopPropagation(); removeImage(); }}
-                  className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-slate-900/60 text-white backdrop-blur-sm transition hover:bg-slate-900/80">
-                  <X className="h-4 w-4" />
-                </button>
-                <div className="absolute bottom-4 left-4 rounded-lg bg-slate-900/60 px-3 py-1.5 text-xs font-medium text-white backdrop-blur-sm">
-                  {imageFile?.name} ({(imageFile?.size / 1024 / 1024).toFixed(2)} MB)
+        {/* Collapsible Optional Media upload dropdown */}
+        <div className="border-t border-[#f1f5f9] pt-4">
+          <button
+            type="button"
+            onClick={() => setMediaOpen(!mediaOpen)}
+            className="flex w-full items-center justify-between text-sm font-semibold text-[#475569] hover:text-[#0f172a] transition-colors"
+          >
+            <span className="flex items-center gap-2">
+              <Image className="h-4 w-4 text-[#64748b]" />
+              Add Media
+              <span className="text-xs font-normal text-[#94a3b8]">(Optional)</span>
+              {imageFile && <span className="h-1.5 w-1.5 rounded-full bg-[#10b981]" />}
+            </span>
+            {mediaOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+          </button>
+
+          {mediaOpen && (
+            <div className="mt-3 relative cursor-pointer rounded-xl border-2 border-dashed transition-all duration-200 animate-fade-in border-[#cbd5e1] bg-white hover:border-[#0f172a] hover:bg-[#f8fafc]"
+              onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}
+              onClick={() => fileInputRef.current?.click()}>
+              <input ref={fileInputRef} type="file" accept="image/*" onChange={(e) => { if (e.target.files?.[0]) handleFileSelect(e.target.files[0]); }} className="hidden" />
+              {imagePreview ? (
+                <div className="relative p-2" onClick={(e) => e.stopPropagation()}>
+                  <img src={imagePreview} alt="Preview" className="h-48 w-full rounded-lg object-cover shadow-sm" />
+                  <button type="button" onClick={removeImage}
+                    className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-slate-900/60 text-white backdrop-blur-sm transition hover:bg-slate-900/80">
+                    <X className="h-4 w-4" />
+                  </button>
+                  <div className="absolute bottom-4 left-4 rounded-lg bg-slate-900/60 px-3 py-1.5 text-xs font-medium text-white backdrop-blur-sm">
+                    {imageFile?.name} ({(imageFile?.size / 1024 / 1024).toFixed(2)} MB)
+                  </div>
                 </div>
-              </div>
-            ) : (
-              <div className="flex flex-col items-center justify-center py-8">
-                <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-sm ring-1 ring-slate-100 dark:bg-white/5 dark:ring-white/10">
-                  <Image className="h-5 w-5 text-purple-500 dark:text-purple-400" />
+              ) : (
+                <div className="flex flex-col items-center justify-center py-8">
+                  <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-xs ring-1 ring-slate-100">
+                    <Image className="h-5 w-5 text-[#475569]" />
+                  </div>
+                  <p className="text-sm font-semibold text-[#0f172a]">Click or drag to upload</p>
+                  <p className="mt-0.5 text-xs text-[#64748b]">PNG, JPG, GIF · max 5 MB</p>
                 </div>
-                <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">Click or drag to upload</p>
-                <p className="mt-0.5 text-xs text-slate-400">PNG, JPG, GIF · max 5 MB</p>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Submit */}
         <button type="submit" disabled={loading}
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 py-3 text-sm font-bold text-white shadow-lg shadow-purple-500/25 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-purple-500/40 disabled:opacity-60 disabled:hover:translate-y-0">
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#0f172a] py-3 text-sm font-bold text-white shadow-sm transition-all duration-150 hover:bg-[#1e293b] disabled:opacity-60">
           <Send className="h-4 w-4" />
           {loading ? 'Posting…' : 'Post Notice'}
         </button>

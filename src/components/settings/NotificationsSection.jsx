@@ -73,7 +73,7 @@ export default function NotificationsSection() {
         type="button"
         onClick={handleSave}
         disabled={loading}
-        className="mt-8 flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-purple-500/25 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-purple-500/40 disabled:opacity-60 disabled:hover:translate-y-0"
+        className="mt-8 flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#6E8F73] to-[#C97B5A] px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-[#6E8F73]/25 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[#6E8F73]/40 disabled:opacity-60 disabled:hover:translate-y-0"
       >
         <Save className="h-4 w-4" />
         {loading ? 'Saving...' : 'Save Preferences'}
