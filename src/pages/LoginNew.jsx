@@ -2,6 +2,7 @@ import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { getApiErrorMessage } from '../utils/apiError';
+import { signInWithGoogle } from '../firebase';
 import toast from 'react-hot-toast';
 import './Login.css';
 
@@ -15,15 +16,16 @@ const feedItems = [
 ];
 
 export default function LoginNew({ initialMode = 'login' }) {
-  const { login, register, verifyOtp, resendOtp } = useAuth();
+  const { login, register, verifyOtp, resendOtp, loginWithGoogle } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const [showSignup, setShowSignup] = useState(initialMode === 'signup');
-  
+
   // Signup form state
   const [signupName, setSignupName] = useState('');
   const [signupEmail, setSignupEmail] = useState('');
@@ -37,7 +39,7 @@ export default function LoginNew({ initialMode = 'login' }) {
   const [resendLoading, setResendLoading] = useState(false);
   const [resendTimer, setResendTimer] = useState(0);
   const [otpSuccess, setOtpSuccess] = useState(false);
-  
+
   const feedTrackRef = useRef(null);
   const otpInputRefs = useRef([]);
 
@@ -58,12 +60,12 @@ export default function LoginNew({ initialMode = 'login' }) {
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    
+
     if (signupPassword !== signupConfirm) {
       toast.error('Passwords do not match');
       return;
     }
-    
+
     setSignupLoading(true);
     try {
       await register(signupName, signupEmail, signupPassword);
@@ -89,7 +91,7 @@ export default function LoginNew({ initialMode = 'login' }) {
     e.preventDefault();
     const otpCode = otpValues.join('');
     if (otpCode.length !== 6) return;
-    
+
     setOtpLoading(true);
     try {
       await verifyOtp(otpEmail, otpCode);
@@ -142,7 +144,7 @@ export default function LoginNew({ initialMode = 'login' }) {
     const newValues = [...otpValues];
     newValues[index] = value.replace(/[^0-9]/g, '').slice(0, 1);
     setOtpValues(newValues);
-    
+
     // Auto-focus next input
     if (value && index < 5) {
       otpInputRefs.current[index + 1]?.focus();
@@ -189,7 +191,7 @@ export default function LoginNew({ initialMode = 'login' }) {
           <h1>The block is <em>talking</em>.<br />Come listen in.</h1>
           <p className="lead">Notices, bookings, and neighbourly chatter — all in one running feed, updated the moment it happens.</p>
 
-          <div 
+          <div
             className="feed-window"
             onMouseEnter={() => handleFeedHover(true)}
             onMouseLeave={() => handleFeedHover(false)}
@@ -354,7 +356,7 @@ export default function LoginNew({ initialMode = 'login' }) {
               <>
                 <div className="otp-modal-icon otp-success-icon">
                   <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M20 6L9 17L4 12" stroke="#1c1a17" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M20 6L9 17L4 12" stroke="#1c1a17" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </div>
                 <h2>Email verified!</h2>
@@ -364,8 +366,8 @@ export default function LoginNew({ initialMode = 'login' }) {
               <>
                 <div className="otp-modal-icon">
                   <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="2" y="4" width="20" height="16" rx="3" fill="#fdfaf4"/>
-                    <path d="M3 6L12 13L21 6" stroke="#c2622f" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+                    <rect x="2" y="4" width="20" height="16" rx="3" fill="#fdfaf4" />
+                    <path d="M3 6L12 13L21 6" stroke="#c2622f" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </div>
                 <h2>Verify your email</h2>
@@ -390,9 +392,9 @@ export default function LoginNew({ initialMode = 'login' }) {
                       </div>
                     ))}
                   </div>
-                  <button 
-                    type="submit" 
-                    className={`otp-verify-btn ${otpValues.every(v => v) ? 'active' : ''}`} 
+                  <button
+                    type="submit"
+                    className={`otp-verify-btn ${otpValues.every(v => v) ? 'active' : ''}`}
                     disabled={otpLoading || !otpValues.every(v => v)}
                   >
                     {otpLoading ? 'Verifying…' : 'Verify email'}
@@ -402,7 +404,7 @@ export default function LoginNew({ initialMode = 'login' }) {
                   {resendTimer > 0 ? (
                     <span className="otp-resend-timer">Resend code in {resendTimer}s</span>
                   ) : (
-                    <button 
+                    <button
                       className="otp-resend-btn"
                       onClick={handleResendOtp}
                       disabled={resendLoading}
@@ -411,7 +413,7 @@ export default function LoginNew({ initialMode = 'login' }) {
                     </button>
                   )}
                 </div>
-                <button 
+                <button
                   className="otp-close-btn"
                   onClick={() => setShowOtpModal(false)}
                 >

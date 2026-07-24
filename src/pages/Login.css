@@ -11,9 +11,9 @@
   --brick: #A8442F;
   --brick-soft: #EAD6CE;
   --ink: #20261F;
-  --ink-70: rgba(32,38,31,0.7);
-  --ink-50: rgba(32,38,31,0.5);
-  --line: rgba(32,38,31,0.12);
+  --ink-70: rgba(32, 38, 31, 0.7);
+  --ink-50: rgba(32, 38, 31, 0.5);
+  --line: rgba(32, 38, 31, 0.12);
 }
 
 .login-page {
@@ -199,6 +199,7 @@
   from {
     transform: translateY(0);
   }
+
   to {
     transform: translateY(-50%);
   }
@@ -532,17 +533,21 @@
   .login-main {
     grid-template-columns: 1fr;
   }
+
   .stamp {
     display: none;
   }
+
   .story {
     border-right: none;
     border-bottom: 1px solid var(--line);
     padding: 44px 28px 32px;
   }
+
   .feed-window {
     min-height: 180px;
   }
+
   .authwrap {
     padding: 32px 20px;
   }
@@ -552,77 +557,77 @@
   .story {
     padding: 32px 20px 24px;
   }
-  
+
   .story h1 {
     font-size: 1.8rem;
   }
-  
+
   .story p.lead {
     font-size: 0.85rem;
   }
-  
+
   .feed-window {
     min-height: 140px;
   }
-  
+
   .feed-item {
     padding: 12px 14px;
   }
-  
+
   .story-foot {
     flex-wrap: wrap;
     gap: 16px;
   }
-  
+
   .foot-stat b {
     font-size: 1.1rem;
   }
-  
+
   .authwrap {
     padding: 24px 16px;
   }
-  
+
   .auth-card {
     max-width: 100%;
     padding: 28px 20px 28px;
   }
-  
+
   .auth-card-front,
   .auth-card-back {
     padding: 28px 20px 28px;
   }
-  
+
   .auth-icon {
     width: 40px;
     height: 40px;
     font-size: 1rem;
     margin-bottom: 18px;
   }
-  
+
   .auth-card h2 {
     font-size: 1.3rem;
   }
-  
+
   .auth-sub {
     font-size: 0.8rem;
     margin-bottom: 20px;
   }
-  
+
   .field input {
     padding: 11px 14px;
     font-size: 0.85rem;
   }
-  
+
   .btn-signin {
     padding: 12px 0;
     font-size: 0.9rem;
   }
-  
+
   .btn-code {
     padding: 11px 0;
     font-size: 0.85rem;
   }
-  
+
   .switch-line {
     font-size: 0.8rem;
     margin-top: 20px;
@@ -650,6 +655,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -662,7 +668,7 @@
   padding: 40px 36px 36px;
   max-width: 420px;
   width: 90%;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
   animation: slideUp 0.3s ease;
 }
 
@@ -671,6 +677,7 @@
     transform: translateY(20px);
     opacity: 0;
   }
+
   to {
     transform: translateY(0);
     opacity: 1;
@@ -831,17 +838,17 @@
     z-index: 99999;
     padding: 16px;
   }
-  
+
   .otp-modal {
     width: 100%;
     max-width: 100%;
     padding: 32px 24px 28px;
   }
-  
+
   .otp-input-row {
     gap: 8px;
   }
-  
+
   .otp-box {
     font-size: 20px;
   }

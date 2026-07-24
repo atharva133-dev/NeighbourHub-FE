@@ -52,6 +52,13 @@ export function AuthProvider({ children }) {
     return data.user;
   };
 
+  const loginWithGoogle = async (idToken) => {
+    const { data } = await api.post('/auth/google', { idToken });
+    localStorage.setItem('token', data.token);
+    setUser(data.user);
+    return data.user;
+  };
+
   // Returns { email } — no JWT yet; caller must show OTP screen next
   const register = async (name, email, password) => {
     const { data } = await api.post('/auth/register', { name, email, password });
@@ -95,6 +102,7 @@ export function AuthProvider({ children }) {
         setUser,
         loading,
         login,
+        loginWithGoogle,
         register,
         verifyOtp,
         resendOtp,
