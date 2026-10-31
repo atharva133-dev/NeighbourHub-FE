@@ -1,4 +1,11 @@
 import { forwardRef } from 'react';
+import {
+  Home, Calendar, Search, AlertTriangle, Users, Settings, User, Shield, Pin,
+  FileText, BookOpen, Dumbbell, ArrowLeftRight, LogOut, Menu, X, ChevronDown,
+  Check, Plus, Minus, Trash, Edit, Bell, Star, Heart, Share, Copy, Download,
+  Upload, Image, Video, MapPin, Clock, CalendarDays, Building2, GraduationCap,
+  Globe, Loader2, ArrowUp, ArrowDown, ArrowLeft, ArrowRight
+} from 'lucide-react';
 
 // Theme colors from Landing page
 const themeColors = {
@@ -20,12 +27,6 @@ const themeColors = {
 
 /**
  * ThemedIcon - A wrapper component for lucide-react icons with theme colors
- * 
- * @param {React.ComponentType} Icon - The lucide-react icon component
- * @param {string} color - Theme color key or custom color (default: 'clay')
- * @param {string} size - Icon size (default: '24')
- * @param {boolean} hover - Enable hover effect (default: false)
- * @param {string} hoverColor - Theme color key for hover state
  */
 export const ThemedIcon = forwardRef(({ 
   Icon, 
@@ -67,48 +68,47 @@ export const ThemedIcon = forwardRef(({
 ThemedIcon.displayName = 'ThemedIcon';
 
 // Pre-configured themed icons for common use
-export const ThemedHome = (props) => <ThemedIcon Icon={require('lucide-react').Home} {...props} />;
-export const ThemedCalendar = (props) => <ThemedIcon Icon={require('lucide-react').Calendar} {...props} />;
-export const ThemedSearch = (props) => <ThemedIcon Icon={require('lucide-react').Search} {...props} />;
-export const ThemedAlert = (props) => <ThemedIcon Icon={require('lucide-react').AlertTriangle} color="primary" {...props} />;
-export const ThemedUsers = (props) => <ThemedIcon Icon={require('lucide-react').Users} color="sage" {...props} />;
-export const ThemedSettings = (props) => <ThemedIcon Icon={require('lucide-react').Settings} {...props} />;
-export const ThemedUser = (props) => <ThemedIcon Icon={require('lucide-react').User} {...props} />;
-export const ThemedShield = (props) => <ThemedIcon Icon={require('lucide-react').Shield} color="primary" {...props} />;
-export const ThemedPin = (props) => <ThemedIcon Icon={require('lucide-react').Pin} color="primary" {...props} />;
-export const ThemedFileText = (props) => <ThemedIcon Icon={require('lucide-react').FileText} color="sage" {...props} />;
-export const ThemedBookOpen = (props) => <ThemedIcon Icon={require('lucide-react').BookOpen} color="sage" {...props} />;
-export const ThemedDumbbell = (props) => <ThemedIcon Icon={require('lucide-react').Dumbbell} color="sage" {...props} />;
-export const ThemedArrowLeftRight = (props) => <ThemedIcon Icon={require('lucide-react').ArrowLeftRight} {...props} />;
-export const ThemedLogOut = (props) => <ThemedIcon Icon={require('lucide-react').LogOut} color="primary" {...props} />;
-export const ThemedMenu = (props) => <ThemedIcon Icon={require('lucide-react').Menu} {...props} />;
-export const ThemedX = (props) => <ThemedIcon Icon={require('lucide-react').X} {...props} />;
-export const ThemedChevronDown = (props) => <ThemedIcon Icon={require('lucide-react').ChevronDown} {...props} />;
-export const ThemedCheck = (props) => <ThemedIcon Icon={require('lucide-react').Check} color="sage" {...props} />;
-export const ThemedPlus = (props) => <ThemedIcon Icon={require('lucide-react').Plus} color="primary" {...props} />;
-export const ThemedMinus = (props) => <ThemedIcon Icon={require('lucide-react').Minus} {...props} />;
-export const ThemedTrash = (props) => <ThemedIcon Icon={require('lucide-react').Trash} {...props} />;
-export const ThemedEdit = (props) => <ThemedIcon Icon={require('lucide-react').Edit} {...props} />;
-export const ThemedBell = (props) => <ThemedIcon Icon={require('lucide-react').Bell} {...props} />;
-export const ThemedStar = (props) => <ThemedIcon Icon={require('lucide-react').Star} color="primary" {...props} />;
-export const ThemedHeart = (props) => <ThemedIcon Icon={require('lucide-react').Heart} color="primary" {...props} />;
-export const ThemedShare = (props) => <ThemedIcon Icon={require('lucide-react').Share} {...props} />;
-export const ThemedCopy = (props) => <ThemedIcon Icon={require('lucide-react').Copy} {...props} />;
-export const ThemedDownload = (props) => <ThemedIcon Icon={require('lucide-react').Download} {...props} />;
-export const ThemedUpload = (props) => <ThemedIcon Icon={require('lucide-react').Upload} {...props} />;
-export const ThemedImage = (props) => <ThemedIcon Icon={require('lucide-react').Image} {...props} />;
-export const ThemedVideo = (props) => <ThemedIcon Icon={require('lucide-react').Video} {...props} />;
-export const ThemedMapPin = (props) => <ThemedIcon Icon={require('lucide-react').MapPin} color="primary" {...props} />;
-export const ThemedClock = (props) => <ThemedIcon Icon={require('lucide-react').Clock} {...props} />;
-export const ThemedCalendarDays = (props) => <ThemedIcon Icon={require('lucide-react').CalendarDays} {...props} />;
-export const ThemedBuilding2 = (props) => <ThemedIcon Icon={require('lucide-react').Building2} color="sage" {...props} />;
-export const ThemedGraduationCap = (props) => <ThemedIcon Icon={require('lucide-react').GraduationCap} color="sage" {...props} />;
-export const ThemedGlobe = (props) => <ThemedIcon Icon={require('lucide-react').Globe} color="sage" {...props} />;
-export const ThemedLoader2 = (props) => <ThemedIcon Icon={require('lucide-react').Loader2} color="primary" {...props} />;
-export const ThemedArrowUp = (props) => <ThemedIcon Icon={require('lucide-react').ArrowUp} {...props} />;
-export const ThemedArrowDown = (props) => <ThemedIcon Icon={require('lucide-react').ArrowDown} {...props} />;
-export const ThemedArrowLeft = (props) => <ThemedIcon Icon={require('lucide-react').ArrowLeft} {...props} />;
-export const ThemedArrowRight = (props) => <ThemedIcon Icon={require('lucide-react').ArrowRight} {...props} />;
+export const ThemedHome = (props) => <ThemedIcon Icon={Home} {...props} />;
+export const ThemedCalendar = (props) => <ThemedIcon Icon={Calendar} {...props} />;
+export const ThemedSearch = (props) => <ThemedIcon Icon={Search} {...props} />;
+export const ThemedAlert = (props) => <ThemedIcon Icon={AlertTriangle} color="primary" {...props} />;
+export const ThemedUsers = (props) => <ThemedIcon Icon={Users} color="sage" {...props} />;
+export const ThemedSettings = (props) => <ThemedIcon Icon={Settings} {...props} />;
+export const ThemedUser = (props) => <ThemedIcon Icon={User} {...props} />;
+export const ThemedShield = (props) => <ThemedIcon Icon={Shield} color="primary" {...props} />;
+export const ThemedPin = (props) => <ThemedIcon Icon={Pin} color="primary" {...props} />;
+export const ThemedFileText = (props) => <ThemedIcon Icon={FileText} color="sage" {...props} />;
+export const ThemedBookOpen = (props) => <ThemedIcon Icon={BookOpen} color="sage" {...props} />;
+export const ThemedDumbbell = (props) => <ThemedIcon Icon={Dumbbell} color="sage" {...props} />;
+export const ThemedArrowLeftRight = (props) => <ThemedIcon Icon={ArrowLeftRight} {...props} />;
+export const ThemedLogOut = (props) => <ThemedIcon Icon={LogOut} color="primary" {...props} />;
+export const ThemedMenu = (props) => <ThemedIcon Icon={Menu} {...props} />;
+export const ThemedX = (props) => <ThemedIcon Icon={X} {...props} />;
+export const ThemedChevronDown = (props) => <ThemedIcon Icon={ChevronDown} {...props} />;
+export const ThemedCheck = (props) => <ThemedIcon Icon={Check} color="sage" {...props} />;
+export const ThemedPlus = (props) => <ThemedIcon Icon={Plus} color="primary" {...props} />;
+export const ThemedMinus = (props) => <ThemedIcon Icon={Minus} color="sage" {...props} />;
+export const ThemedTrash = (props) => <ThemedIcon Icon={Trash} {...props} />;
+export const ThemedEdit = (props) => <ThemedIcon Icon={Edit} {...props} />;
+export const ThemedBell = (props) => <ThemedIcon Icon={Bell} {...props} />;
+export const ThemedStar = (props) => <ThemedIcon Icon={Star} color="primary" {...props} />;
+export const ThemedHeart = (props) => <ThemedIcon Icon={Heart} color="primary" {...props} />;
+export const ThemedShare = (props) => <ThemedIcon Icon={Share} {...props} />;
+export const ThemedCopy = (props) => <ThemedIcon Icon={Copy} {...props} />;
+export const ThemedDownload = (props) => <ThemedIcon Icon={Download} {...props} />;
+export const ThemedUpload = (props) => <ThemedIcon Icon={Upload} {...props} />;
+export const ThemedImage = (props) => <ThemedIcon Icon={Image} {...props} />;
+export const ThemedVideo = (props) => <ThemedIcon Icon={Video} {...props} />;
+export const ThemedMapPin = (props) => <ThemedIcon Icon={MapPin} color="primary" {...props} />;
+export const ThemedClock = (props) => <ThemedIcon Icon={Clock} {...props} />;
+export const ThemedCalendarDays = (props) => <ThemedIcon Icon={CalendarDays} {...props} />;
+export const ThemedBuilding2 = (props) => <ThemedIcon Icon={Building2} color="sage" {...props} />;
+export const ThemedGraduationCap = (props) => <ThemedIcon Icon={GraduationCap} color="sage" {...props} />;
+export const ThemedGlobe = (props) => <ThemedIcon Icon={Globe} color="sage" {...props} />;
+export const ThemedLoader2 = (props) => <ThemedIcon Icon={Loader2} color="primary" {...props} />;
+export const ThemedArrowUp = (props) => <ThemedIcon Icon={ArrowUp} {...props} />;
+export const ThemedArrowDown = (props) => <ThemedIcon Icon={ArrowDown} {...props} />;
+export const ThemedArrowLeft = (props) => <ThemedIcon Icon={ArrowLeft} {...props} />;
+export const ThemedArrowRight = (props) => <ThemedIcon Icon={ArrowRight} {...props} />;
 
-// Export theme colors for use in other components
 export { themeColors };

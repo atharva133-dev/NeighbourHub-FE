@@ -54,7 +54,9 @@ export default function Community() {
     }
   };
 
-  const handleCreated = (community, goDirect = false) => {
+  const handleCreated = (community, goDirect = false, updatedUser = null) => {
+    // Immediately refresh user role in auth context so Admin controls appear
+    if (updatedUser) setUser(prev => ({ ...prev, ...updatedUser, role: 'admin' }));
     fetchCommunities();
     if (goDirect) enterCommunity(community);
   };

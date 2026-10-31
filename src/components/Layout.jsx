@@ -1,14 +1,29 @@
-import { useAuth } from '../context/AuthContext';
-import Navbar from './Navbar';
+import { useState } from 'react';
+import Sidebar from './Sidebar';
+import Topbar from './Topbar';
 
 export default function Layout({ children, onSearchChange }) {
-  return (
-    <div className="min-h-screen text-[#0f172a] antialiased transition-colors duration-500" style={{ background: '#FCFBF6' }}>
-      <Navbar onSearchChange={onSearchChange || (() => {})} />
+  const [mobileOpen, setMobileOpen] = useState(false);
 
-      <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8 relative z-10 compact-main">
-        {children}
-      </main>
+  return (
+    <div className="app-layout">
+      {/* Left Sidebar */}
+      <Sidebar
+        mobileOpen={mobileOpen}
+        onMobileClose={() => setMobileOpen(false)}
+      />
+
+      {/* Right: Topbar + Page content */}
+      <div className="app-main">
+        <Topbar
+          onSearchChange={onSearchChange}
+          onMobileMenuOpen={() => setMobileOpen(true)}
+        />
+
+        <main className="app-content">
+          {children}
+        </main>
+      </div>
     </div>
   );
 }

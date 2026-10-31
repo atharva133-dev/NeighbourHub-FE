@@ -113,25 +113,34 @@ export default function NotificationBell() {
         type="button"
         onClick={handleToggle}
         aria-label="Notifications"
-        className="relative rounded-lg border border-slate-200 bg-white p-2 text-slate-600 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-slate-50 hover:text-slate-900 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:shadow-none dark:hover:bg-white/10"
+        className="relative rounded-xl border p-2 shadow-sm transition-all duration-300 hover:-translate-y-0.5"
+        style={{ borderColor: '#ddd7ca', background: '#fdfaf4', color: '#656f5f' }}
+        onMouseEnter={(e) => { e.currentTarget.style.background = '#f6f5ef'; e.currentTarget.style.color = '#20261f'; }}
+        onMouseLeave={(e) => { e.currentTarget.style.background = '#fdfaf4'; e.currentTarget.style.color = '#656f5f'; }}
       >
         <Bell className="h-5 w-5" />
         {unreadCount > 0 && (
-          <span className="absolute -right-1 -top-1 min-w-5 rounded-full bg-red-500 px-1.5 py-0.5 text-center text-[10px] font-bold leading-none text-white">
+          <span className="absolute -right-1 -top-1 min-w-5 rounded-full px-1.5 py-0.5 text-center text-[10px] font-bold leading-none text-white" style={{ background: '#c97b5a' }}>
             {unreadCount > 99 ? '99+' : unreadCount}
           </span>
         )}
       </button>
 
       {open && (
-        <div className="absolute right-0 mt-3 w-80 max-w-[calc(100vw-2rem)] overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/95 dark:shadow-2xl dark:shadow-black/40">
-          <div className="flex items-center justify-between border-b border-slate-100 px-4 py-3 dark:border-white/10">
-            <h3 className="text-sm font-semibold text-slate-900 dark:text-white">Notifications</h3>
+        <div
+          className="absolute right-0 mt-3 w-80 max-w-[calc(100vw-2rem)] overflow-hidden rounded-2xl border shadow-xl backdrop-blur-xl animate-fade-in z-50"
+          style={{ borderColor: '#ddd7ca', background: '#fdfaf4' }}
+        >
+          <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: '1px solid #ddd7ca' }}>
+            <h3 className="text-sm font-semibold" style={{ color: '#20261f' }}>Notifications</h3>
             {unreadCount > 0 && (
               <button
                 type="button"
                 onClick={handleMarkAllRead}
-                className="text-xs font-medium text-blue-600 transition hover:text-blue-500 dark:text-blue-300 dark:hover:text-blue-200"
+                className="text-xs font-semibold transition-colors"
+                style={{ color: '#c97b5a' }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = '#ad6247')}
+                onMouseLeave={(e) => (e.currentTarget.style.color = '#c97b5a')}
               >
                 Mark all read
               </button>
@@ -146,21 +155,21 @@ export default function NotificationBell() {
                 <div className="skeleton h-4 w-10/12" />
               </div>
             ) : notifications.length === 0 ? (
-              <p className="px-4 py-8 text-center text-sm text-slate-400">
+              <p className="px-4 py-8 text-center text-sm" style={{ color: '#656f5f' }}>
                 No notifications yet.
               </p>
             ) : (
               notifications.map((notification) => (
                 <div
                   key={notification._id}
-                  className={`border-b border-slate-100 px-4 py-3 last:border-0 dark:border-white/10 ${
-                    notification.read
-                      ? 'bg-transparent'
-                      : 'bg-blue-50 dark:bg-blue-500/10'
-                  }`}
+                  className="px-4 py-3 last:border-0 transition-colors"
+                  style={{
+                    borderBottom: '1px solid #ddd7ca',
+                    background: notification.read ? 'transparent' : 'rgba(201,123,90,0.06)',
+                  }}
                 >
-                  <p className="text-sm text-slate-700 dark:text-slate-200">{notification.message}</p>
-                  <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">
+                  <p className="text-sm" style={{ color: '#20261f' }}>{notification.message}</p>
+                  <p className="mt-1 text-xs" style={{ color: '#8B7B6B' }}>
                     {formatDate(notification.createdAt)}
                   </p>
                 </div>

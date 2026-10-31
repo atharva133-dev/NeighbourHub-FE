@@ -1,35 +1,39 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { Plus, Edit2, Trash2, Phone, User, Briefcase, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../../api/axios';
+import { useAuth } from '../../context/AuthContext';
 
 export default function HelpersManager() {
+  const { activeCommunityId } = useAuth();
   const [helpers, setHelpers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editingHelper, setEditingHelper] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
-    category: '',
+    category: 'Electrician',
     phone: '',
     description: '',
   });
 
-  const fetchHelpers = async () => {
+  const fetchHelpers = useCallback(async () => {
+    if (!activeCommunityId) { setLoading(false); return; }
     setLoading(true);
     try {
-      const { data } = await api.get('/helpers');
+      const { data } = await api.get(`/helpers?communityId=${activeCommunityId}`);
       setHelpers(data);
     } catch (err) {
       toast.error('Failed to load helpers');
     } finally {
       setLoading(false);
     }
-  };
+  }, [activeCommunityId]);
 
   useEffect(() => {
     fetchHelpers();
-  }, []);
+  }, [fetchHelpers]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -38,7 +42,7 @@ export default function HelpersManager() {
         await api.put(`/helpers/${editingHelper._id}`, formData);
         toast.success('Helper updated successfully');
       } else {
-        await api.post('/helpers', formData);
+        await api.post('/helpers', { ...formData, communityId: activeCommunityId });
         toast.success('Helper added successfully');
       }
       setShowModal(false);
@@ -81,21 +85,21 @@ export default function HelpersManager() {
   const categories = [...new Set(helpers.map((h) => h.category))];
 
   return (
-    <section className="rounded-[20px] border border-[#e2e8f0] bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+    <section className="glass-card p-5">
       <div className="mb-6 flex items-center justify-between gap-3">
-        <div className="flex items-center gap-4">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#0f172a] shadow-sm">
-            <Briefcase className="h-5 w-5 text-white" />
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl text-white shadow-md" style={{ background: 'linear-gradient(135deg,var(--sage),var(--clay))' }}>
+            <Briefcase className="h-5 w-5" />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-[#0f172a]" style={{ fontFamily: '"Space Grotesk", sans-serif' }}>Community Helpers</h3>
-            <p className="text-xs text-[#64748b]">Manage local service providers</p>
+            <h3 className="text-lg font-bold" style={{ color: 'var(--ink)', fontFamily: '"Space Grotesk", sans-serif' }}>Community Helpers</h3>
+            <p className="text-xs" style={{ color: 'var(--ink-50)' }}>Manage local service providers</p>
           </div>
         </div>
         <button
           type="button"
           onClick={() => setShowModal(true)}
-          className="flex items-center gap-1.5 rounded-xl bg-[#0f172a] px-4 py-2 text-sm font-bold text-white transition hover:bg-[#1e293b]"
+          style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 14px', borderRadius: 10, border: 'none', background: 'linear-gradient(135deg,var(--clay),var(--brick))', color: '#fff', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}
         >
           <Plus className="h-4 w-4" />
           Add Helper
@@ -103,24 +107,25 @@ export default function HelpersManager() {
       </div>
 
       {loading ? (
-        <p className="text-sm text-[#64748b] text-center py-8">Loading helpers...</p>
+        <p className="text-sm text-center py-8" style={{ color: 'var(--ink-50)' }}>Loading helpers...</p>
       ) : helpers.length === 0 ? (
-        <div className="rounded-[20px] border-dashed border-2 border-[#e2e8f0] bg-[#f8fafc] py-12 text-center">
-          <p className="text-sm font-semibold text-[#0f172a]">No helpers added yet.</p>
-          <p className="mt-1 text-xs text-[#64748b]">Add local services like plumbers and electricians.</p>
+        <div className="rounded-2xl border-dashed border-2 py-12 text-center" style={{ borderColor: 'var(--line)', background: 'rgba(32,38,31,0.03)' }}>
+          <p className="text-sm font-semibold" style={{ color: 'var(--ink)' }}>No helpers added yet.</p>
+          <p className="mt-1 text-xs" style={{ color: 'var(--ink-50)' }}>Add local services like plumbers and electricians.</p>
         </div>
       ) : (
         <div className="space-y-6">
           {categories.map((category) => (
             <div key={category}>
-              <h4 className="mb-3 text-xs font-bold uppercase tracking-widest text-[#64748b]">{category}</h4>
+              <h4 className="mb-3 text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--ink-50)' }}>{category}</h4>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {helpers
                   .filter((h) => h.category === category)
                   .map((helper) => (
                     <div
                       key={helper._id}
-                      className="rounded-[16px] border border-[#e2e8f0] bg-white p-4 shadow-[0_1px_2px_rgba(0,0,0,0.02)] transition hover:shadow-md hover:border-[#cbd5e1]"
+                      className="rounded-xl border p-4 transition hover:shadow-md"
+                      style={{ background: 'var(--parchment)', borderColor: 'var(--line)' }}
                     >
                       <div className="mb-3 flex items-start justify-between gap-2">
                         <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#f1f5f9] text-[#475569]">
@@ -163,83 +168,100 @@ export default function HelpersManager() {
       )}
 
       {/* Modal */}
-      {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4 backdrop-blur-sm">
-          <div className="w-full max-w-md max-h-[90vh] overflow-y-auto rounded-2xl bg-white p-6 shadow-2xl">
-            <div className="mb-5 flex items-center justify-between border-b border-[#f1f5f9] pb-4">
-              <h3 className="text-lg font-bold text-[#0f172a]" style={{ fontFamily: '"Space Grotesk", sans-serif' }}>
-                {editingHelper ? 'Edit Helper' : 'Add Helper'}
-              </h3>
-              <button
-                type="button"
-                onClick={closeModal}
-                className="flex h-8 w-8 items-center justify-center rounded-lg text-[#64748b] transition hover:bg-[#f1f5f9] hover:text-[#0f172a]"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-            <form onSubmit={handleSubmit} className="space-y-4">
+      {showModal && createPortal(
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(32,38,31,0.5)', backdropFilter: 'blur(8px)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
+          <div className="glass-card animate-fade-in" style={{ width: '100%', maxWidth: 440, padding: 28, position: 'relative', boxShadow: '0 24px 48px rgba(32,38,31,0.25)' }}>
+            <button onClick={closeModal} style={{ position: 'absolute', top: 16, right: 16, background: 'none', border: 'none', cursor: 'pointer', color: 'var(--ink-50)' }}>
+              <X style={{ width: 20, height: 20 }} />
+            </button>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
+              <div style={{ width: 40, height: 40, borderRadius: 12, background: 'linear-gradient(135deg,var(--sage),var(--clay))', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
+                <Briefcase style={{ width: 20, height: 20 }} />
+              </div>
               <div>
-                <label className="mb-1 block text-sm font-bold text-[#334155]">Name</label>
+                <h3 style={{ margin: 0, fontWeight: 800, fontSize: 18, color: 'var(--ink)' }}>
+                  {editingHelper ? 'Edit Helper Contact' : 'Add Society Helper'}
+                </h3>
+                <p style={{ margin: 0, fontSize: 12, color: 'var(--ink-50)' }}>Register a trusted service provider for your community</p>
+              </div>
+            </div>
+
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              <div>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--ink-70)', marginBottom: 6 }}>Full Name *</label>
                 <input
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   required
-                  className="w-full rounded-xl border border-[#cbd5e1] bg-white px-4 py-2.5 text-sm font-medium text-[#0f172a] outline-none focus:border-[#0f172a] focus:ring-1 focus:ring-[#0f172a]"
-                  placeholder="Helper name"
+                  placeholder="e.g. Ramesh Kumar"
+                  className="glass-input"
+                  style={{ width: '100%' }}
                 />
               </div>
+
               <div>
-                <label className="mb-1 block text-sm font-bold text-[#334155]">Category</label>
-                <input
-                  type="text"
-                  value={formData.category}
-                  onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                  required
-                  className="w-full rounded-xl border border-[#cbd5e1] bg-white px-4 py-2.5 text-sm font-medium text-[#0f172a] outline-none focus:border-[#0f172a] focus:ring-1 focus:ring-[#0f172a]"
-                  placeholder="e.g., Electrician, Plumber"
-                />
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--ink-70)', marginBottom: 6 }}>Category *</label>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 6 }}>
+                  {['Electrician', 'Plumber', 'Carpentry', 'Security', 'Housekeeping', 'Milk & Delivery', 'Gardener', 'Other'].map(cat => (
+                    <button
+                      key={cat}
+                      type="button"
+                      onClick={() => setFormData({ ...formData, category: cat })}
+                      style={{
+                        padding: '4px 10px', borderRadius: 8, fontSize: 12, fontWeight: 600, cursor: 'pointer', border: '1px solid var(--line)',
+                        background: formData.category === cat ? 'linear-gradient(135deg,var(--sage),var(--clay))' : 'var(--parchment)',
+                        color: formData.category === cat ? '#fff' : 'var(--ink-70)',
+                        transition: 'all 0.15s',
+                      }}
+                    >
+                      {cat}
+                    </button>
+                  ))}
+                </div>
+                {formData.category === 'Other' && (
+                  <input type="text" placeholder="Specify category..." onChange={(e) => setFormData({ ...formData, category: e.target.value })} className="glass-input" style={{ width: '100%', marginTop: 4 }} />
+                )}
               </div>
+
               <div>
-                <label className="mb-1 block text-sm font-bold text-[#334155]">Phone</label>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--ink-70)', marginBottom: 6 }}>Phone Number *</label>
                 <input
-                  type="text"
+                  type="tel"
                   value={formData.phone}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                   required
-                  className="w-full rounded-xl border border-[#cbd5e1] bg-white px-4 py-2.5 text-sm font-medium text-[#0f172a] outline-none focus:border-[#0f172a] focus:ring-1 focus:ring-[#0f172a]"
-                  placeholder="Phone number"
+                  placeholder="e.g. 9876543210"
+                  className="glass-input"
+                  style={{ width: '100%' }}
                 />
               </div>
+
               <div>
-                <label className="mb-1 block text-sm font-bold text-[#334155]">Description (Optional)</label>
-                <textarea
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--ink-70)', marginBottom: 6 }}>Notes / Hours (Optional)</label>
+                <input
+                  type="text"
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  rows={3}
-                  className="w-full resize-none rounded-xl border border-[#cbd5e1] bg-white px-4 py-2.5 text-sm font-medium text-[#0f172a] outline-none focus:border-[#0f172a] focus:ring-1 focus:ring-[#0f172a]"
-                  placeholder="Additional details..."
+                  placeholder="e.g. Available 9 AM - 6 PM, Block C"
+                  className="glass-input"
+                  style={{ width: '100%' }}
                 />
               </div>
-              <div className="flex gap-3 pt-2">
-                <button
-                  type="button"
-                  onClick={closeModal}
-                  className="flex-1 rounded-xl border border-[#e2e8f0] bg-white px-4 py-2.5 text-sm font-bold text-[#475569] transition hover:bg-[#f8fafc]"
-                >
+
+              <div style={{ display: 'flex', gap: 10, marginTop: 8 }}>
+                <button type="button" onClick={closeModal} style={{ flex: 1, padding: '11px', borderRadius: 10, border: '1px solid var(--line)', background: 'transparent', color: 'var(--ink-70)', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>
                   Cancel
                 </button>
-                <button
-                  type="submit"
-                  className="flex-1 rounded-xl bg-[#0f172a] px-4 py-2.5 text-sm font-bold text-white shadow-xs transition hover:bg-[#1e293b]"
-                >
-                  {editingHelper ? 'Update' : 'Add Helper'}
+                <button type="submit" style={{ flex: 1, padding: '11px', borderRadius: 10, border: 'none', background: 'linear-gradient(135deg,var(--clay),var(--brick))', color: '#fff', fontWeight: 700, fontSize: 13, cursor: 'pointer' }}>
+                  {editingHelper ? 'Update Helper' : '✓ Save Helper'}
                 </button>
               </div>
             </form>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </section>
   );

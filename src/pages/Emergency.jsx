@@ -126,7 +126,7 @@ export default function Emergency() {
           )}
         </div>
 
-        <aside className="lg:sticky lg:top-24 lg:self-start">
+        <aside className="lg:sticky lg:top-6 lg:self-start">
           <NoticeForm defaultCategory="Emergency" />
         </aside>
       </div>

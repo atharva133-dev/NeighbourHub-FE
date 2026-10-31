@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Building2, Dumbbell, Loader2 } from 'lucide-react';
+import { Dumbbell, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
@@ -16,13 +16,10 @@ export default function Amenities() {
   const [loading, setLoading] = useState(true);
   const [bookingAmenity, setBookingAmenity] = useState(null);
 
-  const communityType = typeof user?.communityId === 'object'
-    ? user?.communityId?.type
-    : user?.communityType;
-  const isSociety = communityType === 'society';
+
 
   const fetchAmenities = useCallback(async () => {
-    if (!activeCommunityId || !isSociety) { setLoading(false); return; }
+    if (!activeCommunityId) { setLoading(false); return; }
     setLoading(true);
     try {
       const { data } = await api.get(`/community/${activeCommunityId}/amenities`);
@@ -32,12 +29,12 @@ export default function Amenities() {
     } finally {
       setLoading(false);
     }
-  }, [activeCommunityId, isSociety]);
+  }, [activeCommunityId]);
 
   useEffect(() => { fetchAmenities(); }, [fetchAmenities]);
 
   useEffect(() => {
-    if (!socket || !isSociety) return;
+    if (!socket) return;
     const handleBooked = () => {};
     const handleCancelled = () => {};
     socket.on('amenity:booked', handleBooked);
@@ -46,21 +43,9 @@ export default function Amenities() {
       socket.off('amenity:booked', handleBooked);
       socket.off('amenity:booking-cancelled', handleCancelled);
     };
-  }, [socket, isSociety]);
+  }, [socket]);
 
-  if (communityType && !isSociety) {
-    return (
-      <Layout>
-        <div className="flex flex-col items-center justify-center rounded-[20px] border border-[#e2e8f0] bg-white px-6 py-24 text-center shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
-          <Building2 className="h-12 w-12 text-[#94a3b8] mb-4" />
-          <h2 className="text-xl font-bold text-[#0f172a]">Not available</h2>
-          <p className="mt-2 text-sm text-[#64748b]">
-            Amenities & Booking is only available for Society communities.
-          </p>
-        </div>
-      </Layout>
-    );
-  }
+
 
   return (
     <Layout>

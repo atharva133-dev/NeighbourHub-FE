@@ -48,7 +48,7 @@ export default function Settings() {
         <h1 className="mb-6 text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Settings</h1>
 
         <div className="grid gap-8 lg:grid-cols-[240px_1fr]">
-          <aside className="lg:sticky lg:top-24 lg:self-start">
+          <aside className="lg:sticky lg:top-6 lg:self-start">
             <nav className="glass-card overflow-hidden rounded-2xl p-3 shadow-sm border border-slate-200 bg-white/60 dark:border-white/10 dark:bg-[#13131f]/60">
               <div className="flex gap-2 overflow-x-auto pb-1 lg:flex-col lg:overflow-visible lg:pb-0 scrollbar-hide">
                 {tabs.map((tab) => {

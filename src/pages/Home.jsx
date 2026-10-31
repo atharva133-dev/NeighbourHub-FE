@@ -19,7 +19,7 @@ function sortNotices(list) {
 }
 
 export default function Home() {
-  const { activeCommunityId } = useAuth();
+  const { user, activeCommunityId } = useAuth();
   const { socket, joinCommunity, leaveCommunity, getOnlineCount } = useSocket();
   const navigate = useNavigate();
   const [notices, setNotices] = useState([]);
@@ -53,9 +53,11 @@ export default function Home() {
   useEffect(() => { fetchNotices(); }, [fetchNotices]);
 
   useEffect(() => {
-    const handleScroll = () => setShowBackToTop(window.scrollY > 400);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    const el = document.querySelector('.app-content');
+    if (!el) return;
+    const handleScroll = () => setShowBackToTop(el.scrollTop > 400);
+    el.addEventListener('scroll', handleScroll);
+    return () => el.removeEventListener('scroll', handleScroll);
   }, []);
 
   useEffect(() => {
@@ -202,7 +204,7 @@ export default function Home() {
           )}
         </div>
 
-        <aside className="lg:sticky lg:top-24 lg:self-start">
+        <aside className="lg:sticky lg:top-6 lg:self-start">
           <NoticeForm
             onCreated={(newNotice) =>
               setNotices((prev) => {
@@ -216,7 +218,7 @@ export default function Home() {
 
       {/* Back to top */}
       {showBackToTop && (
-        <button type="button" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        <button type="button" onClick={() => document.querySelector('.app-content')?.scrollTo({ top: 0, behavior: 'smooth' })}
           className="fixed bottom-8 right-8 flex h-14 w-14 items-center justify-center rounded-full bg-slate-900 text-white shadow-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl dark:bg-gradient-to-br dark:from-[#6E8F73] dark:to-[#C97B5A] dark:shadow-[#6E8F73]/30 dark:hover:shadow-[#6E8F73]/50 z-50"
           aria-label="Back to top">
           <ArrowUp className="h-6 w-6" />

@@ -18,6 +18,11 @@ import Settings from './pages/Settings';
 import Community from './pages/Community';
 import Amenities from './pages/Amenities';
 import MyBookings from './pages/MyBookings';
+import Visitors from './pages/Visitors';
+import Maintenance from './pages/Maintenance';
+import Marketplace from './pages/Marketplace';
+import Chat from './pages/Chat';
+import Payments from './pages/Payments';
 
 export default function App() {
   return (
@@ -66,6 +71,46 @@ export default function App() {
                 element={
                   <ProtectedRoute>
                     <Emergency />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/visitors"
+                element={
+                  <ProtectedRoute>
+                    <Visitors />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/maintenance"
+                element={
+                  <ProtectedRoute>
+                    <Maintenance />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/marketplace"
+                element={
+                  <ProtectedRoute>
+                    <Marketplace />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/chat"
+                element={
+                  <ProtectedRoute>
+                    <Chat />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/payments"
+                element={
+                  <ProtectedRoute>
+                    <Payments />
                   </ProtectedRoute>
                 }
               />

@@ -82,9 +82,13 @@ export default function CreateCommunityModal({ open, onClose, onCreated }) {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
-      setCreated(data);
-      toast.success('Community created!');
-      onCreated?.(data);
+      // Backend now returns { community, user } so we can refresh auth state
+      const community = data.community ?? data;
+      const updatedUser = data.user ?? null;
+
+      setCreated(community);
+      toast.success('Community created! You are now the Admin.');
+      onCreated?.(community, false, updatedUser);
     } catch (err) {
       toast.error(err.response?.data?.message || 'Failed to create community');
     } finally {
